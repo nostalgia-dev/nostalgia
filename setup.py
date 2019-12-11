@@ -1,16 +1,21 @@
 from setuptools import find_packages
 from setuptools import setup
 
-MAJOR_VERSION = '0'
-MINOR_VERSION = '1'
-MICRO_VERSION = '0'
+with open("README.md") as f:
+    LONG_DESCRIPTION = f.read()
+
+MAJOR_VERSION = "0"
+MINOR_VERSION = "1"
+MICRO_VERSION = "2"
 VERSION = "{}.{}.{}".format(MAJOR_VERSION, MINOR_VERSION, MICRO_VERSION)
 
 setup(
     name='nostalgia',
     version=VERSION,
-    description="oops",
-    url='https://github.com/kootenpv/nostalgia',
+    description="nostalgia enables to self-track and gain insights into your life",
+    long_description=LONG_DESCRIPTION,
+    long_description_content_type="text/markdown",
+    url='https://github.com/nostalgia-dev/nostalgia',
     author='Pascal van Kooten',
     author_email='kootenpv@gmail.com',
     license='MIT',
@@ -27,12 +32,10 @@ setup(
         'Operating System :: Unix',
         'Operating System :: POSIX',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Software Development',
         'Topic :: Software Development :: Build Tools',
         'Topic :: Software Development :: Debuggers',
