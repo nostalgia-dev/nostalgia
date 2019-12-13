@@ -13,7 +13,8 @@ from nostalgia.source_to_fast import get_processed_files, save_processed_files
 from nostalgia.source_to_fast import get_last_latest_file, save_last_latest_file
 from nostalgia.source_to_fast import get_last_mod_time, save_last_mod_time
 from nostalgia.source_to_fast import save, load
-from nostalgia.utils import read_array_of_dict_from_json
+from nostalgia.utils import read_array_of_dict_from_json, datetime_from_timestamp
+from nostalgia.cache import get_cache
 
 
 def ab_overlap_cd(a, b, c, d):
@@ -208,6 +209,58 @@ class DF(pd.DataFrame):
         return data
 
     @classmethod
+    def load_image_texts(cls, glob_pattern_s, nrows=None):
+        import pytesseract
+        from PIL import Image
+
+        if isinstance(glob_pattern_s, list):
+            fnames = set()
+            for glob_pattern in glob_pattern_s:
+                fnames.update(set(just.glob(glob_pattern)))
+            glob_pattern = "_".join(glob_pattern_s)
+        else:
+            fnames = set(just.glob(glob_pattern))
+        name = glob_pattern + "_" + normalize_name(cls.__name__)
+        processed_files = get_processed_files(name)
+        to_process = fnames.difference(processed_files)
+        objects = []
+
+        cache = get_cache("tesseract")
+
+        if nrows is not None:
+            if not to_process:
+                return load(name).iloc[-nrows:]
+            else:
+                to_process = list(to_process)[-nrows:]
+        if to_process:
+            for fname in to_process:
+                if fname in cache:
+                    text = cache[fname]
+                else:
+                    try:
+                        text = pytesseract.image_to_string(Image.open(just.make_path(fname)))
+                    except OSError as e:
+                        print("ERR", fname, e)
+                        continue
+                    cache[fname] = text
+                time = datetime_from_timestamp(os.path.getmtime(fname), "utc", divide_by_1000=False)
+                data = {"text": text, "path": fname, "title": fname.split("/")[-1], "time": time}
+                objects.append(data)
+            data = pd.DataFrame(objects)
+            if processed_files and nrows is None:
+                data = pd.concat((data, load(name)))
+            for x in ["time", "start", "end"]:
+                if x in data:
+                    data = data.sort_values(x)
+                    break
+            if nrows is None:
+                save(data, name)
+                save_processed_files(fnames | processed_files, name)
+        else:
+            data = load(name)
+        return data
+
+    @classmethod
     def load_dataframe_per_json_file(cls, glob_pattern, key="", nrows=None):
         fnames = set(just.glob(glob_pattern))
         name = glob_pattern + "_" + normalize_name(cls.__name__)
@@ -216,9 +269,9 @@ class DF(pd.DataFrame):
         objects = []
         if nrows is not None:
             if not to_process:
-                to_process = list(processed_files)[-1:]
+                to_process = list(processed_files)[-nrows:]
             else:
-                to_process = list(to_process)[-1:]
+                to_process = list(to_process)[-nrows:]
         if to_process:
             for fname in to_process:
                 data = read_array_of_dict_from_json(fname, key, nrows)
