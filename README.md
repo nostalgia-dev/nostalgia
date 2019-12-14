@@ -1,4 +1,8 @@
-## nostalgia
+<p align="center">
+  <img src="./Nostalgia-C.png" width="200px"/>
+</p>
+
+# nostalgia
 
 [![PyPI](https://img.shields.io/pypi/v/nostalgia.svg?style=flat-square)](https://pypi.python.org/pypi/nostalgia/)
 [![PyPI](https://img.shields.io/pypi/pyversions/nostalgia.svg?style=flat-square)](https://pypi.python.org/pypi/nostalgia/)
