@@ -23,12 +23,6 @@ BASE_PATH = os.path.expanduser("~/Downloads")
 # chrome_options = webdriver.ChromeOptions()
 # chrome_options.binary_location = "/usr/bin/google-chrome-stable"
 
-driver = webdriver.Chrome()  # , options=chrome_options
-
-url = "https://www.google.com/maps/timeline?pb=!1m2!1m1!1s2019-02-29"
-
-driver.get(url)
-
 
 def move(fname):
     src = os.path.join(BASE_PATH, fname)
@@ -45,33 +39,6 @@ def exists(year, month, day):
 
 def get_last_day_of_month(year, num_month):
     return monthrange(year, num_month)[1]
-
-
-MONTHS = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-]
-
-now = datetime.now()
-today = (now.year, now.month, now.day)
-
-# wait for being logged in
-while not driver.find_elements_by_xpath(
-    "//span[@class='header-feature-name' and text() = ' Timeline ']"
-):
-    time.sleep(2)
-
-time.sleep(5)
 
 
 def select_year(year):
@@ -110,45 +77,78 @@ def click_download():
     time.sleep(1)
 
 
-try:
-    last_clicked_year = None
-    last_clicked_month = None
-    for year in range(now.year, 2014, -1):
-        for num_month, month in enumerate(MONTHS[::-1]):
-            num_month = 12 - num_month
-            for day in range(get_last_day_of_month(year, num_month), 0, -1):
-                date_tuple = (year, num_month, day)
-                if date_tuple >= today:
-                    continue
-                if exists(year, num_month, day):
-                    continue
-                print(num_month, date_tuple)
-                # select year if neccessary
-                if last_clicked_year != year:
-                    select_year(year)
-                    last_clicked_year = year
-                # select month if neccessary
-                if last_clicked_month != month:
-                    select_month(month)
-                    last_clicked_month = month
-                # handle day
-                driver.find_element_by_class_name("day-picker").click()
+MONTHS = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+]
 
-                driver.find_element_by_xpath(
-                    "//td[@aria-label='{} {}']".format(day, month[:3])
-                ).click()
+if __name__ == "__main__":
+    driver = webdriver.Chrome()  # , options=chrome_options
 
-                time.sleep(3)
+    url = "https://www.google.com/maps/timeline?pb=!1m2!1m1!1s2019-02-29"
 
-                click_download()
+    driver.get(url)
 
-                time.sleep(3)
+    now = datetime.now()
+    today = (now.year, now.month, now.day)
 
-                fname = "history-{}-{:02d}-{:02d}.kml".format(year, num_month, day)
+    # wait for being logged in
+    while not driver.find_elements_by_xpath(
+        "//span[@class='header-feature-name' and text() = ' Timeline ']"
+    ):
+        time.sleep(2)
 
-                move(fname)
-finally:
-    driver.quit()
+    time.sleep(5)
 
-from nostalgia.sources.google.timeline_transform import *
-from nostalgia.sources.google.timeline import *
+    try:
+        last_clicked_year = None
+        last_clicked_month = None
+        for year in range(now.year, 2014, -1):
+            for num_month, month in enumerate(MONTHS[::-1]):
+                num_month = 12 - num_month
+                for day in range(get_last_day_of_month(year, num_month), 0, -1):
+                    date_tuple = (year, num_month, day)
+                    if date_tuple >= today:
+                        continue
+                    if exists(year, num_month, day):
+                        continue
+                    print(num_month, date_tuple)
+                    # select year if neccessary
+                    if last_clicked_year != year:
+                        select_year(year)
+                        last_clicked_year = year
+                    # select month if neccessary
+                    if last_clicked_month != month:
+                        select_month(month)
+                        last_clicked_month = month
+                    # handle day
+                    driver.find_element_by_class_name("day-picker").click()
+
+                    driver.find_element_by_xpath(
+                        "//td[@aria-label='{} {}']".format(day, month[:3])
+                    ).click()
+
+                    time.sleep(3)
+
+                    click_download()
+
+                    time.sleep(3)
+
+                    fname = "history-{}-{:02d}-{:02d}.kml".format(year, num_month, day)
+
+                    move(fname)
+    finally:
+        driver.quit()
+
+    from nostalgia.sources.google.timeline_transform import *
+    from nostalgia.sources.google.timeline import *

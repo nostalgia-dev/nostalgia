@@ -102,71 +102,72 @@ class Person(DF):
         return cls(person)
 
 
-person = Person.load(nrows=5)
+if __name__ == "__main__":
+    person = Person.load(nrows=5)
 
-# https://schema.org/Blog
-# "http://schema.org/blogPost"
-# http://schema.org/WebPage # http://schema.org/BlogPosting
+    # https://schema.org/Blog
+    # "http://schema.org/blogPost"
+    # http://schema.org/WebPage # http://schema.org/BlogPosting
 
-# exlclude http://schema.org/QAPage
+    # exlclude http://schema.org/QAPage
 
-it = 0
-imo = 0
-nice = 0
-wrong = 0
-from collections import Counter
-import just
+    it = 0
+    imo = 0
+    nice = 0
+    wrong = 0
+    from collections import Counter
+    import just
 
-c = Counter()
+    c = Counter()
 
-for x in just.iread("/home/pascal/nostalgia_tmp/person.jsonl"):
-    if "/Person" in (str(x.get("microdata"))):
-        it += 1
-        y = x
-        score = 0
-        mc_count = 0
-        for mc in y["microdata"]:
-            if mc.get("type") in [
-                'http://schema.org/ImageObject',
-                'http://schema.org/QAPage',
-                'http://schema.org/Movie',
-                'http://schema.org/videoObject',
-                'http://schema.org/Organization',
-                'http://schema.org/VideoObject',
-                'http://schema.org/Question',
-                'http://schema.org/CreativeWork',
-                'http://schema.org/Code',
-            ]:
+    for x in just.iread("/home/pascal/nostalgia_tmp/person.jsonl"):
+        if "/Person" in (str(x.get("microdata"))):
+            it += 1
+            y = x
+            score = 0
+            mc_count = 0
+            for mc in y["microdata"]:
+                if mc.get("type") in [
+                    'http://schema.org/ImageObject',
+                    'http://schema.org/QAPage',
+                    'http://schema.org/Movie',
+                    'http://schema.org/videoObject',
+                    'http://schema.org/Organization',
+                    'http://schema.org/VideoObject',
+                    'http://schema.org/Question',
+                    'http://schema.org/CreativeWork',
+                    'http://schema.org/Code',
+                ]:
+                    continue
+                mc_count += 1
+                for opt in [
+                    'mc["properties"]["author"]',
+                    'mc["properties"]["author"]["properties"]["name"]',
+                    'mc["properties"]["author"]["value"]',
+                    'mc["properties"]["author"][0]["value"]',
+                    'mc["properties"]["author"][0]["properties"]["name"]',
+                    'mc["properties"]["author"]["properties"]["author"]["properties"]["name"][0]',
+                    'mc["properties"]["creator"]["properties"]["name"]',
+                    'mc["properties"]["author"][0]["value"]',
+                    'mc["properties"]["mainEntity"]["properties"]["author"]["properties"]["name"]',
+                    'mc["properties"]["blogPost"]["properties"]["author"]["properties"]["name"]',
+                ]:
+                    try:
+                        x = eval(opt).strip()
+                        if not x or x.startswith("http") or "\n" in x:
+                            continue
+                        print(x)
+                        score += 1
+                        c[mc["type"].split("/")[-1]] += 1
+                        break
+                    except KeyboardInterrupt:
+                        "a" + 1
+                    except:
+                        pass
+            if mc_count and score == 0:
+                if len(y["microdata"]) == 1 and list(y["microdata"][0]) == ["value"]:
+                    continue
+                wrong += 1
                 continue
-            mc_count += 1
-            for opt in [
-                'mc["properties"]["author"]',
-                'mc["properties"]["author"]["properties"]["name"]',
-                'mc["properties"]["author"]["value"]',
-                'mc["properties"]["author"][0]["value"]',
-                'mc["properties"]["author"][0]["properties"]["name"]',
-                'mc["properties"]["author"]["properties"]["author"]["properties"]["name"][0]',
-                'mc["properties"]["creator"]["properties"]["name"]',
-                'mc["properties"]["author"][0]["value"]',
-                'mc["properties"]["mainEntity"]["properties"]["author"]["properties"]["name"]',
-                'mc["properties"]["blogPost"]["properties"]["author"]["properties"]["name"]',
-            ]:
-                try:
-                    x = eval(opt).strip()
-                    if not x or x.startswith("http") or "\n" in x:
-                        continue
-                    print(x)
-                    score += 1
-                    c[mc["type"].split("/")[-1]] += 1
-                    break
-                except KeyboardInterrupt:
-                    "a" + 1
-                except:
-                    pass
-        if mc_count and score == 0:
-            if len(y["microdata"]) == 1 and list(y["microdata"][0]) == ["value"]:
-                continue
-            wrong += 1
-            continue
-        if score:
-            nice += 1
+            if score:
+                nice += 1

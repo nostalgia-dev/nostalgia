@@ -107,6 +107,7 @@ def col_contains_wrapper(word, col):
     return col_contains
 
 
+# class DF:
 class DF(pd.DataFrame):
     keywords = []
     nlp_columns = []
@@ -198,6 +199,13 @@ class DF(pd.DataFrame):
         if modified_time != last_modified or not from_cache:
             if fname.endswith(".csv"):
                 data = pd.read_csv(fname, error_bad_lines=False, nrows=nrows)
+            elif fname.endswith(".mbox"):
+                import mailbox
+
+                m = mailbox.mbox(fname)
+                data = pd.DataFrame(
+                    [{l: x[l] for l in ["from", "to", "date", "subject"]} for x in m]
+                )
             else:
                 data = read_array_of_dict_from_json(fname, key_name, nrows)
             data = cls.handle_dataframe_per_file(data, fname)
@@ -536,6 +544,7 @@ class DF(pd.DataFrame):
         return self
 
     def containing(self, string, col_name=None, case=False, regex=True, na=False, bound=True):
+        """ Filters using string in all string columns when col_name is None, otherwise in just that one """
         if regex and bound:
             string = r"\b" + string + r"\b"
         if col_name is not None:
@@ -598,16 +607,23 @@ class DF(pd.DataFrame):
         except ValueError:
             raise ValueError("No fields are mapped")
 
-    def at_day(self, day_or_class):
+    def _select_at_day(self, day_or_class):
         if isinstance(day_or_class, pd.DataFrame):
             days = day_or_class.time.dt.date.unique()
-            return self[self.time.dt.date.isin(days)]
+            return self.time.dt.date.isin(days)
+        elif isinstance(day_or_class, (list, tuple, set, pd.Series)):
+            return self.time.dt.date.isin(set(day_or_class))
         else:
-            mp = parse_date_tz(day)
-            return self[
-                (self.time.dt.date >= mp.start_date.date())
-                & (self.time.dt.date < mp.end_date.date())
-            ]
+            mp = parse_date_tz(day_or_class)
+            return (self.time.dt.date >= mp.start_date.date()) & (
+                self.time.dt.date < mp.end_date.date()
+            )
+
+    def at_day(self, day_or_class):
+        return self[self._select_at_day(day_or_class)]
+
+    def not_at_day(self, day_or_class):
+        return self[~self._select_at_day(day_or_class)]
 
     @property
     def last_day(self):

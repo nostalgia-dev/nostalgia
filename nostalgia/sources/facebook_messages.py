@@ -35,7 +35,7 @@ class FacebookChat(Chat):
         face["path"] = ""
         if "photos" in face:
             not_null = face["photos"].notnull()
-            face.loc[not_null, "path"] = [ROOT + x[0]["uri"] for x in face[not_null]["photos"]]
+            face.loc[not_null, "path"] = [file_path + x[0]["uri"] for x in face[not_null]["photos"]]
         # if "photos" in face and isinstance(face["photos"]):
         #     face["path"] = [x.get("uri") if x else x for x in face["photos"]]
         return cls(face)

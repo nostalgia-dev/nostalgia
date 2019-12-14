@@ -1,0 +1,5 @@
+[tool.portray.mkdocs.theme]
+favicon = "art/Nostalgia-C_48x48.png"
+logo = "art/Nostalgia-C_48x48.png"
+name = "material"
+palette = {primary = "white", accent = "pink"}

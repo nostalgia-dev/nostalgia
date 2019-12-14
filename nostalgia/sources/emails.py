@@ -22,7 +22,7 @@ def try_parse(x):
 
 
 class Email(DF):
-    me = ["kootenpv@gmail.com", "Pascal van Kooten", "kooten pv"]
+    me = []
 
     @classmethod
     def handle_dataframe_per_file(cls, data, fname):
@@ -69,14 +69,3 @@ class Email(DF):
         elif email is not None:
             res = self[self.receiver.str.contains(email, case=case, na=False)]
         return self.__class__(res)
-
-
-# from collections import Counter
-
-
-# def fn():
-#     for x in emails:
-#         cc = Counter()
-#         for y in emails[x]:
-#             cc[type(y)] + 1
-#         print(x, cc)

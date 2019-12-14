@@ -3,19 +3,6 @@ import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-chrome_options = webdriver.ChromeOptions()
-chrome_options.binary_location = "/usr/bin/google-chrome-stable"
-driver = webdriver.Chrome(executable_path="/usr/bin/chromedriver", options=chrome_options)
-
-url = "https://mijn.ing.nl/banking/service"
-
-driver.get(url)
-
-while driver.find_elements_by_xpath("/html/body/ing-app-authentication"):
-    time.sleep(1)
-
-time.sleep(5)
-
 
 def expand_shadow_element(base, tags):
     for tag in tags:
@@ -25,67 +12,85 @@ def expand_shadow_element(base, tags):
     return base
 
 
-tags = [
-    "dba-app",
-    "ing-app-daily-banking-service",
-    "ing-orange-service",
-    "ing-orange-service-self-control",
-]
-ele = expand_shadow_element(driver, tags)
-ele.find_element_by_css_selector(
-    "div:nth-child(2) > .card__content > ul > li:nth-child(2) > a"
-).click()
+if __name__ == "__main__":
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = "/usr/bin/google-chrome-stable"
+    driver = webdriver.Chrome(executable_path="/usr/bin/chromedriver", options=chrome_options)
 
-time.sleep(5)
+    url = "https://mijn.ing.nl/banking/service"
 
-tags = [
-    "dba-download-transactions-dialog",
-    "ing-orange-transaction-download-dialog",
-    "ing-uic-dialog-next > section > ing-orange-transaction-download-filter",
-    "ing-uic-form > form > div > div > ing-uic-date-input",
-    "#viewInput",
-]
-form = expand_shadow_element(driver, tags)
-inp = form.find_element_by_css_selector("ing-uic-input-container > ing-uic-native-input > input")
-inp.clear()
-inp.send_keys("01-01-2010")
+    driver.get(url)
 
-tags = [
-    "dba-download-transactions-dialog",
-    "ing-orange-transaction-download-dialog",
-    "ing-uic-dialog-next > section > ing-orange-transaction-download-filter",
-    "ing-uic-form > form > div > div > ing-uic-date-input[name='endDate']",
-    "#viewInput",
-]
-form = expand_shadow_element(driver, tags)
-inp = form.find_element_by_css_selector("ing-uic-input-container > ing-uic-native-input > input")
-now = datetime.now() - relativedelta(days=1)
-inp.clear()
-inp.send_keys("{}-{}-{}".format(now.day, now.month, now.year))
+    while driver.find_elements_by_xpath("/html/body/ing-app-authentication"):
+        time.sleep(1)
 
+    time.sleep(5)
 
-tags = [
-    "dba-download-transactions-dialog",
-    "ing-orange-transaction-download-dialog",
-    "ing-uic-dialog-next > section > ing-orange-transaction-download-filter",
-]
-form = expand_shadow_element(driver, tags)
+    tags = [
+        "dba-app",
+        "ing-app-daily-banking-service",
+        "ing-orange-service",
+        "ing-orange-service-self-control",
+    ]
+    ele = expand_shadow_element(driver, tags)
+    ele.find_element_by_css_selector(
+        "div:nth-child(2) > .card__content > ul > li:nth-child(2) > a"
+    ).click()
 
-form.find_element_by_css_selector(
-    "ing-uic-form > form > div > ing-uic-select.format-container"
-).click()
+    time.sleep(5)
 
-time.sleep(2)
+    tags = [
+        "dba-download-transactions-dialog",
+        "ing-orange-transaction-download-dialog",
+        "ing-uic-dialog-next > section > ing-orange-transaction-download-filter",
+        "ing-uic-form > form > div > div > ing-uic-date-input",
+        "#viewInput",
+    ]
+    form = expand_shadow_element(driver, tags)
+    inp = form.find_element_by_css_selector(
+        "ing-uic-input-container > ing-uic-native-input > input"
+    )
+    inp.clear()
+    inp.send_keys("01-01-2010")
 
-form.find_element_by_css_selector(
-    "ing-uic-form > form > div > ing-uic-select.format-container > paper-listbox > ing-uic-item[value='CSV']"
-).click()
+    tags = [
+        "dba-download-transactions-dialog",
+        "ing-orange-transaction-download-dialog",
+        "ing-uic-dialog-next > section > ing-orange-transaction-download-filter",
+        "ing-uic-form > form > div > div > ing-uic-date-input[name='endDate']",
+        "#viewInput",
+    ]
+    form = expand_shadow_element(driver, tags)
+    inp = form.find_element_by_css_selector(
+        "ing-uic-input-container > ing-uic-native-input > input"
+    )
+    now = datetime.now() - relativedelta(days=1)
+    inp.clear()
+    inp.send_keys("{}-{}-{}".format(now.day, now.month, now.year))
 
-time.sleep(2)
+    tags = [
+        "dba-download-transactions-dialog",
+        "ing-orange-transaction-download-dialog",
+        "ing-uic-dialog-next > section > ing-orange-transaction-download-filter",
+    ]
+    form = expand_shadow_element(driver, tags)
 
+    form.find_element_by_css_selector(
+        "ing-uic-form > form > div > ing-uic-select.format-container"
+    ).click()
 
-form.find_element_by_css_selector("ing-uic-form > form > paper-button[data-type='submit']").click()
+    time.sleep(2)
 
-time.sleep(15)
+    form.find_element_by_css_selector(
+        "ing-uic-form > form > div > ing-uic-select.format-container > paper-listbox > ing-uic-item[value='CSV']"
+    ).click()
 
-driver.close()
+    time.sleep(2)
+
+    form.find_element_by_css_selector(
+        "ing-uic-form > form > paper-button[data-type='submit']"
+    ).click()
+
+    time.sleep(15)
+
+    driver.close()
