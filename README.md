@@ -19,10 +19,17 @@ You're looking at the core which contains the code for sources, installing the b
 
 If you want to add your own data that is not supported, please for now contact me directly in either [discord](https://discord.gg/nJQfM2A) or [slack](https://bit.ly/2Yre09N) and we'll help you get started.
 
-### Nostalgia Query Language - based on pandas
+### Nostalgia Query Language - extending pandas
 
 ```python
-payments.expenses.by_card.last_week.office_days.at_night().heartrate_above(80).when_at("amsterdam").sum()
+payments.expenses
+        .by_card\
+        .last_week\
+        .office_days\
+        .at_night()\
+        .heartrate_above(80)\
+        .when_at("amsterdam")
+        .sum()
 ```
 
 This will give the total expenses by card in the last week, but only on work days, at night, when my heart rate is above 80 and I'm in Amsterdam.
@@ -34,19 +41,31 @@ It combined the generic class functionality, together with data from:
 
 ### Available Data Bindings
 
-- Bank payments (ING)
-- Heartrate (fitbit)
-- Sleep (fitbit)
-- Places (Google Timeline: scraped)
-- Indoor positioning (whereami)
+- Heartrate (Fitbit, Samsung Watch)
+- Sleep (Fitbit, SleepCycle, Samsung Watch)
+- Places (Google Timeline)
+- Bank Payments (ING)
 - Pictures (Google)
-- Public transport (MijnOV)
-- Chrome History (plugin)
-  - Products (Chrome Page Views)
-  - Events (Chrome Page Views)
-- File visits (Emacs)
-- Emails (gmail)
+- Emails (Gmail)
+- App Usage (Google/Android)
+- Chat Conversations (WhatsApp, Facebook Messenger)
+- Music listening (Google)
+- Music identification (Shazam)
+- Posts (Reddit)
+- File Visits (Emacs)
+- Screenshots (Tesseract)
+- Web (Nostalgia Chrome Plugin)
+  - Products
+  - Events
+  - Videos
+  - Google Search
+  - People
+- Indoor Positioning (whereami)
+- Public Transport (MijnOV)
 
+Should generate a table using AST (or maybe people provide anonomized test/data so we can infer the periodness):
+
+**name, type, vendor, description, api vs file vs export, period (moment vs interval)**
 
 ### Contributing
 
