@@ -8,7 +8,7 @@ import pandas as pd
 
 from nostalgia.utils import tz, parse_price
 from nostalgia.nlp import nlp
-from nostalgia.base_df import DF
+from nostalgia.ndf import NDF
 
 from auto_extract import parse_article
 from nostalgia.sources.web.get_keywords_for_product import get_keywords_for_product
@@ -256,7 +256,7 @@ def get_linked_data(x):
     return linked_data
 
 
-class Offers(DF):
+class Offers(NDF):
     vendor = "web"
 
     keywords = [

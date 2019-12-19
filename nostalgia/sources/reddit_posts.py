@@ -1,11 +1,11 @@
 from psaw import PushshiftAPI
-from nostalgia.base_df import DF
+from nostalgia.ndf import NDF
 from nostalgia.utils import datetime_from_timestamp
 from nostalgia.source_to_fast import save, load
 import just
 
 
-class Posts(DF):
+class Posts(NDF):
     vendor = "reddit"
 
     @classmethod

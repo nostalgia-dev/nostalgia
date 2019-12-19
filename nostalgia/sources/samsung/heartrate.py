@@ -3,26 +3,11 @@ import os
 import pandas as pd
 import just
 from nostalgia.utils import datetime_from_timestamp, tz
-from nostalgia.base_df import DF
-
-BASE = "~/.nostalgia/input/samsung/"
-
-
-def load_from_download():
-    import zipfile
-
-    recent_file = max(
-        [x for x in just.glob("~/Downloads/samsunghealth_*.zip") if "(" not in x],
-        key=os.path.getctime,
-    )
-    just.remove(BASE, allow_recursive=True)
-    with zipfile.ZipFile(recent_file, 'r') as zip_ref:
-        zip_ref.extractall(os.path.expanduser(BASE))
+from nostalgia.ndf import NDF
+from nostalgia.sources.samsung import Samsung
 
 
-class Heartrate(DF):
-    vendor = "samsung"
-
+class SamsungHeartrate(Samsung, NDF):
     @classmethod
     def handle_dataframe_per_file(cls, df, fname):
         if df.empty:
@@ -41,11 +26,8 @@ class Heartrate(DF):
 
     @classmethod
     def load(cls, nrows=None, **kwargs):
-
-        file_glob = BASE + "samsunghealth_*/jsons/com.samsung.shealth.tracker.heart_rate"
+        file_glob = "~/.nostalgia/input/samsung/samsunghealth_*/jsons/com.samsung.shealth.tracker.heart_rate"
         file_glob += "/*.com.samsung.health.heart_rate.binning_data.json"
-
-        print(file_glob)
         # TODO FIX
         heartrate = cls.load_dataframe_per_json_file(file_glob, nrows=nrows)
         start = heartrate["start"]

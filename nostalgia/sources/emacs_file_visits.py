@@ -4,12 +4,18 @@ import pandas as pd
 from datetime import datetime
 from nostalgia.utils import tz
 
-from nostalgia.base_df import DF
+from nostalgia.ndf import NDF
+
+# (require 'f)
+# (defun log-find-visits ()
+#   (when (and buffer-file-name (not (eq last-command "xah-close-current-buffer")))
+#       (f-append-text (concat (int-to-string (float-time)) "," buffer-file-name "\n") 'utf-8 "~/.nostalgia/input/log-emacs-find-visits.txt")))
 
 
-class FileVisits(DF):
+class FileVisits(NDF):
     @classmethod
-    def load(cls, fname, nrows=None):
+    def load(cls, file_name="~/.nostalgia/input/log-emacs-find-visits.txt", nrows=None):
+        fname = os.path.expanduser(file_name)
         with open(fname) as f:
             results = []
             files = []

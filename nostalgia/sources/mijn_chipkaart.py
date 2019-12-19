@@ -1,11 +1,11 @@
 import just
 import pandas as pd
-from nostalgia.base_df import DF
+from nostalgia.ndf import NDF
 from nostalgia.utils import parse_date_tz
 from nostalgia.nlp import nlp
 
 
-class MijnChipkaart(DF):
+class MijnChipkaart(NDF):
     @property
     def title(self):
         return [x + " - " + y for x, y in zip(self.Vertrek, self.Bestemming)]
@@ -15,8 +15,8 @@ class MijnChipkaart(DF):
         return self.Bedrag.sum()
 
     @classmethod
-    def load(cls, file_glob, nrows=None):
-        files = just.glob(file_glob)
+    def load(cls, nrows=None):
+        files = just.glob("~/.nostalgia/input/mijn_chipkaart/*.csv")
         data = pd.concat([pd.read_csv(x, sep=";", nrows=nrows) for x in files])
         data["Bedrag"] = [float(x.replace(",", ".")) for x in data["Bedrag"]]
         data["Datum"] = [

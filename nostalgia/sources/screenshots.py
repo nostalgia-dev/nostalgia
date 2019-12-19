@@ -3,7 +3,7 @@ import just
 from datetime import datetime
 import pandas as pd
 from nostalgia.utils import tz, format_latlng
-from nostalgia.base_df import DF
+from nostalgia.ndf import NDF
 import pytesseract
 from PIL import Image
 
@@ -11,7 +11,7 @@ from PIL import Image
 # pytesseract.image_to_string(Image.open(just.make_path(filename)))
 
 
-class Screenshots(DF):
+class Screenshots(NDF):
     @classmethod
     def load(cls, file_dir, nrows=None):
         globs = [os.path.join(file_dir, "*.png"), os.path.join(file_dir, "*.jpg")]

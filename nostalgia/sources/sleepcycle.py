@@ -4,7 +4,7 @@ import json
 import pandas as pd
 import getpass
 
-from nostalgia.base_df import DF
+from nostalgia.ndf import NDF
 from nostalgia.source_to_fast import save, load
 from nostalgia.utils import tz
 
@@ -12,7 +12,7 @@ login_url = "https://s.sleepcycle.com/site/login"
 export_url = 'https://s.sleepcycle.com/export/original'
 
 
-class SleepCycle(DF):
+class SleepCycle(NDF):
     @classmethod
     def download(cls, file_path, credentials, **kwargs):
         html = just.get(login_url)

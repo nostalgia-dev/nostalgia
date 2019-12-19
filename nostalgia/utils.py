@@ -287,29 +287,29 @@ def normalize_name(name):
     return re.sub("([A-Z])", r"_\1", name).lstrip("_").lower()
 
 
-def print_mixed(df):
-    from collections import Counter
+# def print_mixed(df):
+#     from collections import Counter
 
-    for x in df:
-        ls = [y for y in df[x] if isinstance(y, list)]
-        if ls:
-            print(ls[0])
-        dc = [y for y in df[x] if isinstance(y, dict)]
-        if dc:
-            print(dc[0])
-        print(x, Counter([type(y) for y in df[x]]))
-        print()
+#     for x in df:
+#         ls = [y for y in df[x] if isinstance(y, list)]
+#         if ls:
+#             print(ls[0])
+#         dc = [y for y in df[x] if isinstance(y, dict)]
+#         if dc:
+#             print(dc[0])
+#         print(x, Counter([type(y) for y in df[x]]))
+#         print()
 
 
-def take(key):
-    def fn(value):
-        if isinstance(value, list):
-            value = value[0]
-        if isinstance(value, dict):
-            value = value.get(key)
-        return value
+# def take(key):
+#     def fn(value):
+#         if isinstance(value, list):
+#             value = value[0]
+#         if isinstance(value, dict):
+#             value = value.get(key)
+#         return value
 
-    return fn
+#     return fn
 
 
 def clean_df(df, dc):

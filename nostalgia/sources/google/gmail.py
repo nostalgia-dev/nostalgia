@@ -1,10 +1,11 @@
 import just
 import pandas as pd
-from nostalgia.base_df import DF
+from nostalgia.ndf import NDF
 from datetime import datetime
 from nostalgia.utils import tz, parse
 from nostalgia.utils import read_array_of_dict_from_json
 from nostalgia.source_to_fast import check_seen, save, load
+from nostalgia.sources.google import Google
 
 
 def try_parse(x):
@@ -21,7 +22,7 @@ def try_parse(x):
         return datetime(1970, 1, 1, 0, 0, 0, tzinfo=tz)
 
 
-class Email(DF):
+class Gmail(Google, NDF):
     me = []
 
     @classmethod
@@ -46,6 +47,8 @@ class Email(DF):
     @classmethod
     def load(cls, fname, nrows=None, from_cache=True):
         emails = cls.load_data_file_modified_time(fname, nrows=nrows, from_cache=from_cache)
+        if nrows is not None:
+            emails = emails.loc[:nrows]
         return cls(emails)
 
     def sent_by(self, name=None, email=None, case=False):

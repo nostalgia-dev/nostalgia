@@ -1,11 +1,11 @@
 import just
-from nostalgia.base_df import DF
+from nostalgia.ndf import NDF
 from nostalgia.utils import datetime_from_timestamp
 from nostalgia.source_to_fast import save, load
 import just
 
 
-class VideosWatched(DF):
+class VideosWatched(NDF):
     vendor = "web"
 
     @classmethod

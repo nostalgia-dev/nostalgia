@@ -4,7 +4,7 @@ import pandas as pd
 import lxml.html
 
 from nostalgia.cache import get_cache
-from nostalgia.base_df import DF
+from nostalgia.ndf import NDF
 
 from datetime import datetime
 from nostalgia.utils import tz
@@ -35,7 +35,7 @@ def get_linked_data(x):
     return linked_data
 
 
-class GoogleSearch(DF):
+class GoogleSearch(NDF):
     vendor = "web"
     keywords = ["search"]
     nlp_columns = ["title"]
@@ -54,7 +54,7 @@ class GoogleSearch(DF):
             return row
 
     @classmethod
-    def load(cls, file_path, nrows=None):
+    def load(cls, file_path="~/.nostalgia/meta.jsonl", nrows=None):
         data = cls.load_object_per_newline(file_path, nrows)
         # google pages found more often?
         data = data[data.title != data.title.shift(1)]

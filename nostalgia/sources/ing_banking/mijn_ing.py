@@ -11,7 +11,7 @@ from collections import Counter
 import re
 
 from nostalgia.utils import try_date, tz
-from nostalgia.base_df import DF
+from nostalgia.ndf import NDF
 from nostalgia.nlp import nlp
 from nostalgia.source_to_fast import check_seen, save, load
 
@@ -24,7 +24,7 @@ def old_date(col):
     ).dt.tz_localize(tz)
 
 
-class Payments(DF):
+class Payments(NDF):
     keywords = ["pay", "buy", "purchase", "spend", "cost"]
     nlp_columns = ["mededelingen", "naam"]
     selected_columns = ["time", "naam", "bedrag", "mededelingen"]
@@ -57,7 +57,7 @@ class Payments(DF):
         return ing
 
     @classmethod
-    def load(cls, file_glob, nrows=None, from_cache=True):
+    def load(cls, file_glob="~/Downloads/NL*20*20*.csv", nrows=None, from_cache=True):
         data = cls.latest_file_is_historic(file_glob, nrows=nrows, from_cache=from_cache)
         if nrows is not None:
             data = data.iloc[:nrows]

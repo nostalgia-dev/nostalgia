@@ -13,6 +13,7 @@ from nostalgia.source_to_fast import get_processed_files, save_processed_files
 from nostalgia.source_to_fast import get_last_latest_file, save_last_latest_file
 from nostalgia.source_to_fast import get_last_mod_time, save_last_mod_time
 from nostalgia.source_to_fast import save, load
+from nostalgia.sources.extracter import load_from_download
 from nostalgia.utils import read_array_of_dict_from_json, datetime_from_timestamp
 from nostalgia.cache import get_cache
 
@@ -107,8 +108,8 @@ def col_contains_wrapper(word, col):
     return col_contains
 
 
-# class DF:
-class DF(pd.DataFrame):
+# class NDF:
+class NDF(pd.DataFrame):
     keywords = []
     nlp_columns = []
     nlp_when = True
@@ -124,7 +125,7 @@ class DF(pd.DataFrame):
         # IF BIG BREAK, THEN THIS IS HERE
         # if self.df_name not in registry:
         #     registry[self.df_name] = self
-        if self.df_name != "result":
+        if self.df_name != "results":
             if self.df_name not in registry:
                 registry[self.df_name] = self
             # if the new data is smaller than what is in the registry, do not overwrite the registry
@@ -180,10 +181,14 @@ class DF(pd.DataFrame):
         if self.nlp_when:
             nlp_registry["when"].add(ResultInfo(C, "end", time, orig_word="when"))
 
+    @classmethod
+    def ingest(cls):
+        load_from_download(vendor=cls.vendor, **cls.ingest_settings)
+
     @property
     def df_name(self):
         name = normalize_name(self.__class__.__name__)
-        if self.vendor is not None:
+        if self.vendor is not None and not name.startswith(self.vendor):
             name = self.vendor + "_" + name
         return name
 
@@ -192,13 +197,15 @@ class DF(pd.DataFrame):
         return normalize_name(cls.__name__).replace("_", " ").title()
 
     @classmethod
-    def load_data_file_modified_time(cls, fname, key_name="", nrows=None, from_cache=True):
+    def load_data_file_modified_time(
+        cls, fname, key_name="", nrows=None, from_cache=True, **kwargs
+    ):
         name = fname + "_" + normalize_name(cls.__name__)
         modified_time = os.path.getmtime(os.path.expanduser(fname))
         last_modified = get_last_mod_time(name)
         if modified_time != last_modified or not from_cache:
             if fname.endswith(".csv"):
-                data = pd.read_csv(fname, error_bad_lines=False, nrows=nrows)
+                data = pd.read_csv(fname, error_bad_lines=False, nrows=nrows, **kwargs)
             elif fname.endswith(".mbox"):
                 import mailbox
 
@@ -207,7 +214,7 @@ class DF(pd.DataFrame):
                     [{l: x[l] for l in ["from", "to", "date", "subject"]} for x in m]
                 )
             else:
-                data = read_array_of_dict_from_json(fname, key_name, nrows)
+                data = read_array_of_dict_from_json(fname, key_name, nrows, **kwargs)
             data = cls.handle_dataframe_per_file(data, fname)
             if nrows is None:
                 save(data, name)
@@ -281,6 +288,7 @@ class DF(pd.DataFrame):
             else:
                 to_process = list(to_process)[-nrows:]
         if to_process:
+            print("processing {} files".format(len(to_process)))
             for fname in to_process:
                 data = read_array_of_dict_from_json(fname, key, nrows)
                 data = cls.handle_dataframe_per_file(data, fname)
@@ -447,6 +455,10 @@ class DF(pd.DataFrame):
     @property
     def during_office_hours(self):
         return self[self._office_hours & self._office_days]
+
+    @property
+    def outside_office_hours(self):
+        return self[~(self._office_hours & self._office_days)]
 
     @property
     def end(self):
@@ -646,7 +658,7 @@ class DF(pd.DataFrame):
         return self[(self.time > last_year()) & (self.time < now())]
 
     def near(self, s):
-        if isinstance(s, DF) and s.df_name.endswith("places"):
+        if isinstance(s, NDF) and s.df_name.endswith("places"):
             selection = s
         else:
             selection = get_type_from_registry("places").containing(s)
@@ -753,7 +765,7 @@ class DF(pd.DataFrame):
         return self.__class__(self.sort_values(col, na_position="last", ascending=False))
 
     def at(self, time_or_place):
-        if isinstance(time_or_place, DF) and time_or_place.df_name.endswith("places"):
+        if isinstance(time_or_place, NDF) and time_or_place.df_name.endswith("places"):
             return self.when_at(time_or_place)
         if isinstance(time_or_place, str):
             mp = parse_date_tz(time_or_place)
@@ -788,7 +800,7 @@ class DF(pd.DataFrame):
 # )
 
 
-class Results(DF):
+class Results(NDF):
     @classmethod
     def merge(cls, *dfs, max_n=None):
         data = pd.concat([x.as_simple(max_n) for x in dfs])

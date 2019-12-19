@@ -1,8 +1,8 @@
-from nostalgia.base_df import DF
+from nostalgia.ndf import NDF
 from nostalgia.nlp import nlp
 
 
-class Chat(DF):
+class ChatInterface(NDF):
     __name__ = ""
     me = ""
     sender_column = ""

@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from datetime import datetime
-from nostalgia.base_df import DF
+from nostalgia.ndf import NDF
 from nostalgia.utils import tz
 
 
@@ -15,11 +15,11 @@ def get_time(x):
     return d, z
 
 
-class Whereami(DF):
+class Whereami(NDF):
     nlp_columns = ["name"]
 
     @classmethod
-    def load(cls, file_path, nrows=None, **kwargs):
+    def load(cls, file_path="~/.nostalgia/input/whereami/history.tsv", nrows=None, **kwargs):
         file_path = os.path.expanduser(file_path)
         ndata = []
         nrows = nrows or float("inf")

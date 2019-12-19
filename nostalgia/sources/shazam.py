@@ -1,28 +1,24 @@
+# ensure ~/.nostalgia/input exists (e.g. "mkdir -p ~/.nostalgia/input" on linux)
 # goto https://shazam.com/myshazam
 # open network tab
 # login
 # search for url containing "discovery"
 # right click and copy as curl and replace limit=20 with limit=2000
-# take that curl command and add the following: > shazam.json and hit return
+# take that curl command and add the following: > ~/.nostalgia/input/shazam.json and hit return
 
-import just
 import pandas as pd
-from nostalgia.base_df import DF
-import pytz
-from datetime import datetime
-from nostalgia.nlp import nlp
-from nostalgia.utils import tz
+import just
+from nostalgia.ndf import NDF
+from nostalgia.utils import datetime_from_timestamp
 
 
-class Shazam(DF):
+class Shazam(NDF):
     @classmethod
-    def load(cls, file_path, nrows=None):
+    def load(cls, file_path="~/.nostalgia/input/shazam.json", nrows=None):
         shazam = pd.DataFrame(
             [
                 (
-                    datetime.fromtimestamp(
-                        x["timestamp"] // 1000, tz=pytz.timezone(x["timezone"])
-                    ).astimezone(tz),
+                    datetime_from_timestamp(x["timestamp"], x["timezone"]),
                     x["track"]["heading"]["title"],
                     x["track"]["heading"]["subtitle"],
                 )

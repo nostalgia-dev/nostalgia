@@ -3,17 +3,18 @@ import just
 from datetime import datetime
 import pandas as pd
 from nostalgia.utils import tz, format_latlng
-from nostalgia.base_df import DF
+from nostalgia.ndf import NDF
+from nostalgia.sources.google import Google
 
 
-class Pics(DF):
+class Photos(Google, NDF):
     @classmethod
-    def load(cls, takeout_folder, nrows=None):
-        prefix = os.path.join(takeout_folder, "Google Photos/*/*")
+    def load(cls, nrows=None):
+        photo_glob = "~/.nostalgia/input/google/Takeout/Google Photos/*/*"
         pics = []
         nrows = nrows or float("inf")
         rows = 0
-        for fname in just.glob(prefix):
+        for fname in just.glob(photo_glob):
             if fname.endswith(".json"):
                 continue
             try:

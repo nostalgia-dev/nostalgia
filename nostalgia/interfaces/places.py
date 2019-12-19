@@ -1,12 +1,12 @@
 import pandas as pd
 import numpy as np
-from nostalgia.base_df import DF, get_type_from_registry
+from nostalgia.ndf import NDF, get_type_from_registry
 from nostalgia.nlp import nlp
 from nostalgia.utils import parse_date_tz
 from nostalgia.utils import haversine
 
 
-class Places(DF):
+class Places(NDF):
     keywords = [
         "did i go",
         "i was in",

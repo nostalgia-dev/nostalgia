@@ -182,7 +182,7 @@ class GooglePlaces(Places):
     selected_columns = ["date", "name", "city", "_office_hours"]
 
     @classmethod
-    def load(cls, file_glob, nrows=None):
+    def load(cls, file_glob="~/Downloads/timeline_data-*", nrows=None):
         df = pd.read_csv(max(just.glob(file_glob)), nrows=nrows)
 
         unique_locs = set([((y, z), x) for x, y, z in zip(df.name, df.lat, df.lon) if y != "nan"])

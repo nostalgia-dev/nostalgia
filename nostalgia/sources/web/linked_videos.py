@@ -11,7 +11,7 @@ from nostalgia.cache import get_cache
 
 from datetime import datetime
 from nostalgia.utils import tz
-from nostalgia.base_df import DF
+from nostalgia.ndf import NDF
 from nostalgia.nlp import nlp
 
 CACHE = get_cache("linked_data_videos")
@@ -61,7 +61,7 @@ def get_linked_data(x):
     return linked_data
 
 
-class Videos(DF):
+class Videos(NDF):
     vendor = "web"
 
     keywords = ["watch", "viewers", "listen", "video", "music video", "youtube"]

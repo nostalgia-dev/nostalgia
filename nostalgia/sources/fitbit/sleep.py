@@ -3,16 +3,16 @@ import pandas as pd
 import just
 from metadate import parse_date
 from datetime import datetime
-from nostalgia.base_df import DF
+from nostalgia.ndf import NDF
 from nostalgia.utils import datetime_from_format
 
 
-class Sleep(DF):
+class FitbitSleep(NDF):
     vendor = "fitbit"
 
     @classmethod
-    def load(cls, fitbit_user, nrows=None):
-        file_glob = os.path.join("~/.nostalgia/input/fitbit", fitbit_user, "sleep/*.json")
+    def load(cls, nrows=None):
+        file_glob = "~/.nostalgia/input/fitbit/*/sleep/*.json"
         objects = []
         for d in just.multi_read(file_glob).values():
             if not d:

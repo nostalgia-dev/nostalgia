@@ -13,11 +13,41 @@ It's much like [Home Assistant](https://github.com/home-assistant/home-assistant
 
 Afterwards, it will help you filter and visualize the data.
 
-The architecture is as follows.
+The architecture is as follows. You're looking at the core which contains the code for ingesting sources, installing the backend system and allows you to write scripts using Nostalgia Query Language.
 
-You're looking at the core which contains the code for sources, installing the backend system and allows you to write scripts using Nostalgia Query Language.
+If you want to add your own data that is not supported, please for now contact us directly in either [discord](https://discord.gg/nJQfM2A) or [slack](https://bit.ly/2Yre09N) and we'll help you get started. You can also look at the [open issues](https://github.com/nostalgia-dev/nostalgia/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc) to see suggestions for new sources.
 
-If you want to add your own data that is not supported, please for now contact me directly in either [discord](https://discord.gg/nJQfM2A) or [slack](https://bit.ly/2Yre09N) and we'll help you get started.
+### Available Data Bindings
+
+Full list of current [sources](https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources).
+
+- Heartrate ([Fitbit](https://github.com/kootenpv/nostalgia_fitbit), [Samsung Watch](https://github.com/nostalgia-dev/nostalgia/blob/master/nostalgia/sources/samsung/README.md))
+- Sleep (([Fitbit](https://github.com/kootenpv/nostalgia_fitbit), [Samsung Watch](https://github.com/nostalgia-dev/nostalgia/blob/master/nostalgia/sources/samsung/README.md), SleepCycle)
+- Places (Google Timeline)
+- Bank Payments (ING)
+- Pictures (Google)
+- Emails (Gmail)
+- App Usage (Google/Android)
+- Chat Conversations (WhatsApp, Facebook Messenger)
+- Music listening (Google)
+- Music identification (Shazam)
+- Posts (Reddit)
+- File Visits (Emacs)
+- Screenshots (Tesseract)
+- Web ([Nostalgia Chrome Plugin](https://github.com/nostalgia-dev/nostalgia_chrome))
+  - Products
+  - Events
+  - Videos
+  - Google Search
+  - People
+- Indoor Positioning (whereami)
+- Public Transport (MijnOV)
+
+### Getting started
+
+1. Follow the instructions for a [source of interest](#available-data-bindings) to ensure it is loaded
+
+1. Use the data in an interactive session (run Python)
 
 ### Nostalgia Query Language - extending pandas
 
@@ -38,34 +68,6 @@ It combined the generic class functionality, together with data from:
 - A Payments provider
 - A Location provider
 - A Heartrate provider
-
-### Available Data Bindings
-
-- Heartrate (Fitbit, Samsung Watch)
-- Sleep (Fitbit, SleepCycle, Samsung Watch)
-- Places (Google Timeline)
-- Bank Payments (ING)
-- Pictures (Google)
-- Emails (Gmail)
-- App Usage (Google/Android)
-- Chat Conversations (WhatsApp, Facebook Messenger)
-- Music listening (Google)
-- Music identification (Shazam)
-- Posts (Reddit)
-- File Visits (Emacs)
-- Screenshots (Tesseract)
-- Web (Nostalgia Chrome Plugin)
-  - Products
-  - Events
-  - Videos
-  - Google Search
-  - People
-- Indoor Positioning (whereami)
-- Public Transport (MijnOV)
-
-Should generate a table using AST (or maybe people provide anonomized test/data so we can infer the periodness):
-
-**name, type, vendor, description, api vs file vs export, period (moment vs interval)**
 
 ### Contributing
 

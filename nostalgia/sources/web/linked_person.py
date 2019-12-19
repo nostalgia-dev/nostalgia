@@ -8,7 +8,7 @@ from nostalgia.utils import tz
 from auto_extract import parse_article
 
 from nostalgia.cache import get_cache
-from nostalgia.base_df import DF
+from nostalgia.ndf import NDF
 
 from nostalgia.utils import normalize_name
 
@@ -85,7 +85,7 @@ def get_linked_data(x):
     return linked_data
 
 
-class Person(DF):
+class Person(NDF):
     @classmethod
     def object_to_row(cls, obj):
         row = get_linked_data(obj)

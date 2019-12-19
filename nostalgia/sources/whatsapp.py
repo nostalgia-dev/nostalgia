@@ -1,12 +1,12 @@
 import just
 import pandas as pd
-from nostalgia.interfaces.chat import Chat
+from nostalgia.interfaces.chat import ChatInterface
 from nostalgia.utils import datetime_from_format
 
 offset = len("01/10/2019, 20:02 - ")
 
 
-class WhatsappChat(Chat):
+class WhatsappChat(ChatInterface):
     """# WhatsApp Chat
     WhatsApp allows you to export a single conversation (.txt) by email using a mobile app. Below official instructions for each platform:
 
@@ -17,33 +17,35 @@ class WhatsappChat(Chat):
    ### Create instance
    Click below on the `+` sign and fill in the path to the WhatsApp chat file."""
 
+    vendor = "whatsapp"
     me = ""
     sender_column = "sender"
 
     @classmethod
-    def load(cls, file_path, nrows=None, **kwargs):
+    def load(cls, nrows=None, **kwargs):
         old_text = ""
         results = []
-        it = 0
         nrows = nrows or float("inf")
-        for line in just.iread(file_path):
-            try:
-                time = datetime_from_format(line[:offset], "%d/%m/%Y, %H:%M - ")
-            except ValueError:
-                old_text += line + "\n"
-                continue
-            line = old_text + line[offset:]
-            old_text = ""
-            try:
-                sender, text = line.split(": ", 1)
-            except ValueError:
-                print("ERR", line)
-                continue
-            if line:
-                if it > nrows:
-                    break
-                it += 1
-                results.append((time, sender, text))
+        for file_path in just.glob("~/.nostalgia/input/whatsapp/*.txt"):
+            row = 0
+            for line in just.iread(file_path):
+                try:
+                    time = datetime_from_format(line[:offset], "%d/%m/%Y, %H:%M - ")
+                except ValueError:
+                    old_text += line + "\n"
+                    continue
+                line = old_text + line[offset:]
+                old_text = ""
+                try:
+                    sender, text = line.split(": ", 1)
+                except ValueError:
+                    print("ERR", line)
+                    continue
+                if line:
+                    if row > nrows:
+                        break
+                    row += 1
+                    results.append((time, sender, text))
 
         df = pd.DataFrame(results, columns=["time", "sender", "text"])
         # hack "order" into minute data

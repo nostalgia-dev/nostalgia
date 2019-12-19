@@ -3,7 +3,7 @@ import os
 import pandas as pd
 import just
 from datetime import datetime
-from nostalgia.base_df import DF
+from nostalgia.ndf import NDF
 from nostalgia.utils import datetime_from_format
 
 
@@ -11,7 +11,7 @@ def get_day(fname):
     return " ".join(re.sub(".partial_[0-9]+.[0-9]+", "", os.path.basename(fname)).split(".")[1:-1])
 
 
-class Heartrate(DF):
+class FitbitHeartrate(NDF):
     vendor = "fitbit"
 
     @classmethod
@@ -29,10 +29,8 @@ class Heartrate(DF):
         main()
 
     @classmethod
-    def load(cls, fitbit_user, nrows=None, **kwargs):
-        file_glob = os.path.join(
-            "~/.nostalgia/input/fitbit", fitbit_user, "heartrate_intraday/**/*.json"
-        )
+    def load(cls, nrows=None, **kwargs):
+        file_glob = "~/.nostalgia/input/fitbit/*/heartrate_intraday/**/*.json"
         heartrate = cls.load_dataframe_per_json_file(file_glob, nrows=nrows)
         start = heartrate.time.iloc[:-1]
         end = heartrate.time.iloc[1:]
