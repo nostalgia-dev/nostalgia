@@ -224,6 +224,24 @@ class NDF(pd.DataFrame):
         return data
 
     @classmethod
+    def load_json_file_modified_time(cls, fname, nrows=None, from_cache=True, **kwargs):
+        name = fname + "_" + normalize_name(cls.__name__)
+        modified_time = os.path.getmtime(os.path.expanduser(fname))
+        last_modified = get_last_mod_time(name)
+        if modified_time != last_modified or not from_cache:
+            data = just.read(fname)
+            data = cls.handle_json(data, **kwargs)
+            data = pd.DataFrame(data)
+            if nrows is None:
+                save(data, name)
+                save_last_mod_time(modified_time, name)
+        else:
+            data = load(name)
+        if nrows is not None:
+            data = data.iloc[-nrows:]
+        return data
+
+    @classmethod
     def load_image_texts(cls, glob_pattern_s, nrows=None):
         import pytesseract
         from PIL import Image

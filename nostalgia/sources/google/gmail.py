@@ -1,6 +1,5 @@
 import just
 import pandas as pd
-from nostalgia.ndf import NDF
 from datetime import datetime
 from nostalgia.utils import tz, parse
 from nostalgia.utils import read_array_of_dict_from_json
@@ -22,7 +21,7 @@ def try_parse(x):
         return datetime(1970, 1, 1, 0, 0, 0, tzinfo=tz)
 
 
-class Gmail(Google, NDF):
+class Gmail(Google):
     me = []
 
     @classmethod

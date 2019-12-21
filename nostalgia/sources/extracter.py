@@ -6,7 +6,7 @@ import zipfile
 def load_from_download(ingest_glob, vendor, recent_only=True, delete_existing=True):
     ingest_files = just.glob(ingest_glob)
     if not ingest_files:
-        raise ValueError("Nothing to extract. Aborting")
+        raise ValueError(f"Nothing to extract using {ingest_glob} - Aborting")
     nostalgia_input = "~/.nostalgia/input/{}".format(vendor)
     if delete_existing:
         just.remove(nostalgia_input, allow_recursive=True)

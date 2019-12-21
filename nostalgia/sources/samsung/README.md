@@ -23,8 +23,8 @@ The most complete way to get the data is via export (see [this article](https://
 1. Open a Python interpreter:
 
 ```python
-from nostalgia.sources.samsung.heartrate import SamsungHeartrate
-SamsungHeartrate.ingest()
+from nostalgia.sources.samsung import Samsung
+Samsung.ingest()
 ```
 
 This will load all the Samsung data from your download folder into the nostalgia source folder.

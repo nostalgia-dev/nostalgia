@@ -21,4 +21,4 @@ class VideosWatched(NDF):
     @classmethod
     def load(cls, nrows=None):
         data = cls.load_data_file_modified_time("~/.nostalgia/videos_watched.jsonl")
-        return cls(data)
+        return cls(data.reset_index())

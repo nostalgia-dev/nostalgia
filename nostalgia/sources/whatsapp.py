@@ -14,6 +14,19 @@ class WhatsappChat(ChatInterface):
     - iPhone (does not work)
     - [Windows Phone](https://faq.whatsapp.com/en/wp/22548236)
 
+   ### Other method
+
+    datas = []
+    for fname in just.glob("~/Downloads/*.csv"):
+        try:
+            with open(fname) as f:
+                chars = f.read(30)
+                if "Date1;Date2;Time;UserPhone" not in chars:
+                    continue
+                datas.append(pd.read_csv(fname, sep=";"))
+        except PermissionError:
+            continue
+
    ### Create instance
    Click below on the `+` sign and fill in the path to the WhatsApp chat file."""
 

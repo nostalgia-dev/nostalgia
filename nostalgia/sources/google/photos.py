@@ -3,11 +3,10 @@ import just
 from datetime import datetime
 import pandas as pd
 from nostalgia.utils import tz, format_latlng
-from nostalgia.ndf import NDF
 from nostalgia.sources.google import Google
 
 
-class Photos(Google, NDF):
+class Photos(Google):
     @classmethod
     def load(cls, nrows=None):
         photo_glob = "~/.nostalgia/input/google/Takeout/Google Photos/*/*"

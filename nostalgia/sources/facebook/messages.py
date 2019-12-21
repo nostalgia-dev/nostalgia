@@ -3,11 +3,12 @@ import pandas as pd
 import just
 from nostalgia.interfaces.chat import ChatInterface
 from nostalgia.utils import read_array_of_dict_from_json
+from nostalgia.sources.facebook import Facebook
 
 # # # # #
 
 
-class FacebookChat(ChatInterface):
+class FacebookChat(Facebook, ChatInterface):
     """# Facebook Chat
        Facebook allows you to export all your data. This source is about the chat between two people using Facebook Messenger.
 
@@ -21,13 +22,6 @@ class FacebookChat(ChatInterface):
 
     me = ""
     sender_column = "sender_name"
-
-    vendor = "facebook"
-    ingest_settings = {
-        "ingest_glob": "~/Downloads/facebook-*.zip",
-        "recent_only": False,
-        "delete_existing": True,
-    }
 
     @classmethod
     def load(cls, nrows=None):
