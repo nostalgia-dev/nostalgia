@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from nostalgia.ndf import NDF
 from datetime import datetime
-from nostalgia.utils import tz
+from nostalgia.times import tz
 import lxml.html
 import diskcache
 from auto_extract import parse_article
@@ -59,7 +59,7 @@ class WebHistory(NDF):
         return x
 
     @classmethod
-    def load(cls, file_path="~/.nostalgia/meta.jsonl", nrows=None, **kwargs):
+    def load(cls, file_path="~/nostalgia_data/meta.jsonl", nrows=None, **kwargs):
         web_history = cls.load_object_per_newline(file_path, nrows)
         web_history["time"] = web_history.time.apply(lambda x: datetime.fromtimestamp(float(x), tz))
         return cls(web_history)

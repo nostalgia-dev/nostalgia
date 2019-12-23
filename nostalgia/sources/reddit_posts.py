@@ -2,7 +2,7 @@ import just
 import pandas as pd
 from psaw import PushshiftAPI
 from nostalgia.ndf import NDF
-from nostalgia.utils import datetime_from_timestamp
+from nostalgia.times import datetime_from_timestamp
 from nostalgia.source_to_fast import save, load
 from nostalgia.interfaces.post import PostInterface
 
@@ -11,7 +11,7 @@ class RedditPosts(PostInterface):
     vendor = "reddit"
 
     @classmethod
-    def download(cls, author):
+    def ingest(cls, author):
         api = PushshiftAPI()
 
         posts = list(api.search_submissions(author=author))

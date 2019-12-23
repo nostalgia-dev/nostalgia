@@ -22,7 +22,7 @@ If you want to add your own data that is not supported, please for now contact u
 Full list of current [sources](https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources).
 
 - Heartrate ([Fitbit](https://github.com/kootenpv/nostalgia_fitbit), [Samsung Watch](https://github.com/nostalgia-dev/nostalgia/blob/master/nostalgia/sources/samsung/README.md))
-- Sleep (([Fitbit](https://github.com/kootenpv/nostalgia_fitbit), [Samsung Watch](https://github.com/nostalgia-dev/nostalgia/blob/master/nostalgia/sources/samsung/README.md), SleepCycle)
+- Sleep ([Fitbit](https://github.com/kootenpv/nostalgia_fitbit), [Samsung Watch](https://github.com/nostalgia-dev/nostalgia/blob/master/nostalgia/sources/samsung/README.md), SleepCycle)
 - Places (Google Timeline)
 - Bank Payments (ING)
 - Pictures (Google)
@@ -30,17 +30,17 @@ Full list of current [sources](https://github.com/nostalgia-dev/nostalgia/tree/m
 - App Usage (Google/Android)
 - Chat Conversations (WhatsApp, Facebook Messenger)
 - Music listening (Google)
-- Music identification (Shazam)
-- Posts (Reddit)
-- File Visits (Emacs)
-- Screenshots (Tesseract)
+- Music identification ([Shazam](https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/shazam.py))
+- Posts ([Reddit](https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/reddit_posts.py), Facebook)
+- File Visits ([Emacs](https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/emacs_file_visits.py))
+- Annotated Screenshots (Tesseract)
 - Web ([Nostalgia Chrome Plugin](https://github.com/nostalgia-dev/nostalgia_chrome))
   - Products
   - Events
   - Videos
   - Google Search
   - People
-- Indoor Positioning (whereami)
+- Indoor Positioning ([whereami](https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/whereami/scheduler.py))
 - Public Transport (MijnOV)
 
 ### Getting started

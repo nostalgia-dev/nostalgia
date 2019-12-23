@@ -1,7 +1,7 @@
 import just
 import pandas as pd
 from nostalgia.interfaces.chat import ChatInterface
-from nostalgia.utils import datetime_from_format
+from nostalgia.times import datetime_from_format
 
 offset = len("01/10/2019, 20:02 - ")
 
@@ -39,7 +39,7 @@ class WhatsappChat(ChatInterface):
         old_text = ""
         results = []
         nrows = nrows or float("inf")
-        for file_path in just.glob("~/.nostalgia/input/whatsapp/*.txt"):
+        for file_path in just.glob("~/nostalgia_data/input/whatsapp/*.txt"):
             row = 0
             for line in just.iread(file_path):
                 try:

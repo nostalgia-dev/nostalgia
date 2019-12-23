@@ -3,7 +3,7 @@ from datetime import datetime
 import just
 import pandas as pd
 
-from nostalgia.utils import tz
+from nostalgia.times import tz
 
 from auto_extract import parse_article
 
@@ -99,6 +99,6 @@ class Events(NDF):
             return row
 
     @classmethod
-    def load(cls, file_path="~/.nostalgia/meta.jsonl", nrows=None, **kwargs):
+    def load(cls, file_path="~/nostalgia_data/meta.jsonl", nrows=None, **kwargs):
         events = cls.load_object_per_newline(file_path, nrows)
         return cls(events)

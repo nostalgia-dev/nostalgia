@@ -2,14 +2,14 @@ import os
 import just
 from datetime import datetime
 import pandas as pd
-from nostalgia.utils import tz, format_latlng
+from nostalgia.times import tz, format_latlng
 from nostalgia.sources.google import Google
 
 
 class Photos(Google):
     @classmethod
     def load(cls, nrows=None):
-        photo_glob = "~/.nostalgia/input/google/Takeout/Google Photos/*/*"
+        photo_glob = "~/nostalgia_data/input/google/Takeout/Google Photos/*/*"
         pics = []
         nrows = nrows or float("inf")
         rows = 0

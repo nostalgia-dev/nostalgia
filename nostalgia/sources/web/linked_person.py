@@ -3,14 +3,14 @@ from datetime import datetime
 import just
 import pandas as pd
 
-from nostalgia.utils import tz
+from nostalgia.times import tz
 
 from auto_extract import parse_article
 
 from nostalgia.cache import get_cache
 from nostalgia.ndf import NDF
 
-from nostalgia.utils import normalize_name
+from nostalgia.times import normalize_name
 
 CACHE = get_cache("linked_person")
 
@@ -97,7 +97,7 @@ class Person(NDF):
             return row
 
     @classmethod
-    def load(cls, file_path="~/.nostalgia/meta.jsonl", nrows=None, **kwargs):
+    def load(cls, file_path="~/nostalgia_data/meta.jsonl", nrows=None, **kwargs):
         person = cls.load_object_per_newline(file_path, nrows)
         return cls(person)
 
@@ -120,7 +120,7 @@ if __name__ == "__main__":
 
     c = Counter()
 
-    for x in just.iread("/home/pascal/nostalgia_tmp/person.jsonl"):
+    for x in just.iread("/home/pascal/nostal_tmp/person.jsonl"):
         if "/Person" in (str(x.get("microdata"))):
             it += 1
             y = x

@@ -4,7 +4,7 @@ import just
 from metadate import parse_date
 from datetime import datetime
 from nostalgia.ndf import NDF
-from nostalgia.utils import datetime_from_format
+from nostalgia.times import datetime_from_format
 from nostalgia.sources.samsung import Samsung
 
 
@@ -18,7 +18,7 @@ class SamsungSleep(Samsung, NDF):
 
     @classmethod
     def load(cls, nrows=None):
-        path = "~/.nostalgia/input/samsung/samsunghealth_*/com.samsung.health.sleep_stage.*.csv"
+        path = "~/nostalgia_data/input/samsung/samsunghealth_*/com.samsung.health.sleep_stage.*.csv"
         fname = just.glob(path)[0]
         data = cls.load_data_file_modified_time(fname, nrows=nrows, skiprows=1)
         data["start_time"] = [

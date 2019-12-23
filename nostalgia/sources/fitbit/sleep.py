@@ -4,7 +4,7 @@ import just
 from metadate import parse_date
 from datetime import datetime
 from nostalgia.ndf import NDF
-from nostalgia.utils import datetime_from_format
+from nostalgia.times import datetime_from_format
 
 
 class FitbitSleep(NDF):
@@ -12,7 +12,7 @@ class FitbitSleep(NDF):
 
     @classmethod
     def load(cls, nrows=None):
-        file_glob = "~/.nostalgia/input/fitbit/*/sleep/*.json"
+        file_glob = "~/nostalgia_data/input/fitbit/*/sleep/*.json"
         objects = []
         for d in just.multi_read(file_glob).values():
             if not d:

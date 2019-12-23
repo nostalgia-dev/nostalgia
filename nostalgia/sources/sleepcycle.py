@@ -6,7 +6,7 @@ import getpass
 
 from nostalgia.ndf import NDF
 from nostalgia.source_to_fast import save, load
-from nostalgia.utils import tz
+from nostalgia.times import tz
 
 login_url = "https://s.sleepcycle.com/site/login"
 export_url = 'https://s.sleepcycle.com/export/original'

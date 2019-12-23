@@ -10,7 +10,7 @@ from auto_extract import parse_article
 from nostalgia.cache import get_cache
 
 from datetime import datetime
-from nostalgia.utils import tz
+from nostalgia.times import tz
 from nostalgia.ndf import NDF
 from nostalgia.nlp import nlp
 
@@ -82,7 +82,7 @@ class Videos(NDF):
             return row
 
     @classmethod
-    def load(cls, fname="~/.nostalgia/meta.jsonl", nrows=None):
+    def load(cls, fname="~/nostalgia_data/meta.jsonl", nrows=None):
         data = cls.load_object_per_newline(fname, nrows)
         return cls(data)
 

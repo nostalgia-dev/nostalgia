@@ -19,7 +19,7 @@ from nostalgia.sources.google import Google
 Google.ingest()
 ```
 
-This will load all the Google from your download folder into the nostalgia source folder (`~/.nostalgia/input/google/`).
+This will load all the Google from your download folder into the nostalgia source folder (`~/nostalgia_data/input/google/`).
 
 To verify you have the data available, try for example one of the following (depending on what you've exported):
 

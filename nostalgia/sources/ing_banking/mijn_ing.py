@@ -10,7 +10,7 @@ import pandas as pd
 from collections import Counter
 import re
 
-from nostalgia.utils import try_date, tz
+from nostalgia.times import try_date, tz
 from nostalgia.ndf import NDF
 from nostalgia.nlp import nlp
 from nostalgia.source_to_fast import check_seen, save, load

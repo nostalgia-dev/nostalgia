@@ -2,19 +2,20 @@ import os
 import re
 import pandas as pd
 from datetime import datetime
-from nostalgia.utils import tz
+from nostalgia.times import tz
 
 from nostalgia.ndf import NDF
 
+# Add this to your emacs startup init:
 # (require 'f)
 # (defun log-find-visits ()
 #   (when (and buffer-file-name (not (eq last-command "xah-close-current-buffer")))
-#       (f-append-text (concat (int-to-string (float-time)) "," buffer-file-name "\n") 'utf-8 "~/.nostalgia/input/log-emacs-find-visits.txt")))
+#       (f-append-text (concat (int-to-string (float-time)) "," buffer-file-name "\n") 'utf-8 "~/nostalgia_data/input/log-emacs-find-visits.txt")))
 
 
 class FileVisits(NDF):
     @classmethod
-    def load(cls, file_name="~/.nostalgia/input/log-emacs-find-visits.txt", nrows=None):
+    def load(cls, file_name="~/nostalgia_data/input/log-emacs-find-visits.txt", nrows=None):
         fname = os.path.expanduser(file_name)
         with open(fname) as f:
             results = []
@@ -30,7 +31,7 @@ class FileVisits(NDF):
                 files.append(z)
                 d = datetime.fromtimestamp(float(y), tz)
                 ds.append(d)
-                for key in ["egoroot/", "/ssh:", "gits/", "site-packages/"]:
+                for key in ["egoroot/", "/ssh:", "gits/", "site-packages/", "Drive/", "Dropbox/"]:
                     if key in z:
                         z = re.split("[:/]", z.split(key)[1])[0]
                 results.append(z)

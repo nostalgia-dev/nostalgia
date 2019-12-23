@@ -2,7 +2,7 @@ import os
 import just
 from datetime import datetime
 import pandas as pd
-from nostalgia.utils import tz, format_latlng
+from nostalgia.times import tz, format_latlng
 from nostalgia.ndf import NDF
 import pytesseract
 from PIL import Image

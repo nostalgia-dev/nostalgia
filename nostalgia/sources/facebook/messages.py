@@ -1,4 +1,4 @@
-from nostalgia.utils import tz
+from nostalgia.times import tz
 import pandas as pd
 import just
 from nostalgia.interfaces.chat import ChatInterface
@@ -25,7 +25,7 @@ class FacebookChat(Facebook, ChatInterface):
 
     @classmethod
     def load(cls, nrows=None):
-        file_path = "~/.nostalgia/input/facebook"
+        file_path = "~/nostalgia_data/input/facebook"
         chat_paths = just.glob(f"{file_path}/messages/inbox/*/message_1.json")
         face = pd.concat(
             [read_array_of_dict_from_json(chat_file, "messages", nrows) for chat_file in chat_paths]

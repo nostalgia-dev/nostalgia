@@ -1,4 +1,4 @@
-from nostalgia.utils import datetime_from_format
+from nostalgia.times import datetime_from_format
 from datetime import timedelta
 from nostalgia.sources.google import Google
 
@@ -19,7 +19,7 @@ class AppUsage(Google):
 
     @classmethod
     def load(cls, nrows=None, from_cache=True, **kwargs):
-        file_path = "~/.nostalgia/input/google/Takeout/My Activity/Android/My Activity.json"
+        file_path = "~/nostalgia_data/input/google/Takeout/My Activity/Android/My Activity.json"
         data = cls.load_data_file_modified_time(file_path, nrows=nrows, from_cache=from_cache)
         if nrows is not None:
             data = data.iloc[:5]

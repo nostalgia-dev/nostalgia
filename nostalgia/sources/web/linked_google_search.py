@@ -7,7 +7,7 @@ from nostalgia.cache import get_cache
 from nostalgia.ndf import NDF
 
 from datetime import datetime
-from nostalgia.utils import tz
+from nostalgia.times import tz
 
 
 CACHE = get_cache("linked_google_search")
@@ -54,7 +54,7 @@ class GoogleSearch(NDF):
             return row
 
     @classmethod
-    def load(cls, file_path="~/.nostalgia/meta.jsonl", nrows=None):
+    def load(cls, file_path="~/nostalgia_data/meta.jsonl", nrows=None):
         data = cls.load_object_per_newline(file_path, nrows)
         # google pages found more often?
         data = data[data.title != data.title.shift(1)]

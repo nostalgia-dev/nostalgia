@@ -1,7 +1,7 @@
 import inspect
 from collections import defaultdict
 from functools import wraps
-from nostalgia.utils import parse_date_tz
+from nostalgia.times import parse_date_tz
 
 nlp_registry = defaultdict(set)
 regex_registry = defaultdict(set)

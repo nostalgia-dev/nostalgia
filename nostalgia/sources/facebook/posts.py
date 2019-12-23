@@ -1,7 +1,7 @@
 import re
 import just
 import pandas
-from nostalgia.utils import datetime_from_timestamp
+from nostalgia.times import datetime_from_timestamp
 from nostalgia.sources.facebook import Facebook
 from nostalgia.interfaces.post import PostInterface
 
@@ -34,6 +34,6 @@ class FacebookPosts(Facebook, PostInterface):
     @classmethod
     def load(cls, nrows=None):
         data = cls.load_json_file_modified_time(
-            "~/.nostalgia/input/facebook/posts/your_posts_1.json"
+            "~/nostalgia_data/input/facebook/posts/your_posts_1.json"
         )
         return cls(data)

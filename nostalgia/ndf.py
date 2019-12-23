@@ -2,19 +2,19 @@ import os
 import re
 import pandas as pd
 import numpy as np
-from nostalgia.utils import now, yesterday, last_week, last_month, last_year, parse_date_tz, view
+from nostalgia.times import now, yesterday, last_week, last_month, last_year, parse_date_tz
 from metadate import is_mp
 from datetime import timedelta
 import just
 from nostalgia.nlp import nlp_registry, nlp, n, COLUMN_BLACKLIST, ResultInfo
-from nostalgia.utils import get_token_set, normalize_name
+from nostalgia.utils import get_token_set, normalize_name, view, read_array_of_dict_from_json
 from nostalgia.source_to_fast import get_newline_count, save_newline_count
 from nostalgia.source_to_fast import get_processed_files, save_processed_files
 from nostalgia.source_to_fast import get_last_latest_file, save_last_latest_file
 from nostalgia.source_to_fast import get_last_mod_time, save_last_mod_time
 from nostalgia.source_to_fast import save, load
 from nostalgia.sources.extracter import load_from_download
-from nostalgia.utils import read_array_of_dict_from_json, datetime_from_timestamp
+from nostalgia.times import datetime_from_timestamp
 from nostalgia.cache import get_cache
 
 
@@ -108,8 +108,8 @@ def col_contains_wrapper(word, col):
     return col_contains
 
 
-# class NDF:
-class NDF(pd.DataFrame):
+class NDF:
+    # class NDF(pd.DataFrame):
     keywords = []
     nlp_columns = []
     nlp_when = True

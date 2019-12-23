@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 from nostalgia.ndf import NDF, get_type_from_registry
 from nostalgia.nlp import nlp
-from nostalgia.utils import parse_date_tz
-from nostalgia.utils import haversine
+from nostalgia.times import parse_date_tz
+from nostalgia.times import haversine
 
 
 class Places(NDF):

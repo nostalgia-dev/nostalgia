@@ -6,7 +6,8 @@ from urllib.parse import urljoin
 import just
 import pandas as pd
 
-from nostalgia.utils import tz, parse_price
+from nostalgia.utils import parse_price
+from nostalgia.times import tz
 from nostalgia.nlp import nlp
 from nostalgia.ndf import NDF
 
@@ -292,6 +293,6 @@ class Offers(NDF):
             return row
 
     @classmethod
-    def load(cls, file_path="~/.nostalgia/meta.jsonl", nrows=None, **kwargs):
+    def load(cls, file_path="~/nostalgia_data/meta.jsonl", nrows=None, **kwargs):
         offers = cls.load_object_per_newline(file_path, nrows)
         return cls(offers)

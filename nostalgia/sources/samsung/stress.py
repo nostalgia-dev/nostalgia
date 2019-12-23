@@ -2,7 +2,7 @@ import re
 import os
 import pandas as pd
 import just
-from nostalgia.utils import datetime_from_timestamp, tz
+from nostalgia.times import datetime_from_timestamp, tz
 from nostalgia.ndf import NDF
 from nostalgia.sources.samsung import Samsung
 
@@ -26,7 +26,7 @@ class SamsungStress(Samsung, NDF):
 
     @classmethod
     def load(cls, nrows=None, **kwargs):
-        file_glob = "~/.nostalgia/input/samsung/samsunghealth_*/jsons/com.samsung.shealth.stress/*.binning_data.json"
+        file_glob = "~/nostalgia_data/input/samsung/samsunghealth_*/jsons/com.samsung.shealth.stress/*.binning_data.json"
         print(file_glob)
         # TODO FIX
         stress = cls.load_dataframe_per_json_file(file_glob, nrows=nrows)
