@@ -18,6 +18,12 @@ has_alpha = re.compile("[a-zA-Z]")
 num = re.compile("[0-9]")
 
 
+class MockCredentials:
+    def __init__(self, credential_dict):
+        for k, v in credential_dict.items():
+            setattr(self, k, v)
+
+
 def get_tokens(sentence, lower=True):
     if not isinstance(sentence, str):
         return []

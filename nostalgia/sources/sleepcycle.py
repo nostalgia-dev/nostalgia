@@ -5,7 +5,7 @@ import pandas as pd
 import getpass
 
 from nostalgia.ndf import NDF
-from nostalgia.source_to_fast import save, load
+from nostalgia.file_caching import save, load
 from nostalgia.times import tz
 
 login_url = "https://s.sleepcycle.com/site/login"
@@ -14,7 +14,7 @@ export_url = 'https://s.sleepcycle.com/export/original'
 
 class SleepCycle(NDF):
     @classmethod
-    def download(cls, file_path, credentials, **kwargs):
+    def ingest(cls, credentials, **kwargs):
         html = just.get(login_url)
         token = re.findall('name="csrftoken" value="([^"]+)', html)[0]
 
@@ -38,25 +38,26 @@ class SleepCycle(NDF):
         for num, x in enumerate(data):
             res = []
             times = []
+            if len(x["events"]) < 15:
+                continue
             for y in x["events"]:
                 res.append(y[-1])
                 times.append(y[0])
                 nums.append(num)
             xs.extend(
                 [
-                    pd.Timestamp(x["start"], tz=tz) + pd.Timedelta(seconds=y)
+                    pd.Timestamp(x["start"], tz=tz) + pd.Timedelta(seconds=int(y))
                     for y in pd.Series(times).rolling(15).mean().fillna(method="bfill")
                 ]
             )
             ys.extend(pd.Series(res).rolling(15).mean().fillna(method="bfill"))
-
         df = pd.DataFrame({"time": xs, "score": ys, "num": nums}).drop_duplicates()
         df["score"] = df["score"].clip(0, 0.025)
 
-        save(df, file_path)
+        save(df, "sleepcycle")
 
         return cls(df)
 
     @classmethod
-    def load(cls, file_path, credentials, nrows=None):
-        return cls(load(file_path))
+    def load(cls, nrows=None):
+        return cls(load("sleepcycle"))

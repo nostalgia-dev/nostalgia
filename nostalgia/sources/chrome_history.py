@@ -1,3 +1,4 @@
+import re
 import just
 import numpy as np
 import pandas as pd
@@ -10,9 +11,30 @@ from auto_extract import parse_article
 from nostalgia.nlp import nlp
 from nostalgia.cache import get_cache
 from nostalgia.utils import read_array_of_dict_from_json
-from nostalgia.source_to_fast import get_newline_count, save_newline_count, save, load
+from nostalgia.file_caching import get_newline_count, save_newline_count, save, load
 
 CACHE = get_cache("chrome_history")
+
+
+# def destroy_tree(tree):
+#     node_tracker = {tree: [0, None]}
+
+#     for node in tree.iterdescendants():
+#         parent = node.getparent()
+#         node_tracker[node] = [node_tracker[parent][0] + 1, parent]
+
+#     node_tracker = sorted(
+#         [(depth, parent, child) for child, (depth, parent) in node_tracker.items()],
+#         key=lambda x: x[0],
+#         reverse=True,
+#     )
+
+#     for _, parent, child in node_tracker:
+#         if parent is None:
+#             break
+#         parent.remove(child)
+
+#     del tree
 
 
 def get_title(x):
@@ -20,9 +42,12 @@ def get_title(x):
         return ""
     if x["path"] in CACHE:
         return CACHE[x["path"]]
-    tree = lxml.html.fromstring(just.read(x["path"]))
-    title = tree.xpath("/html/head/title/text()") or tree.xpath("//title/text()") or [""]
-    title = title[0]
+    # tree = lxml.html.fromstring(just.read(x["path"]))
+    # title = tree.xpath("/html/head/title/text()") or tree.xpath("//title/text()") or [""]
+    # destroy_tree(tree)
+    # title = title[0]
+    match = re.search("<title>([^<]+)</title", just.read(x["path"]), re.MULTILINE)
+    title = match.groups()[0].strip() if match is not None else ""
     CACHE[x["path"]] = title
     return title
 

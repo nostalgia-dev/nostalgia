@@ -7,7 +7,8 @@ import hashlib
 import pandas as pd
 from pytz import timezone
 import just
-from nostalgia.times import format_latlng, tz
+from nostalgia.times import tz
+from nostalgia.utils import format_latlng
 from nostalgia.cache import get_cache
 from nostalgia.interfaces.places import Places
 

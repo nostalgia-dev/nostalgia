@@ -1,12 +1,18 @@
 from pytz import timezone
+from pytz.reference import Local
 from metadate import parse_date, Units
 from datetime import datetime
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 import dateutil
 
-tz = timezone('Europe/Amsterdam')
+# tz = timezone('Europe/Amsterdam')
+tz = timezone(Local.tzname(datetime.now()))
 utc = timezone('UTC')
+
+
+def now(**kwargs):
+    return datetime.now(tz=tz) - relativedelta(**kwargs)
 
 
 def last_days(days):
@@ -31,10 +37,6 @@ def last_month():
 
 def last_year():
     return now(years=1).replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
-
-
-def now(**kwargs):
-    return datetime.now(tz=tz) - relativedelta(**kwargs)
 
 
 def week_ago(weeks):

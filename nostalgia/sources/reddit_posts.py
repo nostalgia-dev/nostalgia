@@ -3,7 +3,7 @@ import pandas as pd
 from psaw import PushshiftAPI
 from nostalgia.ndf import NDF
 from nostalgia.times import datetime_from_timestamp
-from nostalgia.source_to_fast import save, load
+from nostalgia.file_caching import save, load
 from nostalgia.interfaces.post import PostInterface
 
 
@@ -26,8 +26,12 @@ class RedditPosts(PostInterface):
             for x in posts
         ]
         posts = pd.DataFrame(posts)
-        save(posts, "reddit_posts_" + author)
+        posts["author"] = author
+        save(posts, "reddit_posts")
 
     @classmethod
-    def load(cls, author, nrows=None):
-        return cls(load("reddit_posts_" + author))
+    def load(cls, nrows=None):
+        df = load("reddit_posts")
+        if nrows is not None:
+            df = df.iloc[-nrows:]
+        return cls(df)

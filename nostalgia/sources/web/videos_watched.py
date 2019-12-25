@@ -1,7 +1,7 @@
 import just
 from nostalgia.ndf import NDF
 from nostalgia.times import datetime_from_timestamp
-from nostalgia.source_to_fast import save, load
+from nostalgia.file_caching import save, load
 import just
 
 

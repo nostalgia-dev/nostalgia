@@ -2,7 +2,8 @@ import os
 import just
 from datetime import datetime
 import pandas as pd
-from nostalgia.times import tz, format_latlng
+from nostalgia.times import tz
+from nostalgia.utils import format_latlng
 from nostalgia.sources.google import Google
 
 

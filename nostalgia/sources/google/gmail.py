@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime
 from nostalgia.times import tz, parse
 from nostalgia.utils import read_array_of_dict_from_json
-from nostalgia.source_to_fast import check_seen, save, load
+from nostalgia.file_caching import check_seen, save, load
 from nostalgia.sources.google import Google
 
 

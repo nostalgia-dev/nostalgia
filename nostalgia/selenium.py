@@ -1,11 +1,6 @@
 import getpass
 from selenium import webdriver
-
-
-class MockSeleniumCredentials:
-    def __init__(self, credential_dict):
-        for k, v in credential_dict.items():
-            setattr(self, k, v)
+from nostalgia.utils import MockCredentials
 
 
 def get_driver(
@@ -30,7 +25,7 @@ def get_driver(
 
     # login if neccessary
     if isinstance(credentials, dict):
-        credentials = MockSeleniumCredentials(credentials)
+        credentials = MockCredentials(credentials)
     if credentials is not None:
         driver.get(login_url)
         if user_xpath_or_id.startswith("/"):

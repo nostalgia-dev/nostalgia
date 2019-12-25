@@ -1,14 +1,9 @@
-import os
-import pandas as pd
 import just
-from metadate import parse_date
-from datetime import datetime
-from nostalgia.ndf import NDF
 from nostalgia.times import datetime_from_format
 from nostalgia.sources.samsung import Samsung
 
 
-class SamsungSleep(Samsung, NDF):
+class SamsungSleep(Samsung):
     @classmethod
     def handle_dataframe_per_file(cls, data, fname):
         data = data[["start_time", "end_time", "stage"]]
@@ -28,3 +23,7 @@ class SamsungSleep(Samsung, NDF):
             datetime_from_format(x, "%Y-%m-%d %H:%M:%S.%f") for x in data["end_time"]
         ]
         return cls(data)
+
+    @property
+    def asleep(self):
+        return self.query("stage != 'awake'")

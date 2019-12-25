@@ -10,7 +10,7 @@ from auto_extract import parse_article
 from nostalgia.cache import get_cache
 from nostalgia.ndf import NDF
 
-from nostalgia.times import normalize_name
+from nostalgia.utils import normalize_name
 
 CACHE = get_cache("linked_person")
 

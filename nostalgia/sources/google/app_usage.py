@@ -4,6 +4,8 @@ from nostalgia.sources.google import Google
 
 
 def custom_parse(x):
+    if not isinstance(x, str):
+        return x
     try:
         return datetime_from_format(x, "%Y-%m-%dT%H:%M:%SZ", in_utc=True)
     except:

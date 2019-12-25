@@ -13,7 +13,7 @@ import re
 from nostalgia.times import try_date, tz
 from nostalgia.ndf import NDF
 from nostalgia.nlp import nlp
-from nostalgia.source_to_fast import check_seen, save, load
+from nostalgia.file_caching import check_seen, save, load
 
 digits = set(string.digits)
 

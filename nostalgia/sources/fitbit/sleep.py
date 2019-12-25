@@ -39,3 +39,7 @@ class FitbitSleep(NDF):
         data = pd.concat(objects).drop("dateTime", axis=1)
 
         return cls(data)
+
+    @property
+    def asleep(self):
+        return self.query("level != 'wake'")

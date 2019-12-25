@@ -26,7 +26,8 @@ import pandas as pd
 import lxml.etree
 from dateutil.parser import parse as date_parse
 import just
-from nostalgia.times import yesterday, format_latlng
+from nostalgia.times import yesterday
+from nostalgia.utils import format_latlng
 
 N = {"klm": "http://www.opengis.net/kml/2.2"}
 

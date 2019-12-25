@@ -8,11 +8,11 @@ from datetime import timedelta
 import just
 from nostalgia.nlp import nlp_registry, nlp, n, COLUMN_BLACKLIST, ResultInfo
 from nostalgia.utils import get_token_set, normalize_name, view, read_array_of_dict_from_json
-from nostalgia.source_to_fast import get_newline_count, save_newline_count
-from nostalgia.source_to_fast import get_processed_files, save_processed_files
-from nostalgia.source_to_fast import get_last_latest_file, save_last_latest_file
-from nostalgia.source_to_fast import get_last_mod_time, save_last_mod_time
-from nostalgia.source_to_fast import save, load
+from nostalgia.file_caching import get_newline_count, save_newline_count
+from nostalgia.file_caching import get_processed_files, save_processed_files
+from nostalgia.file_caching import get_last_latest_file, save_last_latest_file
+from nostalgia.file_caching import get_last_mod_time, save_last_mod_time
+from nostalgia.file_caching import save, load
 from nostalgia.sources.extracter import load_from_download
 from nostalgia.times import datetime_from_timestamp
 from nostalgia.cache import get_cache
@@ -549,7 +549,7 @@ class NDF:
 
     @property
     def when_asleep(self):
-        return self.__class__(join_time(registry["sleep"], self))
+        return self.__class__(join_time(registry["sleep"].asleep, self))
 
         # browser["session"] = browser.time.diff().apply(lambda x: x.seconds > 20 * 60).cumsum()+10
         # session, start, end = zip(*[(name, group.iloc[0].time - pd.Timedelta(minutes=10), group.iloc[-1].time + pd.Timedelta(minutes=10)) for name, group in browser.groupby("session")])

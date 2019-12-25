@@ -81,7 +81,7 @@ def make_path(name):
 
 def save(df, name):
     path = make_path(name) + ".parquet"
-    df.to_parquet(path, compression="zstd", allow_truncated_timestamps=True)
+    df.reset_index(drop=True).to_parquet(path, compression="zstd", allow_truncated_timestamps=True)
 
 
 def load(name):
