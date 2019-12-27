@@ -110,8 +110,9 @@ def datetime_tz(*args):
     return tz.localize(datetime(*args))
 
 
-def datetime_from_timestamp(x, tzone=tz, divide_by_1000=True):
-    if divide_by_1000:
+def datetime_from_timestamp(x, tzone=tz):
+    # would be year 3000
+    if x > 32503683600:
         x = x // 1000
     if isinstance(tzone, str):
         tzone = timezone(tzone)

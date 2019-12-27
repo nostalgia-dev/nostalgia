@@ -16,7 +16,7 @@ class RedditPosts(PostInterface):
         posts = [
             {
                 "title": x.title,
-                "time": datetime_from_timestamp(x.created_utc, "utc", divide_by_1000=False),
+                "time": datetime_from_timestamp(x.created_utc, "utc"),
                 "url": x.full_link,
                 "text": x.selftext,
             }

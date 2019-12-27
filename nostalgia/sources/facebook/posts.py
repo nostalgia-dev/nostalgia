@@ -26,7 +26,7 @@ class FacebookPosts(Facebook, PostInterface):
                 row = {
                     "location": location,
                     "title": x["post"],
-                    "time": datetime_from_timestamp(post['timestamp'], divide_by_1000=False),
+                    "time": datetime_from_timestamp(post['timestamp']),
                 }
                 posts.append(row)
         return posts

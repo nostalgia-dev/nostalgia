@@ -7,12 +7,8 @@ class VideosWatched(NDF):
 
     @classmethod
     def handle_dataframe_per_file(cls, data, fname):
-        data["playingSince"] = [
-            datetime_from_timestamp(x, "utc", divide_by_1000=False) for x in data["playingSince"]
-        ]
-        data["playingUntil"] = [
-            datetime_from_timestamp(x, "utc", divide_by_1000=False) for x in data["playingUntil"]
-        ]
+        data["playingSince"] = [datetime_from_timestamp(x, "utc") for x in data["playingSince"]]
+        data["playingUntil"] = [datetime_from_timestamp(x, "utc") for x in data["playingUntil"]]
         return data
 
     @classmethod

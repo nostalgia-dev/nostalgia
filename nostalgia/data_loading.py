@@ -156,7 +156,7 @@ class Loader:
                         print("ERR", fname, e)
                         continue
                     cache[fname] = text
-                time = datetime_from_timestamp(os.path.getmtime(fname), "utc", divide_by_1000=False)
+                time = datetime_from_timestamp(os.path.getmtime(fname), "utc")
                 data = {"text": text, "path": fname, "title": fname.split("/")[-1], "time": time}
                 objects.append(data)
             data = pd.DataFrame(objects)
