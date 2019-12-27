@@ -1,0 +1,3 @@
+Should generate a table using AST (or maybe people provide anonomized test/data so we can infer the periodness):
+
+**name, type, vendor, description, api vs file vs export, period (moment vs interval)**
