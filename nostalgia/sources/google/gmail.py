@@ -2,8 +2,7 @@ import just
 import pandas as pd
 from datetime import datetime
 from nostalgia.times import tz, parse
-from nostalgia.utils import read_array_of_dict_from_json
-from nostalgia.file_caching import check_seen, save, load
+from nostalgia.data_loading import read_array_of_dict_from_json
 from nostalgia.sources.google import Google
 
 
@@ -46,8 +45,6 @@ class Gmail(Google):
     @classmethod
     def load(cls, fname, nrows=None, from_cache=True):
         emails = cls.load_data_file_modified_time(fname, nrows=nrows, from_cache=from_cache)
-        if nrows is not None:
-            emails = emails.loc[:nrows]
         return cls(emails)
 
     def sent_by(self, name=None, email=None, case=False):

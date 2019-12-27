@@ -7,15 +7,12 @@ from metadate import is_mp
 from datetime import timedelta
 import just
 from nostalgia.nlp import nlp_registry, nlp, n, COLUMN_BLACKLIST, ResultInfo
-from nostalgia.utils import get_token_set, normalize_name, view, read_array_of_dict_from_json
-from nostalgia.file_caching import get_newline_count, save_newline_count
-from nostalgia.file_caching import get_processed_files, save_processed_files
-from nostalgia.file_caching import get_last_latest_file, save_last_latest_file
-from nostalgia.file_caching import get_last_mod_time, save_last_mod_time
-from nostalgia.file_caching import save, load
+from nostalgia.utils import get_token_set, normalize_name, view
+
 from nostalgia.sources.extracter import load_from_download
 from nostalgia.times import datetime_from_timestamp
 from nostalgia.cache import get_cache
+from nostalgia.data_loading import Loader
 
 
 def ab_overlap_cd(a, b, c, d):
@@ -108,8 +105,8 @@ def col_contains_wrapper(word, col):
     return col_contains
 
 
-class NDF:
-    # class NDF(pd.DataFrame):
+# class NDF:
+class NDF(Loader, pd.DataFrame):
     keywords = []
     nlp_columns = []
     nlp_when = True
@@ -195,174 +192,6 @@ class NDF:
     @classmethod
     def df_label(cls):
         return normalize_name(cls.__name__).replace("_", " ").title()
-
-    @classmethod
-    def load_data_file_modified_time(
-        cls, fname, key_name="", nrows=None, from_cache=True, **kwargs
-    ):
-        name = fname + "_" + normalize_name(cls.__name__)
-        modified_time = os.path.getmtime(os.path.expanduser(fname))
-        last_modified = get_last_mod_time(name)
-        if modified_time != last_modified or not from_cache:
-            if fname.endswith(".csv"):
-                data = pd.read_csv(fname, error_bad_lines=False, nrows=nrows, **kwargs)
-            elif fname.endswith(".mbox"):
-                import mailbox
-
-                m = mailbox.mbox(fname)
-                data = pd.DataFrame(
-                    [{l: x[l] for l in ["from", "to", "date", "subject"]} for x in m]
-                )
-            else:
-                data = read_array_of_dict_from_json(fname, key_name, nrows, **kwargs)
-            data = cls.handle_dataframe_per_file(data, fname)
-            if nrows is None:
-                save(data, name)
-                save_last_mod_time(modified_time, name)
-        else:
-            data = load(name)
-        return data
-
-    @classmethod
-    def load_json_file_modified_time(cls, fname, nrows=None, from_cache=True, **kwargs):
-        name = fname + "_" + normalize_name(cls.__name__)
-        modified_time = os.path.getmtime(os.path.expanduser(fname))
-        last_modified = get_last_mod_time(name)
-        if modified_time != last_modified or not from_cache:
-            data = just.read(fname)
-            data = cls.handle_json(data, **kwargs)
-            data = pd.DataFrame(data)
-            if nrows is None:
-                save(data, name)
-                save_last_mod_time(modified_time, name)
-        else:
-            data = load(name)
-        if nrows is not None:
-            data = data.iloc[-nrows:]
-        return data
-
-    @classmethod
-    def load_image_texts(cls, glob_pattern_s, nrows=None):
-        import pytesseract
-        from PIL import Image
-
-        if isinstance(glob_pattern_s, list):
-            fnames = set()
-            for glob_pattern in glob_pattern_s:
-                fnames.update(set(just.glob(glob_pattern)))
-            glob_pattern = "_".join(glob_pattern_s)
-        else:
-            fnames = set(just.glob(glob_pattern))
-        name = glob_pattern + "_" + normalize_name(cls.__name__)
-        processed_files = get_processed_files(name)
-        to_process = fnames.difference(processed_files)
-        objects = []
-
-        cache = get_cache("tesseract")
-
-        if nrows is not None:
-            if not to_process:
-                return load(name).iloc[-nrows:]
-            else:
-                to_process = list(to_process)[-nrows:]
-        if to_process:
-            for fname in to_process:
-                if fname in cache:
-                    text = cache[fname]
-                else:
-                    try:
-                        text = pytesseract.image_to_string(Image.open(just.make_path(fname)))
-                    except OSError as e:
-                        print("ERR", fname, e)
-                        continue
-                    cache[fname] = text
-                time = datetime_from_timestamp(os.path.getmtime(fname), "utc", divide_by_1000=False)
-                data = {"text": text, "path": fname, "title": fname.split("/")[-1], "time": time}
-                objects.append(data)
-            data = pd.DataFrame(objects)
-            if processed_files and nrows is None:
-                data = pd.concat((data, load(name)))
-            for x in ["time", "start", "end"]:
-                if x in data:
-                    data = data.sort_values(x)
-                    break
-            if nrows is None:
-                save(data, name)
-                save_processed_files(fnames | processed_files, name)
-        else:
-            data = load(name)
-        return data
-
-    @classmethod
-    def load_dataframe_per_json_file(cls, glob_pattern, key="", nrows=None):
-        fnames = set(just.glob(glob_pattern))
-        name = glob_pattern + "_" + normalize_name(cls.__name__)
-        processed_files = get_processed_files(name)
-        to_process = fnames.difference(processed_files)
-        objects = []
-        if nrows is not None:
-            if not to_process:
-                to_process = list(processed_files)[-nrows:]
-            else:
-                to_process = list(to_process)[-nrows:]
-        if to_process:
-            print("processing {} files".format(len(to_process)))
-            for fname in to_process:
-                data = read_array_of_dict_from_json(fname, key, nrows)
-                data = cls.handle_dataframe_per_file(data, fname)
-                if data is None:
-                    continue
-                objects.append(data)
-            data = pd.concat(objects)
-            if processed_files and nrows is None:
-                data = pd.concat((data, load(name)))
-            for x in ["time", "start", "end"]:
-                if x in data:
-                    data = data.sort_values(x)
-                    break
-            if nrows is None:
-                save(data, name)
-                save_processed_files(fnames | processed_files, name)
-        else:
-            data = load(name)
-        return data
-
-    @classmethod
-    def load_object_per_newline(cls, fname, nrows=None):
-        data = []
-        name = fname + "_" + normalize_name(cls.__name__)
-        newline_count = get_newline_count(name)
-        for i, x in enumerate(just.iread(fname)):
-            if nrows is None:
-                if i < newline_count:
-                    continue
-            row = cls.object_to_row(x)
-            if row is None:
-                continue
-            data.append(row)
-            # breaking at approx 5 rows
-            if nrows is not None and i > nrows:
-                break
-        if data:
-            data = pd.DataFrame(data)
-            if newline_count and nrows is None:
-                data = pd.concat((data, load(name)))
-            for x in ["time", "start", "end"]:
-                if x in data:
-                    data = data.sort_values(x)
-                    break
-            if nrows is None:
-                save(data, name)
-                n = i + 1
-                save_newline_count(n, name)
-        else:
-            data = load(name)
-        return data
-
-    @classmethod
-    def latest_file_is_historic(cls, glob, key_name="", nrows=None, from_cache=True):
-        recent = max([x for x in just.glob(glob) if "(" not in x], key=os.path.getctime)
-        return cls.load_data_file_modified_time(recent, key_name, nrows, from_cache)
 
     @property
     def time(self):
@@ -501,8 +330,13 @@ class NDF:
         return 0
 
     def infer_time(self):
+        if self.__class__.__name__ == "Results":
+            self._start_col, self._time_col, self._end_col = "start", "start", "end"
+            return
         times = [x for x, y in zip(self.columns, self.dtypes) if "datetime" in str(y)]
         levels = [self.time_level(self[x]) for x in times]
+        if not levels:
+            raise ValueError(f"No datetime found in {self.__class__.__name__}")
         max_level = max(levels)
         # workaround
         # start: 10:00:00
@@ -635,7 +469,7 @@ class NDF:
                 data = data.iloc[-max_n:]
             return data
         except ValueError:
-            raise ValueError("No fields are mapped")
+            raise ValueError(f"No fields are mapped for {self.__class__.__name__}")
 
     def _select_at_day(self, day_or_class):
         if isinstance(day_or_class, pd.DataFrame):

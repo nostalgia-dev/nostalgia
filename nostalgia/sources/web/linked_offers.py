@@ -290,6 +290,9 @@ class Offers(NDF):
                 row["keywords"] = " ".join([x[0] for x in get_keywords_for_product(row["name"])])
             else:
                 row["keywords"] = ""
+            if "image" in row:
+                img = row["image"]
+                row["image"] = img if isinstance(img, str) or img is None else img["url"]
             return row
 
     @classmethod

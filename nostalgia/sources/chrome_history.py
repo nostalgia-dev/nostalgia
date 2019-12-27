@@ -10,8 +10,7 @@ import diskcache
 from auto_extract import parse_article
 from nostalgia.nlp import nlp
 from nostalgia.cache import get_cache
-from nostalgia.utils import read_array_of_dict_from_json
-from nostalgia.file_caching import get_newline_count, save_newline_count, save, load
+from nostalgia.data_loading import read_array_of_dict_from_json
 
 CACHE = get_cache("chrome_history")
 

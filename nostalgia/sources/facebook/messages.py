@@ -2,7 +2,7 @@ from nostalgia.times import tz
 import pandas as pd
 import just
 from nostalgia.interfaces.chat import ChatInterface
-from nostalgia.utils import read_array_of_dict_from_json
+from nostalgia.data_loading import read_array_of_dict_from_json
 from nostalgia.sources.facebook import Facebook
 
 # # # # #

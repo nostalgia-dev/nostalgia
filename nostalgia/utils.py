@@ -55,7 +55,7 @@ def view(path):
     view_html(just.read(path))
 
 
-def haversine(lon1, lat1, lon2, lat2):
+def haversine(lat1, lon1, lat2, lon2):
     """
     Calculate the great circle distance between two points
     on the earth (specified in decimal degrees)
@@ -121,42 +121,6 @@ def parse_price(x):
                     continue
                 return result
     return result
-
-
-def read_array_of_dict_from_json(fname, key_name=None, nrows=None):
-    if nrows is None:
-        if not key_name:
-            return pd.read_json(fname, lines=fname.endswith(".jsonl"))
-        else:
-            return pd.DataFrame(just.read(fname)[key_name])
-
-    import ijson
-
-    with open(just.make_path(fname)) as f:
-        parser = ijson.parse(f)
-        capture = False
-        rows = []
-        row = {}
-        map_key = ""
-        num = 0
-        for prefix, event, value in parser:
-            if num > nrows:
-                break
-            if prefix == key_name and event == "start_array":
-                capture = True
-            if not capture:
-                continue
-            if event == "start_map":
-                continue
-            elif event == "map_key":
-                map_key = value
-            elif event == "end_map":
-                rows.append(row)
-                row = {}
-                num += 1
-            elif map_key:
-                row[map_key] = value
-        return pd.DataFrame(rows)
 
 
 def normalize_name(name):

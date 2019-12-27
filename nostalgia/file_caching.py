@@ -79,11 +79,21 @@ def make_path(name):
     return dir_name + slugify(name)
 
 
-def save(df, name):
+def save_df(df, name):
     path = make_path(name) + ".parquet"
-    df.reset_index(drop=True).to_parquet(path, compression="zstd", allow_truncated_timestamps=True)
+    df = df.reset_index(drop=True)
+    try:
+        df.to_parquet(path, compression="zstd", allow_truncated_timestamps=True)
+    except Exception as e:
+        print("ERROR with", name)
+        for x in df.columns:
+            print(x, sum([str(y)[:1] == "{" for y in df[x]]))
+        raise e
 
 
-def load(name):
+def load_df(name, nrows=None):
     path = make_path(name) + ".parquet"
-    return pd.read_parquet(path)
+    data = pd.read_parquet(path)
+    if nrows is not None:
+        data = data.iloc[-nrows:]
+    return data

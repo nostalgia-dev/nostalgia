@@ -36,8 +36,8 @@ class SamsungStress(Samsung, NDF):
         stress = pd.DataFrame(stress)
         stress = stress.set_index(interval_index).sort_index()
         stress["end"] = stress.index.right - pd.Timedelta(seconds=1)
-        if nrows is not None:
-            stress = stress.iloc[:nrows]
+        # if nrows is not None:
+        #     stress = stress.iloc[:nrows]
         stress["value"] = stress.score
         del stress["score"]
         return cls(stress)

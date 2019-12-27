@@ -50,6 +50,8 @@ class WhatsappChat(ChatInterface):
                 line = old_text + line[offset:]
                 old_text = ""
                 try:
+                    if line.startswith("Messages to this chat and calls are now secured"):
+                        continue
                     sender, text = line.split(": ", 1)
                 except ValueError:
                     print("ERR", line)

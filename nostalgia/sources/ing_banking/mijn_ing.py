@@ -13,7 +13,6 @@ import re
 from nostalgia.times import try_date, tz
 from nostalgia.ndf import NDF
 from nostalgia.nlp import nlp
-from nostalgia.file_caching import check_seen, save, load
 
 digits = set(string.digits)
 
@@ -59,8 +58,6 @@ class Payments(NDF):
     @classmethod
     def load(cls, file_glob="~/Downloads/NL*20*20*.csv", nrows=None, from_cache=True):
         data = cls.latest_file_is_historic(file_glob, nrows=nrows, from_cache=from_cache)
-        if nrows is not None:
-            data = data.iloc[:nrows]
         return cls(data)
 
     @property

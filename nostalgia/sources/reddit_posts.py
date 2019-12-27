@@ -1,9 +1,6 @@
-import just
 import pandas as pd
-from psaw import PushshiftAPI
-from nostalgia.ndf import NDF
 from nostalgia.times import datetime_from_timestamp
-from nostalgia.file_caching import save, load
+from nostalgia.file_caching import save_df, load_df
 from nostalgia.interfaces.post import PostInterface
 
 
@@ -12,9 +9,9 @@ class RedditPosts(PostInterface):
 
     @classmethod
     def ingest(cls, author):
-        api = PushshiftAPI()
+        from psaw import PushshiftAPI
 
-        posts = list(api.search_submissions(author=author))
+        api = PushshiftAPI()
 
         posts = [
             {
@@ -23,15 +20,13 @@ class RedditPosts(PostInterface):
                 "url": x.full_link,
                 "text": x.selftext,
             }
-            for x in posts
+            for x in api.search_submissions(author=author)
         ]
         posts = pd.DataFrame(posts)
         posts["author"] = author
-        save(posts, "reddit_posts")
+        save_df(posts, "reddit_posts")
 
     @classmethod
     def load(cls, nrows=None):
-        df = load("reddit_posts")
-        if nrows is not None:
-            df = df.iloc[-nrows:]
+        df = load_df("reddit_posts", nrows)
         return cls(df)

@@ -1,8 +1,5 @@
-import just
 from nostalgia.ndf import NDF
 from nostalgia.times import datetime_from_timestamp
-from nostalgia.file_caching import save, load
-import just
 
 
 class VideosWatched(NDF):
@@ -20,5 +17,7 @@ class VideosWatched(NDF):
 
     @classmethod
     def load(cls, nrows=None):
-        data = cls.load_data_file_modified_time("~/nostalgia_data/videos_watched.jsonl")
+        data = cls.load_data_file_modified_time(
+            "~/nostalgia_data/videos_watched.jsonl", nrows=nrows
+        )
         return cls(data.reset_index())

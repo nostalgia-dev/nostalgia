@@ -38,8 +38,8 @@ class SamsungHeartrate(Samsung, NDF):
         heartrate["end"] = heartrate.index.right - pd.Timedelta(seconds=1)
         # heartrate = heartrate[heartrate.time != heartrate.end]
         # heartrate = heartrate[heartrate.time <= heartrate.end]
-        if nrows is not None:
-            heartrate = heartrate.iloc[:nrows]
+        # if nrows is not None:
+        #     heartrate = heartrate.iloc[:nrows]
         heartrate["value"] = heartrate.heart_rate
         del heartrate["heart_rate"]
         return cls(heartrate)

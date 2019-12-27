@@ -18,6 +18,4 @@ class PageVisit(Google):
         page_visit = cls.load_data_file_modified_time(
             file_path, "Browser History", nrows=nrows, from_cache=from_cache
         )
-        if nrows is not None:
-            page_visit = page_visit.iloc[:5]
         return cls(page_visit)

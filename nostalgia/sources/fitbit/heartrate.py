@@ -40,6 +40,6 @@ class FitbitHeartrate(NDF):
         heartrate["end"] = heartrate.index.right - pd.Timedelta(seconds=1)
         heartrate = heartrate[heartrate.time != heartrate.end]
         heartrate = heartrate[heartrate.time <= heartrate.end]
-        if nrows is not None:
-            heartrate = heartrate.iloc[:nrows]
+        # if nrows is not None:
+        #     heartrate = heartrate.iloc[:nrows]
         return cls(heartrate)

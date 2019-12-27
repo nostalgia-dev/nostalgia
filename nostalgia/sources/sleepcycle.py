@@ -5,7 +5,7 @@ import pandas as pd
 import getpass
 
 from nostalgia.ndf import NDF
-from nostalgia.file_caching import save, load
+from nostalgia.file_caching import save_df, load_df
 from nostalgia.times import tz
 
 login_url = "https://s.sleepcycle.com/site/login"
@@ -54,10 +54,10 @@ class SleepCycle(NDF):
         df = pd.DataFrame({"time": xs, "score": ys, "num": nums}).drop_duplicates()
         df["score"] = df["score"].clip(0, 0.025)
 
-        save(df, "sleepcycle")
+        save_df(df, "sleepcycle")
 
         return cls(df)
 
     @classmethod
     def load(cls, nrows=None):
-        return cls(load("sleepcycle"))
+        return cls(load_df("sleepcycle", nrows))
