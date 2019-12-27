@@ -1487,6 +1487,7 @@
                 <h1 id="add-andor-contribute-a-new-data-source">Add and/or Contribute a New Data Source</h1>
 <p>The first thing to consider is that you should produce a Pandas Dataframe. It should have one or two datetime columns (1 for an event, 2 for a period with a start and end date).
 It is also useful to have a column called <code>title</code>.</p>
+<p>Following the pattern below will ensure that your data will play nicely with all the apps and query language.</p>
 <h2 id="example">Example</h2>
 <p>Let's look at the code for collecting your self-written Reddit posts:</p>
 <p>First install dependencies:</p>
@@ -1515,7 +1516,7 @@ In it, you can see it makes use of the provided time helper function <code>datet
         <span class="n">posts</span> <span class="o">=</span> <span class="p">[</span>
             <span class="p">{</span>
                 <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
-                <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">datetime_from_timestamp</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">created_utc</span><span class="p">,</span> <span class="s2">&quot;utc&quot;</span><span class="p">,</span> <span class="n">divide_by_1000</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+                <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">datetime_from_timestamp</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">created_utc</span><span class="p">),</span>
                 <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">full_link</span><span class="p">,</span>
                 <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">selftext</span><span class="p">,</span>
             <span class="p">}</span>

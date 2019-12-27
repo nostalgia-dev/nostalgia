@@ -2129,17 +2129,9 @@
 
     <span class="k">def</span> <span class="nf">handle_dataframe_per_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
 
-        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;playingSince&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;playingSince&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">datetime_from_timestamp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;utc&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;playingSince&quot;</span><span class="p">]]</span>
 
-            <span class="n">datetime_from_timestamp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;utc&quot;</span><span class="p">,</span> <span class="n">divide_by_1000</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;playingSince&quot;</span><span class="p">]</span>
-
-        <span class="p">]</span>
-
-        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;playingUntil&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-
-            <span class="n">datetime_from_timestamp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;utc&quot;</span><span class="p">,</span> <span class="n">divide_by_1000</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;playingUntil&quot;</span><span class="p">]</span>
-
-        <span class="p">]</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;playingUntil&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">datetime_from_timestamp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;utc&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;playingUntil&quot;</span><span class="p">]]</span>
 
         <span class="k">return</span> <span class="n">data</span>
 
@@ -2174,17 +2166,9 @@
 
     <span class="nx">def</span> <span class="nx">handle_dataframe_per_file</span><span class="p">(</span><span class="nx">cls</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">fname</span><span class="p">)</span><span class="o">:</span>
 
-        <span class="nx">data</span><span class="p">[</span><span class="s2">&quot;playingSince&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="nx">data</span><span class="p">[</span><span class="s2">&quot;playingSince&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nx">datetime_from_timestamp</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="s2">&quot;utc&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="nx">x</span> <span class="k">in</span> <span class="nx">data</span><span class="p">[</span><span class="s2">&quot;playingSince&quot;</span><span class="p">]]</span>
 
-            <span class="nx">datetime_from_timestamp</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="s2">&quot;utc&quot;</span><span class="p">,</span> <span class="nx">divide_by_1000</span><span class="o">=</span><span class="nx">False</span><span class="p">)</span> <span class="k">for</span> <span class="nx">x</span> <span class="k">in</span> <span class="nx">data</span><span class="p">[</span><span class="s2">&quot;playingSince&quot;</span><span class="p">]</span>
-
-        <span class="p">]</span>
-
-        <span class="nx">data</span><span class="p">[</span><span class="s2">&quot;playingUntil&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-
-            <span class="nx">datetime_from_timestamp</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="s2">&quot;utc&quot;</span><span class="p">,</span> <span class="nx">divide_by_1000</span><span class="o">=</span><span class="nx">False</span><span class="p">)</span> <span class="k">for</span> <span class="nx">x</span> <span class="k">in</span> <span class="nx">data</span><span class="p">[</span><span class="s2">&quot;playingUntil&quot;</span><span class="p">]</span>
-
-        <span class="p">]</span>
+        <span class="nx">data</span><span class="p">[</span><span class="s2">&quot;playingUntil&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nx">datetime_from_timestamp</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="s2">&quot;utc&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="nx">x</span> <span class="k">in</span> <span class="nx">data</span><span class="p">[</span><span class="s2">&quot;playingUntil&quot;</span><span class="p">]]</span>
 
         <span class="k">return</span> <span class="nx">data</span>
 
@@ -2277,17 +2261,9 @@
 
     def handle_dataframe_per_file(cls, data, fname):
 
-        data[&quot;playingSince&quot;] = [
+        data[&quot;playingSince&quot;] = [datetime_from_timestamp(x, &quot;utc&quot;) for x in data[&quot;playingSince&quot;]]
 
-            datetime_from_timestamp(x, &quot;utc&quot;, divide_by_1000=False) for x in data[&quot;playingSince&quot;]
-
-        ]
-
-        data[&quot;playingUntil&quot;] = [
-
-            datetime_from_timestamp(x, &quot;utc&quot;, divide_by_1000=False) for x in data[&quot;playingUntil&quot;]
-
-        ]
+        data[&quot;playingUntil&quot;] = [datetime_from_timestamp(x, &quot;utc&quot;) for x in data[&quot;playingUntil&quot;]]
 
         return data
 </pre></div>

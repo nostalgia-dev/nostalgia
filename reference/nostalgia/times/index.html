@@ -1853,9 +1853,11 @@
 
     <span class="k">return</span> <span class="n">tz</span><span class="o">.</span><span class="n">localize</span><span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">))</span>
 
-<span class="k">def</span> <span class="nf">datetime_from_timestamp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tzone</span><span class="o">=</span><span class="n">tz</span><span class="p">,</span> <span class="n">divide_by_1000</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">datetime_from_timestamp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tzone</span><span class="o">=</span><span class="n">tz</span><span class="p">):</span>
 
-    <span class="k">if</span> <span class="n">divide_by_1000</span><span class="p">:</span>
+    <span class="c1"># would be year 3000</span>
+
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="mi">32503683600</span><span class="p">:</span>
 
         <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">//</span> <span class="mi">1000</span>
 
@@ -1923,15 +1925,16 @@
 <h3 id="datetime_from_timestamp">datetime_from_timestamp</h3>
 <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">datetime_from_timestamp</span><span class="p">(</span>
     <span class="n">x</span><span class="p">,</span>
-    <span class="n">tzone</span><span class="o">=&lt;</span><span class="n">DstTzInfo</span> <span class="s1">&#39;CET&#39;</span> <span class="n">CET</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span> <span class="n">STD</span><span class="o">&gt;</span><span class="p">,</span>
-    <span class="n">divide_by_1000</span><span class="o">=</span><span class="kc">True</span>
+    <span class="n">tzone</span><span class="o">=&lt;</span><span class="n">DstTzInfo</span> <span class="s1">&#39;CET&#39;</span> <span class="n">CET</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span> <span class="n">STD</span><span class="o">&gt;</span>
 <span class="p">)</span>
 </pre></div>
 
 
-<details class="example"><summary>View Source</summary><div class="codehilite"><pre><span></span>def datetime_from_timestamp(x, tzone=tz, divide_by_1000=True):
+<details class="example"><summary>View Source</summary><div class="codehilite"><pre><span></span>def datetime_from_timestamp(x, tzone=tz):
 
-    if divide_by_1000:
+    # would be year 3000
+
+    if x &amp;gt; 32503683600:
 
         x = x // 1000
 
