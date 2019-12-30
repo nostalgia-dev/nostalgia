@@ -81,7 +81,7 @@ def make_path(name):
 
 def save_df(df, name):
     path = make_path(name) + ".parquet"
-    df = df.reset_index(drop=True)
+    df = pd.DataFrame(df).reset_index(drop=True)
     try:
         df.to_parquet(path, compression="zstd", allow_truncated_timestamps=True)
     except Exception as e:

@@ -9,7 +9,8 @@ import just
 from nostalgia.nlp import nlp_registry, nlp, n, COLUMN_BLACKLIST, ResultInfo
 from nostalgia.utils import get_token_set, normalize_name, view
 
-from nostalgia.sources.extracter import load_from_download
+from nostalgia.extracter import load_from_download
+from nostalgia.file_caching import save_df, load_df
 from nostalgia.times import datetime_from_timestamp
 from nostalgia.cache import get_cache
 from nostalgia.data_loading import Loader
@@ -105,7 +106,6 @@ def col_contains_wrapper(word, col):
     return col_contains
 
 
-# class NDF:
 class NDF(Loader, pd.DataFrame):
     keywords = []
     nlp_columns = []
@@ -181,6 +181,23 @@ class NDF(Loader, pd.DataFrame):
     @classmethod
     def ingest(cls):
         load_from_download(vendor=cls.vendor, **cls.ingest_settings)
+
+    @classmethod
+    def get_normalized_name(cls):
+        return normalize_name(cls.__name__)
+
+    @classmethod
+    def load_df(cls, nrows):
+        return load_df(cls.get_normalized_name(), nrows)
+
+    @classmethod
+    def save_df(cls, name=None):
+        return save_df(df, name or cls.get_normalized_name())
+
+    @classmethod
+    def load(cls, nrows=None):
+        df = cls.load_df(nrows)
+        return cls(df)
 
     @property
     def df_name(self):

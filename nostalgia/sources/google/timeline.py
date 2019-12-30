@@ -40,7 +40,7 @@ def get_nearby(latlng, name, excluded_transport_names):
     latlng = format_latlng(latlng)
     if latlng == "nan, nan":
         return None
-    params = {"location": latlng, "radius": 15, "key": KEY}
+    params = {"location": latlng, "radius": 100, "key": KEY}
     if name not in excluded_transport_names:
         params["query"] = name
     return api_call(NEARBY_URL, params)

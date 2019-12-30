@@ -1,6 +1,4 @@
-import pandas as pd
 from nostalgia.times import datetime_from_timestamp
-from nostalgia.file_caching import save_df, load_df
 from nostalgia.interfaces.post import PostInterface
 
 
@@ -19,14 +17,9 @@ class RedditPosts(PostInterface):
                 "time": datetime_from_timestamp(x.created_utc),
                 "url": x.full_link,
                 "text": x.selftext,
+                "author": author,
             }
             for x in api.search_submissions(author=author)
         ]
-        posts = pd.DataFrame(posts)
-        posts["author"] = author
-        save_df(posts, "reddit_posts")
 
-    @classmethod
-    def load(cls, nrows=None):
-        df = load_df("reddit_posts", nrows)
-        return cls(df)
+        cls.save_df(posts)
