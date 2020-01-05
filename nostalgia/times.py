@@ -112,6 +112,7 @@ def datetime_tz(*args):
 
 def datetime_from_timestamp(x, tzone=tz):
     # would be year 3000
+    x = float(x)
     if x > 32503683600:
         x = x // 1000
     if isinstance(tzone, str):

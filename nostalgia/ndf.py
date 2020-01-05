@@ -191,7 +191,7 @@ class NDF(Loader, pd.DataFrame):
         return load_df(cls.get_normalized_name(), nrows)
 
     @classmethod
-    def save_df(cls, name=None):
+    def save_df(cls, df, name=None):
         return save_df(df, name or cls.get_normalized_name())
 
     @classmethod
@@ -425,7 +425,13 @@ class NDF(Loader, pd.DataFrame):
         return self
 
     def containing(self, string, col_name=None, case=False, regex=True, na=False, bound=True):
-        """ Filters using string in all string columns when col_name is None, otherwise in just that one """
+        """
+        Filters using string in all string columns when col_name is None, otherwise in just that one
+        When `bound=True` it means to add word boundaries to the regex.
+        case=True is whether to be case-sensitive
+        regex=True means to treat string as regex
+        na=False means to consider NaN to be considered False
+        """
         if regex and bound:
             string = r"\b" + string + r"\b"
         if col_name is not None:

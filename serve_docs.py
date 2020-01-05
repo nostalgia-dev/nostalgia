@@ -6,7 +6,7 @@ NDF_PATH = "nostalgia/ndf.py"
 
 
 def ignore(x):
-    return "flycheck" in x
+    return "lycheck" in x
 
 
 def replace_ndf_class():
@@ -32,4 +32,5 @@ def render_as_html():
 server = livereload.Server()
 server.watch("README.md", render_as_html, ignore=ignore)
 server.watch("docs/**", render_as_html, ignore=ignore)
+server.watch("docs/**/*.md", render_as_html, ignore=ignore)
 server.serve(root="site")

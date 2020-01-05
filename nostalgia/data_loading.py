@@ -25,6 +25,12 @@ def read_array_of_dict_from_json(fname, key_name=None, nrows=None):
     Returns:
     pd.DataFrame([{"sender": "a", "time": 123}])
     """
+    if fname.endswith(".jsonl"):
+        if not key_name:
+            return pd.read_json(fname, lines=True)
+        else:
+            return pd.DataFrame([x[key_name] for x in just.read(fname)])
+
     if nrows is None:
         if not key_name:
             return pd.read_json(fname, lines=fname.endswith(".jsonl"))
