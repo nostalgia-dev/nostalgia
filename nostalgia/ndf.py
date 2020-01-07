@@ -590,7 +590,7 @@ class NDF(Loader, pd.DataFrame):
             mp = parse_date_tz(start)
             start = mp.start_date
             mp = parse_date_tz(end)
-            end = mp.start_date
+            end = mp.end_date
         elif end is None and window_kwargs:
             end = start
         elif end is None:

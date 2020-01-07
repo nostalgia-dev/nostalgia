@@ -45,6 +45,8 @@ Full list of current [sources](https://github.com/nostalgia-dev/nostalgia/tree/m
 
 ### Getting started
 
+1. `pip install nostalgia`
+
 1. Follow the instructions for a [source of interest](#available-data-bindings) to ensure it is loaded
 
 1. Use the data in an interactive session (run Python)

@@ -33,10 +33,11 @@ It is possible to query all the string columns at once (when `col_name=None`, se
 
 For each row, if any of those columns contain the string it will be returned. It takes the `regex` and `case` arguments to allow it to be interpreted as a regex, and whether to be case-sensitive.
 
-When `bound=True` it means to add word boundaries to the regex.
+When `bound=True` it means to add word boundaries (`"\b"`) to the regex on both sides.
+
+The following will return rows in which any of the text columns contains `"sweet"` as a word, but not `"sweettooth"` since `bound=True`.
 
 ```python
-# will return rows in which any of the text columns contains "sweet" as a word
 web.containing("sweet")
 ```
 
