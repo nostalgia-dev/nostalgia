@@ -81,7 +81,16 @@ def make_path(name):
 
 def save_df(df, name):
     path = make_path(name) + ".parquet"
-    df = pd.DataFrame(df).reset_index(drop=True)
+    df = pd.DataFrame(df)
+    for x in ["time", "start", "end"]:
+        if x in df:
+            df = df.sort_values(x)
+            break
+    df = df.reset_index(drop=True)
+    if "index" in df.columns:
+        df.drop("index", axis=1, inplace=True)
+    if "level_0" in df.columns:
+        df.drop("level_0", axis=1, inplace=True)
     try:
         df.to_parquet(path, compression="zstd", allow_truncated_timestamps=True)
     except Exception as e:
@@ -89,6 +98,7 @@ def save_df(df, name):
         for x in df.columns:
             print(x, sum([str(y)[:1] == "{" for y in df[x]]))
         raise e
+    return df
 
 
 def load_df(name, nrows=None):

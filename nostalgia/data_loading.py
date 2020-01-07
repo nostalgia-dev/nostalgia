@@ -242,12 +242,8 @@ class Loader:
             data = pd.DataFrame(data)
             if newline_count and nrows is None:
                 data = pd.concat((data, load_df(name)))
-            for x in ["time", "start", "end"]:
-                if x in data:
-                    data = data.sort_values(x)
-                    break
             if nrows is None:
-                save_df(data, name)
+                data = save_df(data, name)
                 n = i + 1
                 save_newline_count(n, name)
         else:
