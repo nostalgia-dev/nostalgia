@@ -21,7 +21,7 @@ If you want to add your own data that is not supported, please for now contact u
 
 Full list of current [sources](https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources).
 
-- Heartrate ([Fitbit](https://github.com/kootenpv/nostalgia_fitbit), [Samsung Watch](https://github.com/nostalgia-dev/nostalgia/blob/master/nostalgia/sources/samsung/README.md))
+- Heartrate ([Fitbit](https://github.com/nostalgia-dev/nostalgia_fitbit), [Samsung Watch](https://github.com/nostalgia-dev/nostalgia/blob/master/nostalgia/sources/samsung/README.md))
 - Sleep ([Fitbit](https://github.com/kootenpv/nostalgia_fitbit), [Samsung Watch](https://github.com/nostalgia-dev/nostalgia/blob/master/nostalgia/sources/samsung/README.md), SleepCycle)
 - Places (Google Timeline)
 - Bank Payments (ING)
