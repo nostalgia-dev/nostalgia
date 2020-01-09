@@ -60,10 +60,6 @@ In [15]: from nostalgia.sources.ing_banking.mijn_ing import Payments
 
 payments = Payments.load()
 
-payments.by_card.last_year.in_office_days.at_night(7, 12).by_me().heartrate_above(100).when_at("amsterdam").sum().round(2)
-Out[15]: 7.65
-
-
 payments.by_card\
         .last_year\
         .in_office_days\
