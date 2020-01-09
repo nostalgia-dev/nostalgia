@@ -53,7 +53,7 @@ Full list of current [sources](https://github.com/nostalgia-dev/nostalgia/tree/m
 
 ### Nostalgia Query Language - extending pandas
 
-Given that you have payments set up, you could start Python and run:
+Given that you have payments, heartrate and google places set up, you could start Python and run:
 
 ```python
 In [15]: from nostalgia.sources.ing_banking.mijn_ing import Payments
@@ -69,7 +69,7 @@ payments.by_card\
         .when_at("amsterdam")\
         .sum()
 
-Out[15]: 7.65
+Out[15]: 7.65 # in euros
 ```
 
 
