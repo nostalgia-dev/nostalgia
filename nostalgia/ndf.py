@@ -394,9 +394,12 @@ class NDF(Loader, pd.DataFrame):
         return self.__class__(join_time(other, self, **window_kwargs))
 
     def at_night(self, start=22, end=8):
+        return self.between_hours(start, end)
+
+    def between_hours(self, start=22, end=8):
         if self._start_col is not None:
             return self[(self.start.dt.hour > start) | (self.end.dt.hour < end)]
-        return self[(self.time.dt.hour > start) | (self.time.dt.hour < end)]
+        return self[(self.time.dt.hour > start) & (self.time.dt.hour < end)]
 
     @property
     def when_asleep(self):

@@ -49,20 +49,33 @@ Full list of current [sources](https://github.com/nostalgia-dev/nostalgia/tree/m
 
 1. Follow the instructions for a [source of interest](#available-data-bindings) to ensure it is loaded
 
-1. Use the data in an interactive session (run Python)
+1. Use the data in an interactive session (run Python) OR [run the timeline](https://github.com/nostalgia-dev/timeline)
 
 ### Nostalgia Query Language - extending pandas
 
+Given that you have payments set up, you could start Python and run:
+
 ```python
-payments.expenses
-        .by_card\
-        .last_week\
-        .office_days\
-        .at_night()\
-        .heartrate_above(80)\
-        .when_at("amsterdam")
+In [15]: from nostalgia.sources.ing_banking.mijn_ing import Payments
+
+payments = Payments.load()
+
+payments.by_card.last_year.in_office_days.at_night(7, 12).by_me().heartrate_above(100).when_at("amsterdam").sum().round(2)
+Out[15]: 7.65
+
+
+payments.by_card\
+        .last_year\
+        .in_office_days\
+        .during_hours(7, 12)\
+        .by_me()\
+        .heartrate_above(100)\
+        .when_at("amsterdam")\
         .sum()
+
+Out[15]: 7.65
 ```
+
 
 This will give the total expenses by card in the last week, but only on work days, at night, when my heart rate is above 80 and I'm in Amsterdam.
 It combined the generic class functionality, together with data from:

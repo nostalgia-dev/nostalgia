@@ -74,7 +74,7 @@ class Payments(NDF):
 
     @nlp("end", "how much")
     def sum(self):
-        return self.bedrag.sum()
+        return self.bedrag.sum().round(2)
 
     def equal_to(self, amount):
         return self.query("bedrag == {}".format(amount))
