@@ -234,8 +234,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../docs/1.-connect_your_data/" title="1. Connect Your Data" class="md-nav__link">
-      1. Connect Your Data
+    <a href="../../../docs/connect_your_data/" title="Connect Your Data" class="md-nav__link">
+      Connect Your Data
     </a>
   </li>
 
@@ -245,10 +245,34 @@
       
 
 
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Adding New Data
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        Adding New Data
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
   <li class="md-nav__item">
-    <a href="../../../docs/2.-add_or_contribute_a_new_data_source/" title="2. Add Or Contribute A New Data Source" class="md-nav__link">
-      2. Add Or Contribute A New Data Source
+    <a href="../../../docs/adding_new_data/add_or_contribute_a_new_data_source/" title="Add Or Contribute A New Data Source" class="md-nav__link">
+      Add Or Contribute A New Data Source
     </a>
+  </li>
+
+        
+      </ul>
+    </nav>
   </li>
 
     
@@ -262,11 +286,11 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
     
     <label class="md-nav__link" for="nav-4">
-      Explore Your Data
+      Apps
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-4">
-        Explore Your Data
+        Apps
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -277,8 +301,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../docs/explore_your_data/1.-using_nostalgia_ql/" title="1. Using Nostalgia Ql" class="md-nav__link">
-      1. Using Nostalgia Ql
+    <a href="../../../docs/apps/1.-nostalgia_timeline/" title="1. Nostalgia Timeline" class="md-nav__link">
+      1. Nostalgia Timeline
     </a>
   </li>
 
@@ -289,20 +313,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../docs/explore_your_data/2.-using_timeline/" title="2. Using Timeline" class="md-nav__link">
-      2. Using Timeline
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../docs/explore_your_data/3.-using_chatbot/" title="3. Using Chatbot" class="md-nav__link">
-      3. Using Chatbot
+    <a href="../../../docs/apps/2.-nostalgia_chatbot/" title="2. Nostalgia Chatbot" class="md-nav__link">
+      2. Nostalgia Chatbot
     </a>
   </li>
 
@@ -322,11 +334,11 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
     
     <label class="md-nav__link" for="nav-5">
-      Searching Your Data
+      Nostalgia Query Language
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-5">
-        Searching Your Data
+        Nostalgia Query Language
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -337,8 +349,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../docs/searching_your_data/by_location/" title="By Location" class="md-nav__link">
-      By Location
+    <a href="../../../docs/nostalgia_query_language/search_by_location/" title="Search By Location" class="md-nav__link">
+      Search By Location
     </a>
   </li>
 
@@ -349,8 +361,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../docs/searching_your_data/by_text/" title="By Text" class="md-nav__link">
-      By Text
+    <a href="../../../docs/nostalgia_query_language/search_by_text/" title="Search By Text" class="md-nav__link">
+      Search By Text
     </a>
   </li>
 
@@ -361,8 +373,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../docs/searching_your_data/by_time/" title="By Time" class="md-nav__link">
-      By Time
+    <a href="../../../docs/nostalgia_query_language/search_by_time/" title="Search By Time" class="md-nav__link">
+      Search By Time
     </a>
   </li>
 
@@ -1046,8 +1058,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../sources/google/flycheck_timeline/" title="Flycheck Timeline" class="md-nav__link">
-      Flycheck Timeline
+    <a href="../sources/google/calendar/" title="Calendar" class="md-nav__link">
+      Calendar
     </a>
   </li>
 
@@ -1611,6 +1623,8 @@
                 <h1 id="module-nostalgiadata_loading">Module nostalgia.data_loading</h1>
 <details class="example"><summary>View Source</summary><div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
 <span class="kn">import</span> <span class="nn">just</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
@@ -1648,6 +1662,16 @@
 <span class="sd">    pd.DataFrame([{&quot;sender&quot;: &quot;a&quot;, &quot;time&quot;: 123}])</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">fname</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.jsonl&quot;</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">key_name</span><span class="p">:</span>
+
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="n">key_name</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">just</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fname</span><span class="p">)])</span>
 
     <span class="k">if</span> <span class="n">nrows</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
 
@@ -1756,6 +1780,34 @@
             <span class="k">if</span> <span class="n">fname</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">):</span>
 
                 <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">error_bad_lines</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="n">nrows</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">fname</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.ics&quot;</span><span class="p">):</span>
+
+                <span class="kn">from</span> <span class="nn">icalevents.icalevents</span> <span class="kn">import</span> <span class="n">events</span>
+
+                <span class="n">evs</span> <span class="o">=</span> <span class="n">events</span><span class="p">(</span><span class="nb">file</span><span class="o">=</span><span class="n">fname</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+
+                <span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
+
+                    <span class="p">{</span>
+
+                        <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">ev</span><span class="o">.</span><span class="n">summary</span><span class="p">,</span>
+
+                        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">ev</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+
+                        <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="n">ev</span><span class="o">.</span><span class="n">location</span><span class="p">,</span>
+
+                        <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">ev</span><span class="o">.</span><span class="n">start</span><span class="p">,</span>
+
+                        <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="n">ev</span><span class="o">.</span><span class="n">end</span><span class="p">,</span>
+
+                    <span class="p">}</span>
+
+                    <span class="k">for</span> <span class="n">ev</span> <span class="ow">in</span> <span class="n">evs</span>
+
+                <span class="p">]</span>
+
+                <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
             <span class="k">elif</span> <span class="n">fname</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.mbox&quot;</span><span class="p">):</span>
 
@@ -2045,17 +2097,9 @@
 
                 <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="n">load_df</span><span class="p">(</span><span class="n">name</span><span class="p">)))</span>
 
-            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">]:</span>
-
-                <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-
-                    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-
-                    <span class="k">break</span>
-
             <span class="k">if</span> <span class="n">nrows</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
 
-                <span class="n">save_df</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">save_df</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
                 <span class="n">n</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
 
@@ -2131,6 +2175,16 @@ pd.DataFrame([{"sender": "a", "time": 123}])</p>
 <span class="sd">    pd.DataFrame([{&quot;sender&quot;: &quot;a&quot;, &quot;time&quot;: 123}])</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">fname</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.jsonl&quot;</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">key_name</span><span class="p">:</span>
+
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="n">key_name</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">just</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fname</span><span class="p">)])</span>
 
     <span class="k">if</span> <span class="n">nrows</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
 
@@ -2252,6 +2306,34 @@ pd.DataFrame([{"sender": "a", "time": 123}])</p>
             <span class="kt">if</span> <span class="nx">fname</span><span class="p">.</span><span class="nx">endswith</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">)</span><span class="o">:</span>
 
                 <span class="nx">data</span> <span class="o">=</span> <span class="nx">pd</span><span class="p">.</span><span class="nx">read_csv</span><span class="p">(</span><span class="nx">fname</span><span class="p">,</span> <span class="nx">error_bad_lines</span><span class="o">=</span><span class="nx">False</span><span class="p">,</span> <span class="nx">nrows</span><span class="o">=</span><span class="nx">nrows</span><span class="p">,</span> <span class="o">**</span><span class="nx">kwargs</span><span class="p">)</span>
+
+            <span class="nx">elif</span> <span class="nx">fname</span><span class="p">.</span><span class="nx">endswith</span><span class="p">(</span><span class="s2">&quot;.ics&quot;</span><span class="p">)</span><span class="o">:</span>
+
+                <span class="nx">from</span> <span class="nx">icalevents</span><span class="p">.</span><span class="nx">icalevents</span> <span class="kr">import</span> <span class="nx">events</span>
+
+                <span class="nx">evs</span> <span class="o">=</span> <span class="nx">events</span><span class="p">(</span><span class="nx">file</span><span class="o">=</span><span class="nx">fname</span><span class="p">,</span> <span class="nx">start</span><span class="o">=</span><span class="nx">datetime</span><span class="p">.</span><span class="nx">fromtimestamp</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="nx">end</span><span class="o">=</span><span class="nx">datetime</span><span class="p">.</span><span class="nx">now</span><span class="p">())</span>
+
+                <span class="nx">data</span> <span class="o">=</span> <span class="p">[</span>
+
+                    <span class="p">{</span>
+
+                        <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="nx">ev</span><span class="p">.</span><span class="nx">summary</span><span class="p">,</span>
+
+                        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="nx">ev</span><span class="p">.</span><span class="nx">description</span><span class="p">,</span>
+
+                        <span class="s2">&quot;location&quot;</span><span class="o">:</span> <span class="nx">ev</span><span class="p">.</span><span class="nx">location</span><span class="p">,</span>
+
+                        <span class="s2">&quot;start&quot;</span><span class="o">:</span> <span class="nx">ev</span><span class="p">.</span><span class="nx">start</span><span class="p">,</span>
+
+                        <span class="s2">&quot;end&quot;</span><span class="o">:</span> <span class="nx">ev</span><span class="p">.</span><span class="nx">end</span><span class="p">,</span>
+
+                    <span class="p">}</span>
+
+                    <span class="k">for</span> <span class="nx">ev</span> <span class="k">in</span> <span class="nx">evs</span>
+
+                <span class="p">]</span>
+
+                <span class="nx">data</span> <span class="o">=</span> <span class="nx">pd</span><span class="p">.</span><span class="nx">DataFrame</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
 
             <span class="nx">elif</span> <span class="nx">fname</span><span class="p">.</span><span class="nx">endswith</span><span class="p">(</span><span class="s2">&quot;.mbox&quot;</span><span class="p">)</span><span class="o">:</span>
 
@@ -2541,17 +2623,9 @@ pd.DataFrame([{"sender": "a", "time": 123}])</p>
 
                 <span class="kt">data</span> <span class="o">=</span> <span class="nx">pd</span><span class="p">.</span><span class="nx">concat</span><span class="p">((</span><span class="nx">data</span><span class="p">,</span> <span class="nx">load_df</span><span class="p">(</span><span class="nx">name</span><span class="p">)))</span>
 
-            <span class="k">for</span> <span class="nx">x</span> <span class="k">in</span> <span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">]</span><span class="o">:</span>
-
-                <span class="k">if</span> <span class="nx">x</span> <span class="k">in</span> <span class="nx">data</span>:
-
-                    <span class="kt">data</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">sort_values</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span>
-
-                    <span class="k">break</span>
-
             <span class="k">if</span> <span class="nx">nrows</span> <span class="nx">is</span> <span class="nx">None</span>:
 
-                <span class="kt">save_df</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
+                <span class="kt">data</span> <span class="o">=</span> <span class="nx">save_df</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
 
                 <span class="nx">n</span> <span class="o">=</span> <span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span>
 
@@ -2688,6 +2762,34 @@ dropping and adding columns.</p>
             if fname.endswith(&quot;.csv&quot;):
 
                 data = pd.read_csv(fname, error_bad_lines=False, nrows=nrows, **kwargs)
+
+            elif fname.endswith(&quot;.ics&quot;):
+
+                from icalevents.icalevents import events
+
+                evs = events(file=fname, start=datetime.fromtimestamp(0), end=datetime.now())
+
+                data = [
+
+                    {
+
+                        &quot;title&quot;: ev.summary,
+
+                        &quot;description&quot;: ev.description,
+
+                        &quot;location&quot;: ev.location,
+
+                        &quot;start&quot;: ev.start,
+
+                        &quot;end&quot;: ev.end,
+
+                    }
+
+                    for ev in evs
+
+                ]
+
+                data = pd.DataFrame(data)
 
             elif fname.endswith(&quot;.mbox&quot;):
 
@@ -3027,17 +3129,9 @@ You should implement <code>object_to_row(cls, row)</code> on your class that ret
 
                 data = pd.concat((data, load_df(name)))
 
-            for x in [&quot;time&quot;, &quot;start&quot;, &quot;end&quot;]:
-
-                if x in data:
-
-                    data = data.sort_values(x)
-
-                    break
-
             if nrows is None:
 
-                save_df(data, name)
+                data = save_df(data, name)
 
                 n = i + 1
 

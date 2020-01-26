@@ -14,6 +14,10 @@ def replace_ndf_class():
 
 # remove base pandas from documentation
 original_ndf = replace_ndf_class()
-portray.on_github_pages()
-# put pandas class back in
-just.write(original_ndf, NDF_PATH)
+try:
+    portray.on_github_pages()
+except KeyboardInterrupt:
+    print("Exiting")
+finally:
+    # put pandas class back in
+    just.write(original_ndf, NDF_PATH)

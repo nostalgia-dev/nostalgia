@@ -6,7 +6,7 @@ NDF_PATH = "nostalgia/ndf.py"
 
 
 def ignore(x):
-    return x.startswith("flycheck")
+    return "lycheck" in x
 
 
 def replace_ndf_class():
@@ -20,12 +20,17 @@ def replace_ndf_class():
 def render_as_html():
     # remove base pandas from documentation
     original_ndf = replace_ndf_class()
-    portray.as_html(overwrite=True)
+    try:
+        portray.as_html(overwrite=True)
+    except KeyboardInterrupt:
+        print("Exiting")
     # put pandas class back in
-    just.write(original_ndf, NDF_PATH)
+    finally:
+        just.write(original_ndf, NDF_PATH)
 
 
 server = livereload.Server()
-server.watch("README.md", render_as_html)
-server.watch("docs/**", render_as_html)
+server.watch("README.md", render_as_html, ignore=ignore)
+server.watch("docs/**", render_as_html, ignore=ignore)
+server.watch("docs/**/*.md", render_as_html, ignore=ignore)
 server.serve(root="site")

@@ -296,8 +296,8 @@
 
 
   <li class="md-nav__item">
-    <a href="docs/1.-connect_your_data/" title="1. Connect Your Data" class="md-nav__link">
-      1. Connect Your Data
+    <a href="docs/connect_your_data/" title="Connect Your Data" class="md-nav__link">
+      Connect Your Data
     </a>
   </li>
 
@@ -307,10 +307,34 @@
       
 
 
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Adding New Data
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        Adding New Data
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
   <li class="md-nav__item">
-    <a href="docs/2.-add_or_contribute_a_new_data_source/" title="2. Add Or Contribute A New Data Source" class="md-nav__link">
-      2. Add Or Contribute A New Data Source
+    <a href="docs/adding_new_data/add_or_contribute_a_new_data_source/" title="Add Or Contribute A New Data Source" class="md-nav__link">
+      Add Or Contribute A New Data Source
     </a>
+  </li>
+
+        
+      </ul>
+    </nav>
   </li>
 
     
@@ -324,11 +348,11 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
     
     <label class="md-nav__link" for="nav-4">
-      Explore Your Data
+      Apps
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-4">
-        Explore Your Data
+        Apps
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -339,8 +363,8 @@
 
 
   <li class="md-nav__item">
-    <a href="docs/explore_your_data/1.-using_nostalgia_ql/" title="1. Using Nostalgia Ql" class="md-nav__link">
-      1. Using Nostalgia Ql
+    <a href="docs/apps/1.-nostalgia_timeline/" title="1. Nostalgia Timeline" class="md-nav__link">
+      1. Nostalgia Timeline
     </a>
   </li>
 
@@ -351,20 +375,8 @@
 
 
   <li class="md-nav__item">
-    <a href="docs/explore_your_data/2.-using_timeline/" title="2. Using Timeline" class="md-nav__link">
-      2. Using Timeline
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="docs/explore_your_data/3.-using_chatbot/" title="3. Using Chatbot" class="md-nav__link">
-      3. Using Chatbot
+    <a href="docs/apps/2.-nostalgia_chatbot/" title="2. Nostalgia Chatbot" class="md-nav__link">
+      2. Nostalgia Chatbot
     </a>
   </li>
 
@@ -384,11 +396,11 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
     
     <label class="md-nav__link" for="nav-5">
-      Searching Your Data
+      Nostalgia Query Language
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-5">
-        Searching Your Data
+        Nostalgia Query Language
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -399,8 +411,8 @@
 
 
   <li class="md-nav__item">
-    <a href="docs/searching_your_data/by_location/" title="By Location" class="md-nav__link">
-      By Location
+    <a href="docs/nostalgia_query_language/search_by_location/" title="Search By Location" class="md-nav__link">
+      Search By Location
     </a>
   </li>
 
@@ -411,8 +423,8 @@
 
 
   <li class="md-nav__item">
-    <a href="docs/searching_your_data/by_text/" title="By Text" class="md-nav__link">
-      By Text
+    <a href="docs/nostalgia_query_language/search_by_text/" title="Search By Text" class="md-nav__link">
+      Search By Text
     </a>
   </li>
 
@@ -423,8 +435,8 @@
 
 
   <li class="md-nav__item">
-    <a href="docs/searching_your_data/by_time/" title="By Time" class="md-nav__link">
-      By Time
+    <a href="docs/nostalgia_query_language/search_by_time/" title="Search By Time" class="md-nav__link">
+      Search By Time
     </a>
   </li>
 
@@ -972,8 +984,8 @@
 
 
   <li class="md-nav__item">
-    <a href="reference/nostalgia/sources/google/flycheck_timeline/" title="Flycheck Timeline" class="md-nav__link">
-      Flycheck Timeline
+    <a href="reference/nostalgia/sources/google/calendar/" title="Calendar" class="md-nav__link">
+      Calendar
     </a>
   </li>
 
@@ -1483,17 +1495,18 @@
 <h3 id="available-data-bindings">Available Data Bindings</h3>
 <p>Full list of current <a href="https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources">sources</a>.</p>
 <ul>
-<li>Heartrate (<a href="https://github.com/kootenpv/nostalgia_fitbit">Fitbit</a>, <a href="https://github.com/nostalgia-dev/nostalgia/blob/master/nostalgia/sources/samsung/README.md">Samsung Watch</a>)</li>
+<li>Heartrate (<a href="https://github.com/nostalgia-dev/nostalgia_fitbit">Fitbit</a>, <a href="https://github.com/nostalgia-dev/nostalgia/blob/master/nostalgia/sources/samsung/README.md">Samsung Watch</a>)</li>
 <li>Sleep (<a href="https://github.com/kootenpv/nostalgia_fitbit">Fitbit</a>, <a href="https://github.com/nostalgia-dev/nostalgia/blob/master/nostalgia/sources/samsung/README.md">Samsung Watch</a>, SleepCycle)</li>
 <li>Places (Google Timeline)</li>
 <li>Bank Payments (ING)</li>
-<li>Pictures (Google)</li>
-<li>Emails (Gmail)</li>
-<li>App Usage (Google/Android)</li>
-<li>Chat Conversations (WhatsApp, Facebook Messenger)</li>
-<li>Music listening (Google)</li>
+<li>Pictures (<a href="https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/google/photos.py">Google Photos</a>)</li>
+<li>Emails (<a href="https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/google/gmail.py">Gmail</a>)</li>
+<li>App Usage (<a href="https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/google/app_usage.py">Android</a>)</li>
+<li>Calendar (<a href="https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/google/calendar.py">Google</a>)</li>
+<li>Chat Conversations (<a href="https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/whatsapp.py">WhatsApp</a>, <a href="https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/facebook/messages.py">Facebook Messages</a>)</li>
+<li>Music listening (<a href="https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/google/play_music.py">Google Play Music</a>)</li>
 <li>Music identification (<a href="https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/shazam.py">Shazam</a>)</li>
-<li>Posts (<a href="https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/reddit_posts.py">Reddit</a>, Facebook)</li>
+<li>Posts (<a href="https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/reddit_posts.py">Reddit</a>, <a href="https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/facebook/messages.py">Facebook</a>)</li>
 <li>File Visits (<a href="https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/emacs_file_visits.py">Emacs</a>)</li>
 <li>Annotated Screenshots (Tesseract)</li>
 <li>Web (<a href="https://github.com/nostalgia-dev/nostalgia_chrome">Nostalgia Chrome Plugin</a>)</li>
@@ -1508,21 +1521,31 @@
 <h3 id="getting-started">Getting started</h3>
 <ol>
 <li>
+<p><code>pip install nostalgia</code></p>
+</li>
+<li>
 <p>Follow the instructions for a <a href="#available-data-bindings">source of interest</a> to ensure it is loaded</p>
 </li>
 <li>
-<p>Use the data in an interactive session (run Python)</p>
+<p>Use the data in an interactive session (run Python) OR <a href="https://github.com/nostalgia-dev/timeline">run the timeline</a></p>
 </li>
 </ol>
 <h3 id="nostalgia-query-language-extending-pandas">Nostalgia Query Language - extending pandas</h3>
-<div class="codehilite"><pre><span></span><span class="n">payments</span><span class="o">.</span><span class="n">expenses</span>
-        <span class="o">.</span><span class="n">by_card</span>\
-        <span class="o">.</span><span class="n">last_week</span>\
-        <span class="o">.</span><span class="n">office_days</span>\
-        <span class="o">.</span><span class="n">at_night</span><span class="p">()</span>\
-        <span class="o">.</span><span class="n">heartrate_above</span><span class="p">(</span><span class="mi">80</span><span class="p">)</span>\
-        <span class="o">.</span><span class="n">when_at</span><span class="p">(</span><span class="s2">&quot;amsterdam&quot;</span><span class="p">)</span>
+<p>Given that you have payments, heartrate and google places set up, you could start Python and run:</p>
+<div class="codehilite"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">15</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">nostalgia.sources.ing_banking.mijn_ing</span> <span class="kn">import</span> <span class="n">Payments</span>
+
+<span class="n">payments</span> <span class="o">=</span> <span class="n">Payments</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+<span class="n">payments</span><span class="o">.</span><span class="n">by_card</span>\
+        <span class="o">.</span><span class="n">last_year</span>\
+        <span class="o">.</span><span class="n">in_office_days</span>\
+        <span class="o">.</span><span class="n">during_hours</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>\
+        <span class="o">.</span><span class="n">by_me</span><span class="p">()</span>\
+        <span class="o">.</span><span class="n">heartrate_above</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>\
+        <span class="o">.</span><span class="n">when_at</span><span class="p">(</span><span class="s2">&quot;amsterdam&quot;</span><span class="p">)</span>\
         <span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="n">Out</span><span class="p">[</span><span class="mi">15</span><span class="p">]:</span> <span class="mf">7.65</span> <span class="c1"># in euros</span>
 </pre></div>
 
 
@@ -1556,13 +1579,13 @@ It combined the generic class functionality, together with data from:</p>
       <nav class="md-footer-nav__inner md-grid">
         
         
-          <a href="docs/1.-connect_your_data/" title="1. Connect Your Data" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="docs/connect_your_data/" title="Connect Your Data" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                1. Connect Your Data
+                Connect Your Data
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">

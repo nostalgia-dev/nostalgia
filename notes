@@ -1,3 +1,6 @@
 Should generate a table using AST (or maybe people provide anonomized test/data so we can infer the periodness):
 
 **name, type, vendor, description, api vs file vs export, period (moment vs interval)**
+
+
+http://api.openweathermap.org/data/2.5/weather?lat=52.3785&lon=4.7988&apikey=a584720c43c130d020ae58d96440565e
