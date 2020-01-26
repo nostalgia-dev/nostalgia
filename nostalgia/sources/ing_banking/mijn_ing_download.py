@@ -51,7 +51,7 @@ if __name__ == "__main__":
         "ing-uic-input-container > ing-uic-native-input > input"
     )
     inp.clear()
-    inp.send_keys("01-01-2010")
+    inp.send_keys("01-01-2011")
 
     tags = [
         "dba-download-transactions-dialog",

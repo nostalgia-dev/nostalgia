@@ -199,6 +199,10 @@ class NDF(Loader, pd.DataFrame):
         df = cls.load_df(nrows)
         return cls(df)
 
+    @classmethod
+    def register(cls):
+        return cls.load(nrows=5)
+
     @property
     def df_name(self):
         name = normalize_name(self.__class__.__name__)

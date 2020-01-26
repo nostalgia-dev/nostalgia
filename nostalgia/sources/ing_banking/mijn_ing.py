@@ -51,8 +51,8 @@ class Payments(NDF):
         ing.columns = ["bedrag" if x == "Bedrag (EUR)" else x for x in ing.columns]
         ing.columns = ["naam" if x == "Naam / Omschrijving" else x for x in ing.columns]
         ing.columns = [x.lower().replace(" ", "_") for x in ing.columns]
-
-        ing = ing[ing.timestamp.notnull()]
+        ing.loc[ing.timestamp.isnull(), "timestamp"] = ing.datum[ing.timestamp.isnull()]
+        # ing = ing[ing.timestamp.notnull()]
         return ing
 
     @classmethod

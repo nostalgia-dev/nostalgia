@@ -1,4 +1,6 @@
 import os
+from datetime import datetime
+
 import just
 import pandas as pd
 
@@ -90,6 +92,21 @@ class Loader:
         if modified_time != last_modified or not from_cache:
             if fname.endswith(".csv"):
                 data = pd.read_csv(fname, error_bad_lines=False, nrows=nrows, **kwargs)
+            elif fname.endswith(".ics"):
+                from icalevents.icalevents import events
+
+                evs = events(file=fname, start=datetime.fromtimestamp(0), end=datetime.now())
+                data = [
+                    {
+                        "title": ev.summary,
+                        "description": ev.description,
+                        "location": ev.location,
+                        "start": ev.start,
+                        "end": ev.end,
+                    }
+                    for ev in evs
+                ]
+                data = pd.DataFrame(data)
             elif fname.endswith(".mbox"):
                 import mailbox
 
