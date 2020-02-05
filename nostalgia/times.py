@@ -1,13 +1,12 @@
 from pytz import timezone
-from pytz.reference import Local
+import tzlocal
 from metadate import parse_date, Units
 from datetime import datetime
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 import dateutil
 
-# tz = timezone('Europe/Amsterdam')
-tz = timezone(Local.tzname(datetime.now()))
+tz = tzlocal.get_localzone()
 utc = timezone('UTC')
 
 
