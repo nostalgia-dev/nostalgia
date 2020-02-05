@@ -6,6 +6,8 @@ import pandas as pd
 
 from nostalgia.utils import normalize_name
 
+from nostalgia.times import datetime_from_timestamp
+from nostalgia.cache import get_cache
 from nostalgia.file_caching import save_df, load_df
 from nostalgia.file_caching import get_newline_count, save_newline_count
 from nostalgia.file_caching import get_processed_files, save_processed_files

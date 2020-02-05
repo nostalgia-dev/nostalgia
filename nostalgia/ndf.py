@@ -373,7 +373,7 @@ class NDF(Loader, pd.DataFrame):
             col1, col2 = times
             sub = self[self[col1].notnull() & self[col2].notnull()]
             a, b = sub[col1], sub[col2]
-            if (a > b).all():
+            if (a >= b).all():
                 col1, col2 = col2, col1
             elif not (a <= b).all():
                 raise ValueError(
@@ -699,3 +699,7 @@ class Results(NDF):
         if not isinstance(rec, pd.Series):
             rec = rec.iloc[0]
         return rec
+
+
+for x in registry.values():
+    x.time

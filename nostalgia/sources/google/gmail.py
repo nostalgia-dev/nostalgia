@@ -20,6 +20,14 @@ def try_parse(x):
         return datetime(1970, 1, 1, 0, 0, 0, tzinfo=tz)
 
 
+# class MBox:
+#     ingest_settings = {
+#         "ingest_glob": "~/Downloads/*.mbox",
+#         "recent_only": False,
+#         "delete_existing": False,
+#     }
+
+
 class Gmail(Google):
     me = []
 
@@ -41,11 +49,14 @@ class Gmail(Google):
         data.drop("date", axis=1, inplace=True)
         return data
 
-    # refactor to use "google_takeout" as target
     @classmethod
-    def load(cls, fname, nrows=None, from_cache=True):
-        emails = cls.load_data_file_modified_time(fname, nrows=nrows, from_cache=from_cache)
-        return cls(emails)
+    def load(cls, nrows=None, from_cache=True, **kwargs):
+        dfs = [
+            cls.load_data_file_modified_time(file_path, nrows=nrows, from_cache=from_cache)
+            for file_path in just.glob("~/nostalgia_data/input/google/Takeout/Mail/*.mbox")
+        ]
+        dfs = [x for x in dfs if not x.empty]
+        return cls(pd.concat(dfs))
 
     def sent_by(self, name=None, email=None, case=False):
         if name is not None and email is not None:

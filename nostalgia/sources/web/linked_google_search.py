@@ -48,7 +48,6 @@ class GoogleSearch(NDF):
         row = get_linked_data(obj)
         if row is not None:
             row["time"] = datetime.fromtimestamp(float(obj["time"]), tz=tz)
-            row["url"] = obj["url"]
             row["path"] = obj["path"]
             row["keywords"] = ""
             return row

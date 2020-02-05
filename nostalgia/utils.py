@@ -50,9 +50,14 @@ def format_latlng(latlng):
 
 
 def view(path):
-    from requests_viewer import view_html
+    if path.endswith("gz"):
+        from requests_viewer import view_html
 
-    view_html(just.read(path))
+        view_html(just.read(path))
+    else:
+        import webbrowser
+
+        webbrowser.open("file://" + path)
 
 
 def haversine(lat1, lon1, lat2, lon2):
