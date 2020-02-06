@@ -54,6 +54,7 @@ setup(
         "cython",
         "pyarrow",
         "tldextract",
+        "diskcache",
         # "lxml",  # web_history
         # "diskcache",  # web_history
         # "auto_extract",  # web_history
