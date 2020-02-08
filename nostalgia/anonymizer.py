@@ -3,14 +3,14 @@ from pandas._config import get_option
 from pandas.io.formats import console
 from io import StringIO
 
-ANONIMIZED = False
+ANONYMIZED = False
 
 series_orig_repr = pd.Series.__repr__
 
 # pd.Series.__repr__ = lambda *args: "a"
 
 
-class AnonimizedSeries:
+class AnonymizedSeries:
     def __init__(self, data, key):
         self.data = pd.Series(data)
         self._key = key
@@ -22,17 +22,17 @@ class AnonimizedSeries:
         return pd.Series(self.data).value_counts()._values
 
     def head(self):
-        return AnonimizedSeries(pd.Series.head(self.data), self._key)
+        return AnonymizedSeries(pd.Series.head(self.data), self._key)
 
     def tail(self):
-        return AnonimizedSeries(pd.Series.tail(self.data), self._key)
+        return AnonymizedSeries(pd.Series.tail(self.data), self._key)
 
     def __repr__(self):
         return repr(pd.Series([self._key] * len(self)))
 
     def __getattribute__(self, key):
         if key == "iloc":
-            raise ValueError("Cannot iloc anonimized object")
+            raise ValueError("Cannot iloc anonymized object")
         return super().__getattribute__(key)
 
     @property
@@ -41,7 +41,7 @@ class AnonimizedSeries:
 
 
 def series_anon_repr(x):
-    return "<AnonimizedSeries>"
+    return "<AnonymizedSeries>"
 
 
 class Anon:
@@ -61,17 +61,17 @@ def normal(y):
     return str(y).replace("\n", "\\n")
 
 
-class Anonimizer(pd.DataFrame):
-    anonimized = []
+class Anonymizer(pd.DataFrame):
+    anonymized = []
 
     def __getitem__(self, key):
-        if isinstance(key, str) and ANONIMIZED and key in self.anonimized:
-            return AnonimizedSeries(pd.DataFrame.__getitem__(self, key), key)
+        if isinstance(key, str) and ANONYMIZED and key in self.anonymized:
+            return AnonymizedSeries(pd.DataFrame.__getitem__(self, key), key)
         return pd.DataFrame.__getitem__(self, key)
 
     def __repr__(self) -> str:
-        global ANONIMIZED
-        if not ANONIMIZED:
+        global ANONYMIZED
+        if not ANONYMIZED:
             return super().__repr__()
         """
         Return a string representation for a particular DataFrame.
@@ -89,7 +89,7 @@ class Anonimizer(pd.DataFrame):
             width, _ = console.get_console_size()
         else:
             width = None
-        formatters = [(Anon(x).get_value if x in self.anonimized else normal) for x in self.columns]
+        formatters = [(Anon(x).get_value if x in self.anonymized else normal) for x in self.columns]
         self.to_string(
             buf=buf,
             max_rows=max_rows,
@@ -103,15 +103,15 @@ class Anonimizer(pd.DataFrame):
         return buf.getvalue()
 
     @classmethod
-    def is_anonimized(cls):
-        return ANONIMIZED
+    def is_anonymized(cls):
+        return ANONYMIZED
 
     @classmethod
-    def anonimize(cls):
-        global ANONIMIZED
-        ANONIMIZED = True
+    def anonymize(cls):
+        global ANONYMIZED
+        ANONYMIZED = True
 
     @classmethod
     def reveal(cls):
-        global ANONIMIZED
-        ANONIMIZED = False
+        global ANONYMIZED
+        ANONYMIZED = False

@@ -27,7 +27,7 @@ class Payments(NDF):
     keywords = ["pay", "buy", "purchase", "spend", "cost"]
     nlp_columns = ["mededelingen", "naam"]
     selected_columns = ["time", "naam", "bedrag", "mededelingen"]
-    anonimized = [
+    anonymized = [
         "naam",
         "mededelingen",
         "rekening",

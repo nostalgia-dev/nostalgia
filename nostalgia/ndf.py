@@ -15,8 +15,8 @@ from nostalgia.file_caching import save_df, load_df
 from nostalgia.times import datetime_from_timestamp
 from nostalgia.cache import get_cache
 from nostalgia.data_loading import Loader
-from nostalgia.anonimizer import Anonimizer
-import nostalgia.anonimizer
+from nostalgia.anonymizer import Anonymizer
+import nostalgia.anonymizer
 
 
 def ab_overlap_cd(a, b, c, d):
@@ -109,7 +109,7 @@ def col_contains_wrapper(word, col):
     return col_contains
 
 
-class NDF(Anonimizer, Loader, pd.DataFrame):
+class NDF(Anonymizer, Loader, pd.DataFrame):
     keywords = []
     nlp_columns = []
     nlp_when = True
@@ -182,7 +182,7 @@ class NDF(Anonimizer, Loader, pd.DataFrame):
             nlp_registry["when"].add(ResultInfo(C, "end", time, orig_word="when"))
 
     def __repr__(self):
-        if not self.anonimized:
+        if not self.anonymized:
             return super(NDF, self).__repr__()
         return super(NDF, self).__repr__()
 
@@ -350,8 +350,8 @@ class NDF(Anonimizer, Loader, pd.DataFrame):
     def create_sample_data(self):
         fname = sys.modules[self.__module__].__file__[:-3] + ".parquet"
         sample = self.iloc[:100].reset_index().drop("index", axis=1)
-        if self.is_anonimized:
-            for x in self.anonimized:
+        if self.is_anonymized:
+            for x in self.anonymized:
                 dtype = self.dtypes[x]
                 if str(self.dtypes[x]) == "object":
                     sample[x] = x
