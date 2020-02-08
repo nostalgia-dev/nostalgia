@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 import pandas as pd
 import numpy as np
 from nostalgia.times import now, yesterday, last_week, last_month, last_year, parse_date_tz
@@ -14,6 +15,8 @@ from nostalgia.file_caching import save_df, load_df
 from nostalgia.times import datetime_from_timestamp
 from nostalgia.cache import get_cache
 from nostalgia.data_loading import Loader
+from nostalgia.anonimizer import Anonimizer
+import nostalgia.anonimizer
 
 
 def ab_overlap_cd(a, b, c, d):
@@ -106,7 +109,7 @@ def col_contains_wrapper(word, col):
     return col_contains
 
 
-class NDF(Loader, pd.DataFrame):
+class NDF(Anonimizer, Loader, pd.DataFrame):
     keywords = []
     nlp_columns = []
     nlp_when = True
@@ -177,6 +180,11 @@ class NDF(Loader, pd.DataFrame):
                 )
         if self.nlp_when:
             nlp_registry["when"].add(ResultInfo(C, "end", time, orig_word="when"))
+
+    def __repr__(self):
+        if not self.anonimized:
+            return super(NDF, self).__repr__()
+        return super(NDF, self).__repr__()
 
     @classmethod
     def ingest(cls):
@@ -338,6 +346,22 @@ class NDF(Loader, pd.DataFrame):
         if self._end_col not in self:
             return None
         return getattr(self, self._end_col)
+
+    def create_sample_data(self):
+        fname = sys.modules[self.__module__].__file__[:-3] + ".parquet"
+        sample = self.iloc[:100].reset_index().drop("index", axis=1)
+        if self.is_anonimized:
+            for x in self.anonimized:
+                dtype = self.dtypes[x]
+                if str(self.dtypes[x]) == "object":
+                    sample[x] = x
+                else:
+                    sample[x] = np.random.choice(sample[x], sample.shape[0])
+                assert sample[x].dtype == dtype
+        sample = sample.sample(5).reset_index().drop("index", axis=1)
+        sample.to_parquet(fname)
+        print(f"Sample save as {os.path.abspath(fname)}")
+        return sample
 
     def time_level(self, col):
         if (col.dt.microsecond != 0).any():
@@ -699,7 +723,3 @@ class Results(NDF):
         if not isinstance(rec, pd.Series):
             rec = rec.iloc[0]
         return rec
-
-
-for x in registry.values():
-    x.time

@@ -27,6 +27,15 @@ class Payments(NDF):
     keywords = ["pay", "buy", "purchase", "spend", "cost"]
     nlp_columns = ["mededelingen", "naam"]
     selected_columns = ["time", "naam", "bedrag", "mededelingen"]
+    anonimized = [
+        "naam",
+        "mededelingen",
+        "rekening",
+        "tegenrekening",
+        "bedrag",
+        "datum",
+        "timestamp",
+    ]
 
     @classmethod
     def handle_dataframe_per_file(cls, data, fname=None):
