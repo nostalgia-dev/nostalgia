@@ -67,7 +67,7 @@ setup(
     package_data={
         # If any package contains *.txt or *.rst files, include them:
         # '': ['*.txt', '*.rst'],
-        "": ["*.parquet"]
+        "nostalgia": ["**/*.parquet"]
     },
     zip_safe=False,
     platforms='any',

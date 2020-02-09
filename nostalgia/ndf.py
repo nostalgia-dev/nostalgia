@@ -350,18 +350,35 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
     def create_sample_data(self):
         fname = sys.modules[self.__module__].__file__[:-3] + ".parquet"
         sample = self.iloc[:100].reset_index().drop("index", axis=1)
-        if self.is_anonymized:
-            for x in self.anonymized:
-                dtype = self.dtypes[x]
-                if str(self.dtypes[x]) == "object":
-                    sample[x] = x
-                else:
-                    sample[x] = np.random.choice(sample[x], sample.shape[0])
-                assert sample[x].dtype == dtype
+        # if self.is_anonymized:
+        #     for x in self.anonymized:
+        #         dtype = self.dtypes[x]
+        #         if str(self.dtypes[x]) == "object":
+        #             sample[x] = x
+        #         else:
+        #             sample[x] = np.random.choice(sample[x], sample.shape[0])
+        #         assert sample[x].dtype == dtype
         sample = sample.sample(5).reset_index().drop("index", axis=1)
         sample.to_parquet(fname)
         print(f"Sample save as {os.path.abspath(fname)}")
         return sample
+
+    @classmethod
+    def load_sample_data(cls):
+        fname = sys.modules[cls.__module__].__file__[:-3] + ".parquet"
+        if os.path.exists(fname):
+            print("loaded method 1")
+            df = pd.read_parquet(fname)
+        else:
+            import pkgutil
+            from io import BytesIO
+
+            fname = sys.modules[cls.__module__].__file__[:-3].split("sources")[1]
+            resource_path = os.path.join("sources", fname) + ".parquet"
+            data = pkgutil.get_data("nostalgia", resource_path)
+            print("loaded method 2")
+            df = pd.read_parquet(BytesIO(data))
+        return cls(df)
 
     def time_level(self, col):
         if (col.dt.microsecond != 0).any():
@@ -690,7 +707,7 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         return super().to_html()
 
     def get_type_from_registry(self, tp):
-        for key, value in rergistry.items():
+        for key, value in registry.items():
             if key.endswith(tp):
                 return value
 
