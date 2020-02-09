@@ -55,6 +55,7 @@ setup(
         "pyarrow",
         "tldextract",
         "diskcache",
+        "tzlocal",
         # "lxml",  # web_history
         # "diskcache",  # web_history
         # "auto_extract",  # web_history
