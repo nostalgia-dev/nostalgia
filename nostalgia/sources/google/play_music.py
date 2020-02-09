@@ -19,7 +19,7 @@ class PlayMusic(Google):
         data["_start"] = [custom_parse(x) for x in data["time"]]
 
         data = data.rename(columns={"description": "artist"})
-        data = data[~data.title.str.startswith("Searched for ")]
+        data = data[~data.title.str.startswith("Searched for ", na=False)]
         data.loc[:, "skip"] = data.title.str.startswith("Skipped ")
         data.loc[:, "listen"] = data.title.str.startswith("Listened to ")
         data = data.sort_values("_start")
@@ -43,7 +43,8 @@ class PlayMusic(Google):
             "listen",
             "fake",
         ]:
-            del data[d]
+            if d in data:
+                del data[d]
         for name, group in data.groupby(["artist", "title"]):
             if not group.long.any() or group.long.all():
                 continue

@@ -6,7 +6,7 @@ with open("README.md") as f:
 
 MAJOR_VERSION = "0"
 MINOR_VERSION = "1"
-MICRO_VERSION = "27"
+MICRO_VERSION = "36"
 VERSION = "{}.{}.{}".format(MAJOR_VERSION, MINOR_VERSION, MICRO_VERSION)
 
 setup(
@@ -54,6 +54,8 @@ setup(
         "cython",
         "pyarrow",
         "tldextract",
+        "diskcache",
+        "tzlocal",
         # "lxml",  # web_history
         # "diskcache",  # web_history
         # "auto_extract",  # web_history
@@ -62,6 +64,11 @@ setup(
         # "python-dotenv",  # offers
         # "natura",  # offers
     ],
+    package_data={
+        # If any package contains *.txt or *.rst files, include them:
+        # '': ['*.txt', '*.rst'],
+        "nostalgia": ["**/*.parquet"]
+    },
     zip_safe=False,
     platforms='any',
 )
