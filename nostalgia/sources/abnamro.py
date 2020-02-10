@@ -2,6 +2,7 @@ import pandas as pd
 from nostalgia.ndf import NDF
 from nostalgia.times import datetime_from_format
 import re
+import just
 import time
 import numpy as np
 from nostalgia.times import datetime_from_timestamp
@@ -18,8 +19,9 @@ def find_date(x):
 
 class AbnAmro(NDF):
     @classmethod
-    def load(cls, file_path="/Users/nikolay_vasilishin/work/foundation/nostalgia/MyData/abnamro/XLS200202220050.xls", nrows=None):
-        abn = pd.read_excel(file_path, converters={'transactiondate': convert_date})
+    def load(cls, files="~/nostalgia_data/input/abnamro/*.xls", nrows=None):
+        files = just.glob(files)
+        abn = pd.concat([pd.read_excel(x, nrows=nrows, converters={'transactiondate': convert_date}) for x in files])
         abn["preciseDate"] = abn["description"].apply(find_date)
         if abn.preciseDate.isnull().iloc[0]:
             abn.preciseDate.iloc[0] = abn.transactiondate.iloc[0]
