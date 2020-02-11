@@ -46,11 +46,13 @@ Full list of current [sources](https://github.com/nostalgia-dev/nostalgia/tree/m
 
 ### Getting started
 
-1. `pip install nostalgia`
+1. If you're a user: `pip install nostalgia` or... `pip install -e .` if you might want to develop on Nostalgia
 
 1. Follow the instructions for a [source of interest](#available-data-bindings) to ensure it is loaded
 
 1. Use the data in an interactive session (run Python) OR [run the timeline](https://github.com/nostalgia-dev/timeline)
+
+1. To upgrade Nostalgia, as user run `pip install -U nostalgia` or as developer run `git pull`.
 
 ### Nostalgia Query Language - extending pandas
 
@@ -72,7 +74,6 @@ payments.by_card\
 
 Out[15]: 7.65 # in euros
 ```
-
 
 This will give the total expenses by card in the last week, but only on work days, at night, when my heart rate is above 80 and I'm in Amsterdam.
 It combined the generic class functionality, together with data from:
