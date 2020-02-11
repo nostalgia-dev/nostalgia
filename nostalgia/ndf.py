@@ -129,7 +129,7 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
             if self.df_name not in registry:
                 registry[self.df_name] = self
             # if the new data is smaller than what is in the registry, do not overwrite the registry
-            elif data.shape[0] > registry[self.df_name].shape[0]:
+            elif len(data) > registry[self.df_name].shape[0]:
                 registry[self.df_name] = self
         if n is None:
             return
@@ -349,6 +349,8 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
 
     def create_sample_data(self):
         fname = sys.modules[self.__module__].__file__[:-3] + ".parquet"
+        # verify that we can process it
+        _ = self.as_simple()
         sample = self.iloc[:100].reset_index().drop("index", axis=1)
         # if self.is_anonymized:
         #     for x in self.anonymized:
@@ -358,7 +360,10 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         #         else:
         #             sample[x] = np.random.choice(sample[x], sample.shape[0])
         #         assert sample[x].dtype == dtype
-        sample = sample.sample(5).reset_index().drop("index", axis=1)
+        n = min(sample.shape[0], 5)
+        if n == 0:
+            raise ValueError("Empty DataFrame, cannot make sample")
+        sample = sample.sample(n).reset_index().drop("index", axis=1)
         sample.to_parquet(fname)
         print(f"Sample save as {os.path.abspath(fname)}")
         return sample
@@ -398,7 +403,9 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         times = [x for x, y in zip(self.columns, self.dtypes) if "datetime" in str(y)]
         levels = [self.time_level(self[x]) for x in times]
         if not levels:
-            raise ValueError(f"No datetime found in {self.__class__.__name__}")
+            raise ValueError(
+                f"Either 1 or 2 columns should be of type datetime for {self.__class__.__name__} (0 found)"
+            )
         max_level = max(levels)
         # workaround
         # start: 10:00:00
