@@ -6,6 +6,7 @@ import just
 import time
 import numpy as np
 from nostalgia.times import datetime_from_timestamp
+import os
 
 def convert_date(date):
     return datetime_from_format(str(date),"%Y%m%d")
@@ -19,8 +20,8 @@ def find_date(x):
 
 class AbnAmro(NDF):
     @classmethod
-    def load(cls, files="~/nostalgia_data/input/abnamro/*.xls", nrows=None):
-        files = just.glob(files)
+    def load(cls, file_path="~/nostalgia_data/input/abnamro", nrows=None):
+        files = just.glob(os.path.join(file_path, '*.xls'))
         abn = pd.concat([pd.read_excel(x, nrows=nrows, converters={'transactiondate': convert_date}) for x in files])
         abn["preciseDate"] = abn["description"].apply(find_date)
         if abn.preciseDate.isnull().iloc[0]:

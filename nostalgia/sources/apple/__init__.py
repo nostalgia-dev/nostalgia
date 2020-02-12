@@ -1,5 +1,4 @@
 from nostalgia.ndf import NDF
-from nostalgia.sources.google import Google
 
 
 class Apple(NDF):
@@ -11,5 +10,4 @@ class Apple(NDF):
     }
 
 if __name__ == "__main__":
-
     Apple.ingest()
