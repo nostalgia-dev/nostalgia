@@ -2,7 +2,6 @@ import just
 import pandas as pd
 
 from nostalgia.ndf import NDF
-import os
 
 class StoresActivity(NDF):
     @classmethod
