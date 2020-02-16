@@ -1,18 +1,17 @@
+from datetime import timedelta
+
 import just
 import pandas as pd
 
 from nostalgia.ndf import NDF
 from nostalgia.times import datetime_from_format
-import os
-from datetime import timedelta
 
 flatten = lambda l: [item for sublist in l for item in sublist]
 
-
 class Spotify(NDF):
     @classmethod
-    def load(cls, file_path="~/nostalgia_data/input/spotify", nrows=None):
-        files = os.path.join(file_path, "StreamingHistory*.json")
+    def load(cls, nrows=None):
+        files = "~/nostalgia_data/input/spotify/StreamingHistory*.json"
         spotify = pd.DataFrame(
             [
                 (
@@ -31,5 +30,4 @@ class Spotify(NDF):
 
 if __name__ == "__main__":
     j = Spotify.load()
-    print(j.as_simple())
-    print(j.last_week)
+    print(j.create_sample_data())

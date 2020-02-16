@@ -20,8 +20,8 @@ def find_date(x):
 
 class AbnAmro(NDF):
     @classmethod
-    def load(cls, file_path="~/nostalgia_data/input/abnamro", nrows=None):
-        files = just.glob(os.path.join(file_path, '*.xls'))
+    def load(cls, nrows=None):
+        files = just.glob('~/nostalgia_data/input/abnamro/*.xls')
         abn = pd.concat([pd.read_excel(x, nrows=nrows, converters={'transactiondate': convert_date}) for x in files])
         abn["preciseDate"] = abn["description"].apply(find_date)
         if abn.preciseDate.isnull().iloc[0]:
