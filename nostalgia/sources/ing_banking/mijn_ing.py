@@ -24,6 +24,7 @@ def old_date(col):
 
 
 class Payments(NDF):
+    vendor = "ing"
     keywords = ["pay", "buy", "purchase", "spend", "cost"]
     nlp_columns = ["mededelingen", "naam"]
     selected_columns = ["time", "naam", "bedrag", "mededelingen"]

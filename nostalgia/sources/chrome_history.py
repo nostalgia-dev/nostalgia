@@ -51,6 +51,7 @@ def get_title(x):
 
 
 class WebHistory(NDF):
+    vendor = "chrome"
     keywords = ["website", "page", "site", "web history", "page history", "visit"]
     nlp_columns = ["domain", "domain_and_suffix", "title"]
     # selected_columns = ["time", "name", "price", "url"]

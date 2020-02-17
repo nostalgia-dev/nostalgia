@@ -3,6 +3,7 @@ import re
 import sys
 import pandas as pd
 import numpy as np
+import nostalgia
 from nostalgia.times import now, yesterday, last_week, last_month, last_year, parse_date_tz
 from metadate import is_mp
 from datetime import timedelta
@@ -219,6 +220,13 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         return name
 
     @classmethod
+    def class_df_name(cls):
+        name = normalize_name(cls.__name__)
+        if cls.vendor is not None and not name.startswith(cls.vendor):
+            name = cls.vendor + "_" + name
+        return name
+
+    @classmethod
     def df_label(cls):
         return normalize_name(cls.__name__).replace("_", " ").title()
 
@@ -348,7 +356,8 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         return getattr(self, self._end_col)
 
     def create_sample_data(self):
-        fname = sys.modules[self.__module__].__file__[:-3] + ".parquet"
+        nostalgia_dir = os.path.dirname(nostalgia.__file__)
+        fname = os.path.join(nostalgia_dir, "data/sources/" + self.df_name + ".parquet")
         # verify that we can process it
         _ = self.as_simple()
         sample = self.iloc[:100].reset_index().drop("index", axis=1)
@@ -378,8 +387,9 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
             import pkgutil
             from io import BytesIO
 
-            fname = sys.modules[cls.__module__].__file__[:-3].split("sources")[1]
-            resource_path = os.path.join("sources", fname) + ".parquet"
+            nostalgia_dir = os.path.dirname(nostalgia.__file__)
+            sample_name = "data/sources/" + cls.class_df_name + ".parquet"
+            resource_path = os.path.join(nostalgia_dir, sample_name)
             data = pkgutil.get_data("nostalgia", resource_path)
             print("loaded method 2")
             df = pd.read_parquet(BytesIO(data))
