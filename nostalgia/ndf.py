@@ -372,7 +372,12 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         n = min(sample.shape[0], 5)
         if n == 0:
             raise ValueError("Empty DataFrame, cannot make sample")
-        sample = sample.sample(n).reset_index().drop("index", axis=1)
+        sample = (
+            sample.sample(n)
+            .reset_index()
+            .drop("index", axis=1)
+            .drop("level_0", axis=1, errors="ignore")
+        )
         sample.to_parquet(fname)
         print(f"Sample save as {os.path.abspath(fname)}")
         return sample
@@ -441,6 +446,11 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
             if col1 == "end" and col2 == "start":
                 col2, col1 = col1, col2
             self._start_col, self._time_col, self._end_col = col1, col1, col2
+            interval_index = pd.IntervalIndex.from_arrays(
+                self[self._start_col], self[self._end_col]
+            )
+            self.set_index(interval_index, inplace=True)
+            self.sort_index(inplace=True)
         else:
             msg = 'infer time failed: there can only be 1 or 2 datetime columns at the same granularity.'
 
