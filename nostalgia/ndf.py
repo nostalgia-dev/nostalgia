@@ -357,7 +357,7 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
 
     def create_sample_data(self):
         nostalgia_dir = os.path.dirname(nostalgia.__file__)
-        fname = os.path.join(nostalgia_dir, "data/sources/" + self.df_name + ".parquet")
+        fname = os.path.join(nostalgia_dir, "data/samples/" + self.df_name + ".parquet")
         # verify that we can process it
         _ = self.as_simple()
         sample = self.iloc[:100].reset_index().drop("index", axis=1)
@@ -379,7 +379,8 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
 
     @classmethod
     def load_sample_data(cls):
-        fname = sys.modules[cls.__module__].__file__[:-3] + ".parquet"
+        nostalgia_dir = os.path.dirname(nostalgia.__file__)
+        fname = os.path.join(nostalgia_dir, "data/samples/" + cls.class_df_name() + ".parquet")
         if os.path.exists(fname):
             print("loaded method 1")
             df = pd.read_parquet(fname)
@@ -388,9 +389,9 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
             from io import BytesIO
 
             nostalgia_dir = os.path.dirname(nostalgia.__file__)
-            sample_name = "data/sources/" + cls.class_df_name + ".parquet"
-            resource_path = os.path.join(nostalgia_dir, sample_name)
-            data = pkgutil.get_data("nostalgia", resource_path)
+            sample_name = "data/samples/" + cls.class_df_name() + ".parquet"
+
+            data = pkgutil.get_data("nostalgia", sample_name)
             print("loaded method 2")
             df = pd.read_parquet(BytesIO(data))
         return cls(df)
