@@ -75,7 +75,7 @@ def check_seen(name, value):
 
 def make_path(name):
     dir_name = os.path.expanduser("~/nostalgia_data/dfs/")
-    just.mkdir(dir_name, 0x700)
+    just.mkdir(dir_name, 0o700)
     return dir_name + slugify(name)
 
 
