@@ -55,14 +55,22 @@ setup(
         "pyarrow",
         "tldextract",
         "diskcache",
+        "requests_viewer",  # utils
         "tzlocal",
-        # "lxml",  # web_history
-        # "diskcache",  # web_history
-        # "auto_extract",  # web_history
-        # "ujson",  # web_history
-        # "google-api-python-client",  # offers
-        # "python-dotenv",  # offers
-        # "natura",  # offers
+        "lxml",  # web_history
+        "diskcache",  # web_history
+        "auto_extract",  # web_history
+        "ujson",  # web_history
+        "google-api-python-client",  # offers
+        "python-dotenv",  # offers
+        "natura",  # offers
+        "selenium",  # google_timeline, ing_payments
+        "psaw",  # reddit
+        "icalevents",  # google calendar
+        "pytesseract",  # screenshots
+        # extras
+        "nostalgia_chrome",
+        "nostalgia_fitbit",
     ],
     package_data={
         # If any package contains *.txt or *.rst files, include them:
