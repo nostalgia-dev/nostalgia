@@ -1,6 +1,6 @@
 import pandas as pd
+
 from nostalgia.sources.google import Google
-from nostalgia.times import datetime_from_format
 from nostalgia.times import tz
 
 

@@ -1,9 +1,8 @@
 import re
-import just
-import pandas
-from nostalgia.times import datetime_from_timestamp
-from nostalgia.sources.facebook import Facebook
+
 from nostalgia.interfaces.post import PostInterface
+from nostalgia.sources.facebook import Facebook
+from nostalgia.times import datetime_from_timestamp
 
 
 class FacebookPosts(Facebook, PostInterface):

@@ -1,10 +1,8 @@
-import re
-import os
 import pandas as pd
-import just
-from nostalgia.times import datetime_from_timestamp, tz
+
 from nostalgia.ndf import NDF
 from nostalgia.sources.samsung import Samsung
+from nostalgia.times import datetime_from_timestamp, tz
 
 
 class SamsungStress(Samsung, NDF):

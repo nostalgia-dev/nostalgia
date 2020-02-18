@@ -22,10 +22,11 @@
 #   </TimeSpan>
 # </Placemark>
 
-import pandas as pd
-import lxml.etree
-from dateutil.parser import parse as date_parse
 import just
+import lxml.etree
+import pandas as pd
+from dateutil.parser import parse as date_parse
+
 from nostalgia.times import yesterday
 from nostalgia.utils import format_latlng
 

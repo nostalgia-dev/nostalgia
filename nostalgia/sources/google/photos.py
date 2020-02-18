@@ -1,10 +1,11 @@
-import os
-import just
 from datetime import datetime
+
+import just
 import pandas as pd
+
+from nostalgia.sources.google import Google
 from nostalgia.times import tz
 from nostalgia.utils import format_latlng
-from nostalgia.sources.google import Google
 
 
 class Photos(Google):

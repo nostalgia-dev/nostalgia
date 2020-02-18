@@ -1,16 +1,12 @@
 import json
 from datetime import datetime
+
 import just
-import pandas as pd
-
-from nostalgia.times import tz
-
 from auto_extract import parse_article
 
 from nostalgia.cache import get_cache
 from nostalgia.ndf import NDF
-
-from nostalgia.utils import normalize_name
+from nostalgia.times import tz
 
 CACHE = get_cache("linked_events")
 

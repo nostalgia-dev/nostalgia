@@ -1,6 +1,5 @@
-from nostalgia.times import datetime_from_format
-from datetime import timedelta
 from nostalgia.sources.google import Google
+from nostalgia.times import datetime_from_format
 
 
 def custom_parse(x):

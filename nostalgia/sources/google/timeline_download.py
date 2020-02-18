@@ -1,15 +1,17 @@
-import time
 import os
 import shutil
-from selenium import webdriver
+import time
 from calendar import monthrange
 from datetime import datetime
+
 from selenium.common.exceptions import (
     NoSuchElementException,
     ElementNotVisibleException,
     ElementClickInterceptedException,
     ElementNotInteractableException,
 )
+
+from selenium import webdriver
 
 SELENIUM_EXCEPTIONS = (
     NoSuchElementException,

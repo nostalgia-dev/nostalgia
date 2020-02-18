@@ -1,11 +1,11 @@
+import functools
 import re
 from collections import Counter
-import just
-import requests
+
 from nearnlp.nearnlp import is_noun, is_verb, singularize
-import functools
-from tok import Tokenizer
 from nltk.corpus import stopwords
+from tok import Tokenizer
+
 from nostalgia.enrichers.google.custom_search import google_custom_search
 
 ENGLISH_STOP = set(stopwords.words("english"))

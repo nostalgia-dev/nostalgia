@@ -1,9 +1,10 @@
+from datetime import datetime
+
 import just
 import pandas as pd
-from datetime import datetime
-from nostalgia.times import tz, parse
-from nostalgia.data_loading import read_array_of_dict_from_json
+
 from nostalgia.sources.google import Google
+from nostalgia.times import tz, parse
 
 
 def try_parse(x):
