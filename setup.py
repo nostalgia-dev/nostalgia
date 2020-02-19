@@ -55,19 +55,18 @@ setup(
         "pyarrow",
         "tldextract",
         "diskcache",
-        "requests_viewer",  # utils
+        "requests_viewer",
         "tzlocal",
-        "lxml",  # web_history
-        "diskcache",  # web_history
-        "auto_extract",  # web_history
-        "ujson",  # web_history
-        "google-api-python-client",  # offers
-        "python-dotenv",  # offers
-        "natura",  # offers
-        "selenium",  # google_timeline, ing_payments
-        "psaw",  # reddit
-        "icalevents",  # google calendar
-        "pytesseract",  # screenshots
+        "lxml",
+        "auto_extract",
+        "ujson",
+        "google-api-python-client",
+        "python-dotenv",
+        "natura",
+        "selenium",
+        "psaw",
+        "icalevents",
+        "pytesseract",
         # extras
         "nostalgia_chrome",
         "nostalgia_fitbit",
