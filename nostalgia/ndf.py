@@ -3,6 +3,7 @@ import re
 import sys
 import pandas as pd
 import numpy as np
+import nostalgia
 from nostalgia.times import now, yesterday, last_week, last_month, last_year, parse_date_tz
 from metadate import is_mp
 from datetime import timedelta
@@ -219,6 +220,13 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         return name
 
     @classmethod
+    def class_df_name(cls):
+        name = normalize_name(cls.__name__)
+        if cls.vendor is not None and not name.startswith(cls.vendor):
+            name = cls.vendor + "_" + name
+        return name
+
+    @classmethod
     def df_label(cls):
         return normalize_name(cls.__name__).replace("_", " ").title()
 
@@ -348,7 +356,8 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         return getattr(self, self._end_col)
 
     def create_sample_data(self):
-        fname = sys.modules[self.__module__].__file__[:-3] + ".parquet"
+        nostalgia_dir = os.path.dirname(nostalgia.__file__)
+        fname = os.path.join(nostalgia_dir, "data/samples/" + self.df_name + ".parquet")
         # verify that we can process it
         _ = self.as_simple()
         sample = self.iloc[:100].reset_index().drop("index", axis=1)
@@ -363,14 +372,20 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         n = min(sample.shape[0], 5)
         if n == 0:
             raise ValueError("Empty DataFrame, cannot make sample")
-        sample = sample.sample(n).reset_index().drop("index", axis=1)
+        sample = (
+            sample.sample(n)
+            .reset_index()
+            .drop("index", axis=1)
+            .drop("level_0", axis=1, errors="ignore")
+        )
         sample.to_parquet(fname)
         print(f"Sample save as {os.path.abspath(fname)}")
         return sample
 
     @classmethod
     def load_sample_data(cls):
-        fname = sys.modules[cls.__module__].__file__[:-3] + ".parquet"
+        nostalgia_dir = os.path.dirname(nostalgia.__file__)
+        fname = os.path.join(nostalgia_dir, "data/samples/" + cls.class_df_name() + ".parquet")
         if os.path.exists(fname):
             print("loaded method 1")
             df = pd.read_parquet(fname)
@@ -378,9 +393,10 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
             import pkgutil
             from io import BytesIO
 
-            fname = sys.modules[cls.__module__].__file__[:-3].split("sources")[1]
-            resource_path = os.path.join("sources", fname) + ".parquet"
-            data = pkgutil.get_data("nostalgia", resource_path)
+            nostalgia_dir = os.path.dirname(nostalgia.__file__)
+            sample_name = "data/samples/" + cls.class_df_name() + ".parquet"
+
+            data = pkgutil.get_data("nostalgia", sample_name)
             print("loaded method 2")
             df = pd.read_parquet(BytesIO(data))
         return cls(df)
@@ -430,6 +446,11 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
             if col1 == "end" and col2 == "start":
                 col2, col1 = col1, col2
             self._start_col, self._time_col, self._end_col = col1, col1, col2
+            interval_index = pd.IntervalIndex.from_arrays(
+                self[self._start_col], self[self._end_col]
+            )
+            self.set_index(interval_index, inplace=True)
+            self.sort_index(inplace=True)
         else:
             msg = 'infer time failed: there can only be 1 or 2 datetime columns at the same granularity.'
 

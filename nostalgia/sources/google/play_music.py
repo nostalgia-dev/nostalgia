@@ -62,5 +62,4 @@ class PlayMusic(Google):
             "~/nostalgia_data/input/google/Takeout/My Activity/Google Play Music/My Activity.json"
         )
         data = cls.load_data_file_modified_time(file_path, nrows=nrows, from_cache=from_cache)
-        data["duration"] = data["_end"] - data["_start"]
         return cls(data)
