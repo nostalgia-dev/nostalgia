@@ -4,6 +4,7 @@
 *.log
 *Data.fs*
 *flymake*
+flycheck*
 dist/*
 *egg*
 urllist*
