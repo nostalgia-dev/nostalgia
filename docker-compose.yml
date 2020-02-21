@@ -1,0 +1,9 @@
+version: "3"
+services:
+  nostalgia:
+    image: nostalgia
+    build: .
+    container_name: nostalgia
+    volumes:
+       - ~/nostalgia_data:/root/nostalgia_data/
+    restart: always
