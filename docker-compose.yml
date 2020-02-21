@@ -1,7 +1,8 @@
 version: "3"
 services:
-  timeline:
+  nostalgia:
     image: nostalgia
+    build: .
     container_name: nostalgia
     volumes:
        - ~/nostalgia_data:/root/nostalgia_data/
