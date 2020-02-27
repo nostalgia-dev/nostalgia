@@ -1,9 +1,6 @@
 import os
-import just
 from googleapiclient.discovery import build
 from googleapiclient.http import HttpError
-from datetime import datetime
-import diskcache
 import dotenv
 from nostalgia.cache import get_cache
 
@@ -22,9 +19,9 @@ def google_custom_search(search_term, **kwargs):
         return CACHE[search_term]
     if errored_count > 4:
         return []
-    service = build("customsearch", "v1", developerKey=os.environ.get("MY_API_KEY"))
+    service = build("customsearch", "v1", developerKey=os.environ["MY_API_KEY"])
     try:
-        res = service.cse().list(q=search_term, cx=os.environ.get("MY_CSE_ID"), **kwargs).execute()
+        res = service.cse().list(q=search_term, cx=os.environ["MY_CSE_ID"], **kwargs).execute()
     except HttpError as e:
         print("error", e)
         errored_count += 1
