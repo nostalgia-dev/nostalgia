@@ -360,7 +360,7 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         fname = os.path.join(nostalgia_dir, "data/samples/" + self.df_name + ".parquet")
         # verify that we can process it
         _ = self.as_simple()
-        sample = self.iloc[:100].reset_index().drop("index", axis=1)
+        sample = self.iloc[:1000].reset_index().drop("index", axis=1)
         # if self.is_anonymized:
         #     for x in self.anonymized:
         #         dtype = self.dtypes[x]
@@ -378,7 +378,7 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
             .drop("index", axis=1)
             .drop("level_0", axis=1, errors="ignore")
         )
-        sample.to_parquet(fname)
+        sample.to_parquet(fname, allow_truncated_timestamps=True)
         print(f"Sample save as {os.path.abspath(fname)}")
         return sample
 

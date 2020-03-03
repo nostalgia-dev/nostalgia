@@ -24,4 +24,4 @@ class VideosWatched(NDF):
         )
         data["image"] = [get_thumbnail(x) for x in data["loc"]]
 
-        return cls(data.reset_index())
+        return cls(data.reset_index(drop=True))
