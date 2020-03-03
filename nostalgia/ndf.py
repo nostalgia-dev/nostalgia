@@ -744,7 +744,10 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         until = until if until is not None else self.end.max()
         for dt in iterate_time(start, until, freq):
             try:
-                yield dt, self.loc[dt]
+                series = self.loc[dt]
+                if not isinstance(series, pd.Series):
+                    series = series.iloc[0]
+                yield dt, series
             except KeyError:
                 pass
 

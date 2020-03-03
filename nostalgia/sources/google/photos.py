@@ -24,7 +24,7 @@ class Photos(Google):
             if rows == nrows:
                 break
             date = datetime.fromtimestamp(int(meta['photoTakenTime']['timestamp']), tz)
-            lat, lon = format_latlng(
+            latitude, longitude = format_latlng(
                 (meta['geoData']['latitude'], meta['geoData']['longitude'])
             ).split(", ")
             title = meta["title"]
