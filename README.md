@@ -85,3 +85,8 @@ It combined the generic class functionality, together with data from:
 ### Contributing
 
 Please contribute the data sources that others could use as well!
+
+
+Rules:
+Translate all terms into English (class names as trade marks or brands should be kept,
+ but internal names in data should be translated in their code representation)
