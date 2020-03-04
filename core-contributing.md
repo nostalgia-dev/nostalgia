@@ -50,6 +50,17 @@ We want commit messages to be meaningful and follow a uniform formatting
 We've adapted these guidelines from a somewhat canonical article:
 https://chris.beams.io/posts/git-commit/
 
+Example commit message:
+
+	Add a guide for core contributors
+
+    * Made sure to mention newcomers are not meant to worry
+	  much about all these guidelines
+    * Tried to be friendly rather than demanding
+
+	Fixes #13
+
+
 
 ## Merging Pull Requests
 
