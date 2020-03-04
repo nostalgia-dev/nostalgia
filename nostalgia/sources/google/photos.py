@@ -29,7 +29,13 @@ class Photos(Google):
             ).split(", ")
             title = meta["title"]
             pics.append(
-                {"path": "file://" + fname, "lat": lat, "lon": lon, "title": title, "time": date}
+                {
+                    "path": "file://" + fname,
+                    "lat": latitude,
+                    "lon": longitude,
+                    "title": title,
+                    "time": date,
+                }
             )
             rows += 1
 

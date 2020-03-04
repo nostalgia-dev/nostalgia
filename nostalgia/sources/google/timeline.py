@@ -195,8 +195,8 @@ class GooglePlaces(Places):
             d = get_results((latitude, longitude), name, excluded_transport_names)
             if d is None:
                 continue
-            d["lat"] = lat
-            d["lon"] = lon
+            d["lat"] = latitude
+            d["lon"] = longitude
             d["name"] = name
             details_data.append(d)
 

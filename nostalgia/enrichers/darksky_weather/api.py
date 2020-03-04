@@ -10,7 +10,7 @@ dotenv.load_dotenv("~/nostalgia_data/.env")
 
 
 def _historic_weather(latitude, longitude, epoch_time):
-    q = f"{lat},{lon},{epoch_time}"
+    q = f"{latitude},{longitude},{epoch_time}"
     if q in CACHE:
         return CACHE[q]
     key = os.environ["DARKSKY_WEATHER_KEY"]
