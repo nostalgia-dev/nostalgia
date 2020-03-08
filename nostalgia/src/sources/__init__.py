@@ -1,11 +1,11 @@
 from abc import ABCMeta
-from abc import *
+from abc import abstractmethod
 from collections import defaultdict
 from datetime import datetime
 
 import just
 
-from nostalgia import NDF
+from nostalgia.src.common.infrastructure.sdf import SDF
 import pandas as pd
 
 from src.common.meta.aspect import Aspect
@@ -77,7 +77,7 @@ class Source(Vendor, metaclass=ABCMeta):
         """
         pass
 
-    def verify(self, df: NDF):
+    def verify(self, df: SDF):
         """
         Check basic stuff:
             mandatory aspect (time), correct dates
@@ -94,8 +94,14 @@ class Source(Vendor, metaclass=ABCMeta):
     def __resolve_aspects(self, sdf: pd.DataFrame):
         aspects = self.aspects if isinstance(self.aspects, defaultdict) else defaultdict(lambda: Aspect, **self.aspects)
         columns = sdf.columns.to_list()
-        for column in columns:
-            aspects[column](sdf[column])
+        applicable_aspects = set(aspects).intersection(set(columns))
+        producable_aspects = set(aspects) - set(columns)
+        # first resolve existing
+        for column in applicable_aspects:
+            sdf[column] = aspects[column].apply(sdf[column])
+        # then produce new
+        for column in producable_aspects:
+            sdf[column] = aspects[column](sdf)
 
         return sdf
 
@@ -106,7 +112,7 @@ class Source(Vendor, metaclass=ABCMeta):
     def __resolve_meta(self, sdf: pd.DataFrame):
         return self.__resolve_categories(self.__resolve_aspects(sdf))
 
-    def build_source_dataframe(self) -> NDF:
+    def build_source_dataframe(self) -> SDF:
         # Here it should be decided if it's needed to download data,
         """
         download new data
@@ -116,11 +122,14 @@ class Source(Vendor, metaclass=ABCMeta):
         @return:
         """
         downloaded_data = self.download()
+
         data = self.ingest(downloaded_data)
-        sdf = self.load(data)
+
+        pdf = self.load(data)
+
         #inspect sdf categories and aspects
-        sdf = self.__resolve_meta(sdf)
-        ndf = NDF(sdf)
+        pdf = self.__resolve_meta(pdf)
+        ndf = SDF(pdf, self.aspects, self.category)
 
         ndf = self.verify(ndf)
         return ndf

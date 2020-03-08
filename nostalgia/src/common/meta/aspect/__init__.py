@@ -1,5 +1,11 @@
+from abc import ABCMeta
+
 import pandas as pd
 
-class Aspect():
-    def __init__(self, series: pd.Series):
-        super().__init__()
+class Aspect(metaclass=ABCMeta):
+    @classmethod
+    def apply(cls, series: pd.Series):
+        return series
+
+    def verify(self):
+        pass
