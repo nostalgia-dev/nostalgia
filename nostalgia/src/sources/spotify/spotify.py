@@ -38,10 +38,8 @@ class Spotify(Source):
         return spotify
 
 
-
-
 if __name__ == "__main__":
-    j = Spotify().build_source_dataframe()
+    j = Spotify().build_sdf()
     pd.set_option("display.max_columns", 10)
     c = Spotify().category
     print(j.head())

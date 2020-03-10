@@ -4,10 +4,10 @@ from collections import defaultdict
 from datetime import datetime
 
 import just
+import pandas as pd
+import types
 
 from nostalgia.src.common.infrastructure.sdf import SDF
-import pandas as pd
-
 from src.common.meta.aspect import Aspect
 
 
@@ -22,7 +22,7 @@ class Vendor(metaclass=ABCMeta):
         "delete_existing": False,
     }
 
-
+### Reuse Loader
 class Source(Vendor, metaclass=ABCMeta):
 
     @property
@@ -88,20 +88,25 @@ class Source(Vendor, metaclass=ABCMeta):
         @param df:
         @return:
         """
+        # [aspect.__class__.verify() for aspect in df.aspects]
+        # [category.__class__.verify() for category in df.categories]
 
-        return df
 
     def __resolve_aspects(self, sdf: pd.DataFrame):
         aspects = self.aspects if isinstance(self.aspects, defaultdict) else defaultdict(lambda: Aspect, **self.aspects)
         columns = sdf.columns.to_list()
         applicable_aspects = set(aspects).intersection(set(columns))
-        producable_aspects = set(aspects) - set(columns)
+        produceable_aspects = set(aspects) - set(columns)
         # first resolve existing
         for column in applicable_aspects:
             sdf[column] = aspects[column].apply(sdf[column])
         # then produce new
-        for column in producable_aspects:
+        for column in produceable_aspects:
             sdf[column] = aspects[column](sdf)
+
+        a = [aspect for aspect in self.aspects.values() if not isinstance(aspect, types.FunctionType)]
+
+        sdf.__class__.__bases__ = tuple(sdf.__class__.__bases__ + tuple(a))
 
         return sdf
 
@@ -112,7 +117,7 @@ class Source(Vendor, metaclass=ABCMeta):
     def __resolve_meta(self, sdf: pd.DataFrame):
         return self.__resolve_categories(self.__resolve_aspects(sdf))
 
-    def build_source_dataframe(self) -> SDF:
+    def build_sdf(self) -> SDF:
         # Here it should be decided if it's needed to download data,
         """
         download new data
@@ -128,11 +133,18 @@ class Source(Vendor, metaclass=ABCMeta):
         pdf = self.load(data)
 
         #inspect sdf categories and aspects
-        pdf = self.__resolve_meta(pdf)
-        ndf = SDF(pdf, self.aspects, self.category)
+        ndf = SDF(pdf)
+        ndf = self.mixin(ndf)
 
-        ndf = self.verify(ndf)
+        self.verify(ndf)
+
         return ndf
+
+    def mixin(self, df) -> SDF:
+        df = self.__resolve_meta(df)
+        df.aspects = self.aspects
+        df.category = self.category
+        return df
 
     def resolve_filename(self, file: str) -> str:
         return "%s/%s/%s" % (self.data_path, self.vendor, file)

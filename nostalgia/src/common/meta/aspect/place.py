@@ -1,3 +1,4 @@
+from src.common.infrastructure.sdf import SDF, join_time
 from src.common.meta.aspect import Aspect
 
 import pandas as pd
@@ -8,7 +9,7 @@ from nostalgia.times import parse_date_tz
 from nostalgia.utils import haversine
 
 
-class Places(NDF, Aspect):
+class Place(NDF, Aspect):
     keywords = [
         "did i go",
         "i was in",
@@ -119,3 +120,53 @@ class Places(NDF, Aspect):
     @nlp("end", "address of", "what is the address", "how to find", "how can i find")
     def what_address(self):
         return self["address"]
+
+    def when_at(self, other, **window_kwargs):
+        if isinstance(other, str):
+            other = get_type_from_registry("places").containing(other)
+        return self.__class__(join_time(other, self, **window_kwargs))
+
+    when = when_at
+
+    def near(self, s):
+        if isinstance(s, SDF) and s.df_name.endswith("places"):
+            selection = s
+        else:
+            selection = get_type_from_registry("places").containing(s)
+        return self.when_at(selection)
+
+    def to_place(self):
+        results = []
+        places = get_type_from_registry("places")
+        for time in self.time:
+            try:
+                results.append(places.iloc[places.index.get_loc(time)].iloc[0])
+            except (TypeError, KeyError):
+                pass
+        return places.__class__(results)
+
+    def in_a(self, s):
+        return self.near(s)
+
+    @property
+    def at_home(self):
+        self.take_from("places", "category")
+        return self[self["places_category"] == "Home"]
+
+    @property
+    def at_work(self):
+        self.take_from("places", "category")
+        return self[self["places_category"] == "Work"]
+
+    def at(self, time_or_place):
+        if isinstance(time_or_place, SDF) and time_or_place.df_name.endswith("places"):
+            return self.when_at(time_or_place)
+        if isinstance(time_or_place, str):
+            mp = parse_date_tz(time_or_place)
+            if mp:
+                start = mp.start_date
+                end = mp.end_date
+                return self.at_time(start, end)
+            else:
+                return self.when_at(get_type_from_registry("places").containing(time_or_place))
+        raise ValueError("neither time nor place was passed")

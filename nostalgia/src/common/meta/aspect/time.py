@@ -26,11 +26,11 @@ class Time(Aspect):
 
     @classmethod
     def of_duration(cls, time_column: str, duration_column: str, duration_unit: str = 's'):
-        return lambda df: Time.apply(df[time_column] - pd.to_timedelta(df[duration_column], unit=duration_unit))
+        return lambda df: df[time_column] - pd.to_timedelta(df[duration_column], unit=duration_unit)
 
     @classmethod
     def apply(cls, series: pd.Series):
-        return series.apply(datetime_from_any_format)
+        return pd.to_datetime(series)
 
     @property
     def time(self):
@@ -372,7 +372,6 @@ def datetime_from_timestamp(x, tzone=tz):
 
 
 def datetime_from_any_format(date, in_utc=False):
-    print(date)
     if isinstance(date, datetime):
         return date
     base = dateparser.parse(str(date))
