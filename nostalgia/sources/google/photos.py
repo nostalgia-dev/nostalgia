@@ -24,12 +24,18 @@ class Photos(Google):
             if rows == nrows:
                 break
             date = datetime.fromtimestamp(int(meta['photoTakenTime']['timestamp']), tz)
-            lat, lon = format_latlng(
+            latitude, longitude = format_latlng(
                 (meta['geoData']['latitude'], meta['geoData']['longitude'])
             ).split(", ")
             title = meta["title"]
             pics.append(
-                {"path": "file://" + fname, "lat": lat, "lon": lon, "title": title, "time": date}
+                {
+                    "path": "file://" + fname,
+                    "lat": latitude,
+                    "lon": longitude,
+                    "title": title,
+                    "time": date,
+                }
             )
             rows += 1
 

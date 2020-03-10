@@ -13,7 +13,7 @@ from nostalgia.utils import get_token_set, normalize_name, view
 
 from nostalgia.extracter import load_from_download
 from nostalgia.file_caching import save_df, load_df
-from nostalgia.times import datetime_from_timestamp
+from nostalgia.times import datetime_from_timestamp, iterate_time
 from nostalgia.cache import get_cache
 from nostalgia.data_loading import Loader
 from nostalgia.anonymizer import Anonymizer
@@ -738,6 +738,18 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         for key, value in registry.items():
             if key.endswith(tp):
                 return value
+
+    def iterate_time(self, start=None, until=None, freq="hourly"):
+        start = start if start is not None else self.start.min()
+        until = until if until is not None else self.end.max()
+        for dt in iterate_time(start, until, freq):
+            try:
+                series = self.loc[dt]
+                if not isinstance(series, pd.Series):
+                    series = series.iloc[0]
+                yield dt, series
+            except KeyError:
+                pass
 
     def __call_(self):
         return self

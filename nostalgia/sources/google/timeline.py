@@ -191,12 +191,12 @@ class GooglePlaces(Places):
         excluded_transport_names = set(df[df.name == df.category].name)
 
         details_data = []
-        for (lat, lon), name in unique_locs:
-            d = get_results((lat, lon), name, excluded_transport_names)
+        for (latitude, longitude), name in unique_locs:
+            d = get_results((latitude, longitude), name, excluded_transport_names)
             if d is None:
                 continue
-            d["lat"] = lat
-            d["lon"] = lon
+            d["lat"] = latitude
+            d["lon"] = longitude
             d["name"] = name
             details_data.append(d)
 

@@ -5,6 +5,7 @@ from datetime import datetime
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 import dateutil
+from dateutil.rrule import rrule
 
 tz = tzlocal.get_localzone()
 utc = timezone('UTC')
@@ -128,3 +129,13 @@ def datetime_from_format(s, fmt, in_utc=False):
         return utc.localize(base).astimezone(tz)
     else:
         return tz.localize(base)
+
+
+freqs = dict(
+    zip(("yearly", "monthly", "weekly", "daily", "hourly", "minutely", "secondly"), range(7))
+)
+
+
+def iterate_time(start, until=now(), freq="hourly"):
+    for dt in rrule(dtstart=start, until=until, freq=freqs[freq]):
+        yield dt
