@@ -20,7 +20,7 @@ def ab_overlap_cd(a, b, c, d):
 
 
 def ab_overlap_c(a, b, c):
-    return (a <= c) & (c <= b)
+    return a <= c <= b
 
 def join_time_naive(locs, df, **window_kwargs):
     tmp = []
@@ -658,6 +658,7 @@ class SDF(pd.DataFrame):
     ### TODO -- SERVICE (WEB) SECTION
     ####################################################################################################################
 
+    ##filter sdf when I was browsing
     def browsing(self, other, **window_kwargs):
         if isinstance(other, str):
             other = get_type_from_registry("browser").containing(other)

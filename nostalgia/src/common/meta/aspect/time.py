@@ -98,6 +98,11 @@ class Time(Aspect):
         return self[~(self._office_hours & self._office_days)]
 
     @property
+    def when_asleep(self):
+        return self.__class__(join_time(registry["sleep"].asleep, self))
+
+
+    @property
     def end(self):
         if not self.inferred_time:
             self.infer_time()
@@ -115,10 +120,6 @@ class Time(Aspect):
         if self._start_col is not None:
             return self[(self.start.dt.hour > start) | (self.end.dt.hour < end)]
         return self[(self.time.dt.hour > start) & (self.time.dt.hour < end)]
-
-    @property
-    def when_asleep(self):
-        return self.__class__(join_time(registry["sleep"].asleep, self))
 
     def _select_at_day(self, day_or_class):
         if isinstance(day_or_class, pd.DataFrame):

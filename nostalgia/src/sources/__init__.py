@@ -95,14 +95,20 @@ class Source(Vendor, metaclass=ABCMeta):
     def __resolve_aspects(self, sdf: pd.DataFrame):
         aspects = self.aspects if isinstance(self.aspects, defaultdict) else defaultdict(lambda: Aspect, **self.aspects)
         columns = sdf.columns.to_list()
-        applicable_aspects = set(aspects).intersection(set(columns))
-        produceable_aspects = set(aspects) - set(columns)
+        simple_aspects = set(aspects).intersection(set(columns))
+        generated_aspects = set(aspects) - set(columns)
+        unlisted_aspects = set(columns) - set(aspects)
+        resolved_aspects = {}
         # first resolve existing
-        for column in applicable_aspects:
+        for column in simple_aspects:
             sdf[column] = aspects[column].apply(sdf[column])
+            resolved_aspects[column] = aspects[column]
+
         # then produce new
-        for column in produceable_aspects:
+        for column in generated_aspects:
             sdf[column] = aspects[column](sdf)
+
+
 
         a = [aspect for aspect in self.aspects.values() if not isinstance(aspect, types.FunctionType)]
 
@@ -150,5 +156,6 @@ class Source(Vendor, metaclass=ABCMeta):
         return "%s/%s/%s" % (self.data_path, self.vendor, file)
 
     def read_file(self, file: str) -> list:
-        return just.multi_read(self.resolve_filename(file)).values()
+        filename = self.resolve_filename(file)
+        return just.multi_read(filename).values()
 
