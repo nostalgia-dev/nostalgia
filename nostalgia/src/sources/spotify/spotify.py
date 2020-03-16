@@ -26,7 +26,7 @@ class Spotify(Source):
         return self.read_file("StreamingHistory*.json")
 
     @classmethod
-    def load(self, data) -> pd.DataFrame:
+    def load(cls, data) -> pd.DataFrame:
         spotify = pd.DataFrame([(
             x["endTime"],
             x["trackName"],

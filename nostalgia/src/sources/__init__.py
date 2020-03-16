@@ -61,7 +61,7 @@ class Source(Vendor, metaclass=ABCMeta):
         If your datasource supports time range, please use start_time and end_time, so Nostalgia can download your data
         more granularly.
 
-        auth, compress and secure should be handled here
+        compress and secure should be handled here
 
         @return:
         """
@@ -123,6 +123,12 @@ class Source(Vendor, metaclass=ABCMeta):
     def __resolve_meta(self, sdf: pd.DataFrame):
         return self.__resolve_categories(self.__resolve_aspects(sdf))
 
+    def __mixin(self, df) -> SDF:
+        df = self.__resolve_meta(df)
+        df.aspects = self.aspects
+        df.category = self.category
+        return df
+
     def build_sdf(self) -> SDF:
         # Here it should be decided if it's needed to download data,
         """
@@ -132,30 +138,24 @@ class Source(Vendor, metaclass=ABCMeta):
         verify result dataframe before putting it into regustry
         @return:
         """
-        downloaded_data = self.download()
+        # downloaded_data = self.download()
 
-        data = self.ingest(downloaded_data)
+        data = self.ingest(None)
 
         pdf = self.load(data)
 
         #inspect sdf categories and aspects
         ndf = SDF(pdf)
-        ndf = self.mixin(ndf)
+        ndf = self.__mixin(ndf)
 
         self.verify(ndf)
 
         return ndf
-
-    def mixin(self, df) -> SDF:
-        df = self.__resolve_meta(df)
-        df.aspects = self.aspects
-        df.category = self.category
-        return df
 
     def resolve_filename(self, file: str) -> str:
         return "%s/%s/%s" % (self.data_path, self.vendor, file)
 
     def read_file(self, file: str) -> list:
         filename = self.resolve_filename(file)
-        return just.multi_read(filename).values()
+        return just.multi_read(str(filename)).values()
 
