@@ -13,7 +13,7 @@ n = None
 
 
 class ResultInfo(object):
-    __slots__ = ('cls', 'role', 'cls_fn', 'col_name', 'orig_word')
+    __slots__ = ("cls", "role", "cls_fn", "col_name", "orig_word")
 
     def __init__(self, cls, role, cls_fn=None, col_name=None, orig_word=None):
         self.cls = cls
@@ -47,7 +47,11 @@ class ResultInfo(object):
         return "!{}({})".format(
             c,
             ", ".join(
-                ["{}={!r}".format(x, self.repr_wrapper(x)) for x in self.__slots__ if x != "cls"]
+                [
+                    "{}={!r}".format(x, self.repr_wrapper(x))
+                    for x in self.__slots__
+                    if x != "cls"
+                ]
             ),
         )
 
@@ -55,7 +59,11 @@ class ResultInfo(object):
         return hash((self.cls, self.col_name, self.orig_word))
 
     def __eq__(self, o):
-        return (self.cls, self.col_name, self.orig_word) == (o.cls, o.col_name, o.orig_word)
+        return (self.cls, self.col_name, self.orig_word) == (
+            o.cls,
+            o.col_name,
+            o.orig_word,
+        )
 
 
 COLUMN_BLACKLIST = set(["did", "was", "the", "a", "are", "i", "from", "hard", "for"])
@@ -152,5 +160,9 @@ def find_entities(sentence):
         for l, e in mp.spans:
             wrongs.update(range(l, e))
         ents = [x for x in ents if x.start not in wrongs and x.end not in wrongs]
-        ents.append(ResultInfo("MP", "filter", at_time_wrapper(mp), orig_word=" ".join(mp.matches)))
+        ents.append(
+            ResultInfo(
+                "MP", "filter", at_time_wrapper(mp), orig_word=" ".join(mp.matches)
+            )
+        )
     return ents

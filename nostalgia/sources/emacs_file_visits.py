@@ -15,7 +15,9 @@ from nostalgia.ndf import NDF
 
 class FileVisits(NDF):
     @classmethod
-    def load(cls, file_name="~/nostalgia_data/input/log-emacs-find-visits.txt", nrows=None):
+    def load(
+        cls, file_name="~/nostalgia_data/input/log-emacs-find-visits.txt", nrows=None
+    ):
         fname = os.path.expanduser(file_name)
         with open(fname) as f:
             results = []
@@ -31,7 +33,14 @@ class FileVisits(NDF):
                 files.append(z)
                 d = datetime.fromtimestamp(float(y), tz)
                 ds.append(d)
-                for key in ["egoroot/", "/ssh:", "gits/", "site-packages/", "Drive/", "Dropbox/"]:
+                for key in [
+                    "egoroot/",
+                    "/ssh:",
+                    "gits/",
+                    "site-packages/",
+                    "Drive/",
+                    "Dropbox/",
+                ]:
                     if key in z:
                         z = re.split("[:/]", z.split(key)[1])[0]
                 results.append(z)

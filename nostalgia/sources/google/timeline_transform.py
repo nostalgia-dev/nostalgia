@@ -40,10 +40,15 @@ for fname in sorted(just.glob("/home/pascal/Downloads/ghistory/history-*.kml")):
         name = placemark.xpath("./klm:name/text()", namespaces=N)[0]
         address = placemark.xpath("./klm:address/text()", namespaces=N)
         address = address[0] if address else None
-        start = date_parse(placemark.xpath("./klm:TimeSpan/klm:begin/text()", namespaces=N)[0])
-        end = date_parse(placemark.xpath("./klm:TimeSpan/klm:end/text()", namespaces=N)[0])
+        start = date_parse(
+            placemark.xpath("./klm:TimeSpan/klm:begin/text()", namespaces=N)[0]
+        )
+        end = date_parse(
+            placemark.xpath("./klm:TimeSpan/klm:end/text()", namespaces=N)[0]
+        )
         category = placemark.xpath(
-            "./klm:ExtendedData/klm:Data[@name='Category']/klm:value/text()", namespaces=N
+            "./klm:ExtendedData/klm:Data[@name='Category']/klm:value/text()",
+            namespaces=N,
         )
         category = category[0] if category else None
         # just a location
@@ -54,12 +59,15 @@ for fname in sorted(just.glob("/home/pascal/Downloads/ghistory/history-*.kml")):
         if "Steynlaan" in name:
             category = "Home"
         distance = placemark.xpath(
-            "./klm:ExtendedData/klm:Data[@name='Distance']/klm:value/text()", namespaces=N
+            "./klm:ExtendedData/klm:Data[@name='Distance']/klm:value/text()",
+            namespaces=N,
         )
         distance = distance[0] if distance else None
         # fuckers, lon|lat instead of lat|lon
         coords = placemark.xpath("./klm:Point/klm:coordinates/text()", namespaces=N)
-        coords = coords or placemark.xpath("./klm:LineString/klm:coordinates/text()", namespaces=N)
+        coords = coords or placemark.xpath(
+            "./klm:LineString/klm:coordinates/text()", namespaces=N
+        )
         d = {
             "date": start.date(),
             "name": name,
@@ -76,7 +84,10 @@ for fname in sorted(just.glob("/home/pascal/Downloads/ghistory/history-*.kml")):
         # here switch lon|lat
         coor = sum(
             [
-                [format_latlng((x.split(",")[1], x.split(",")[0])).split(", ") for x in c.split()]
+                [
+                    format_latlng((x.split(",")[1], x.split(",")[0])).split(", ")
+                    for x in c.split()
+                ]
                 for c in coords
             ],
             [],

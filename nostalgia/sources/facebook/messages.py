@@ -28,7 +28,8 @@ class FacebookChat(Facebook, ChatInterface):
         file_path = "~/nostalgia_data/input/facebook"
         chat_paths = just.glob(f"{file_path}/messages/inbox/*/message_*.json")
         face = [
-            read_array_of_dict_from_json(chat_file, "messages", nrows) for chat_file in chat_paths
+            read_array_of_dict_from_json(chat_file, "messages", nrows)
+            for chat_file in chat_paths
         ]
         for df in face:
             senders = df.sender_name.unique()
@@ -36,11 +37,15 @@ class FacebookChat(Facebook, ChatInterface):
                 df.loc[df.sender_name == senders[0], "receiver_name"] = senders[1]
                 df.loc[df.sender_name == senders[1], "receiver_name"] = senders[0]
             elif len(senders) > 2:
-                df["receiver_name"] = ", ".join([x for x in senders if isinstance(x, str)])
+                df["receiver_name"] = ", ".join(
+                    [x for x in senders if isinstance(x, str)]
+                )
         face = [x for x in face]
         face = pd.concat(face)
         face = face.reset_index(drop=True).sort_values("timestamp_ms")
-        face["time"] = pd.to_datetime(face["timestamp_ms"], unit='ms', utc=True).dt.tz_convert(tz)
+        face["time"] = pd.to_datetime(
+            face["timestamp_ms"], unit="ms", utc=True
+        ).dt.tz_convert(tz)
         face.drop("timestamp_ms", axis=1, inplace=True)
         face.loc[
             (face["type"] != "Generic") | face["content"].isnull(), "content"

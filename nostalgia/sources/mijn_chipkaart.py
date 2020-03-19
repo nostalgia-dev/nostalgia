@@ -20,6 +20,7 @@ class MijnChipkaart(NDF):
         data = pd.concat([pd.read_csv(x, sep=";", nrows=nrows) for x in files])
         data["Bedrag"] = [float(x.replace(",", ".")) for x in data["Bedrag"]]
         data["Datum"] = [
-            parse_date_tz(x + " " + y).start_date for x, y in zip(data.Datum, data["Check-uit"])
+            parse_date_tz(x + " " + y).start_date
+            for x, y in zip(data.Datum, data["Check-uit"])
         ]
         return cls(data)

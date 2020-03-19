@@ -22,10 +22,10 @@ for prefix in ["og:", "twitter:", ""]:
         "title",
         "description",
         "name",
-        'manufacturer_name',
-        'category_name_singular',
-        'long_description',
-        'snippet',
+        "manufacturer_name",
+        "category_name_singular",
+        "long_description",
+        "snippet",
     ]:
         interesting_keys.add(prefix + key)
 

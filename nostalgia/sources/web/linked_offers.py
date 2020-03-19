@@ -53,7 +53,7 @@ def get_linked_data_jd(art):
         if isinstance(brand, dict):
             brand = brand.get("name")
         for offer in offers:
-            currency = offer.get('priceCurrency')
+            currency = offer.get("priceCurrency")
             if currency is None:
                 continue
             price = offer.get("price") or offer.get("lowPrice")
@@ -113,7 +113,9 @@ def deeper_price_md(art):
                 if image:
                     image = image[0]
             description = (
-                y.get("description") or props.get("description") or offer.get("description")
+                y.get("description")
+                or props.get("description")
+                or offer.get("description")
             )
             if isinstance(description, list):
                 description = description[0]
@@ -172,7 +174,7 @@ def get_linked_data_md(art):
             offer_properties = offer.get("properties")
             if offer_properties is None:
                 continue
-            currency = offer_properties.get('priceCurrency')
+            currency = offer_properties.get("priceCurrency")
             if currency is None:
                 continue
             price = offer_properties.get("price") or offer_properties.get("lowPrice")
@@ -287,12 +289,16 @@ class Offers(NDF):
             row["url"] = obj["url"]
             row["path"] = obj["path"]
             if row.get("name"):
-                row["keywords"] = " ".join([x[0] for x in get_keywords_for_product(row["name"])])
+                row["keywords"] = " ".join(
+                    [x[0] for x in get_keywords_for_product(row["name"])]
+                )
             else:
                 row["keywords"] = ""
             if "image" in row:
                 img = row["image"]
-                row["image"] = img if isinstance(img, str) or img is None else img["url"]
+                row["image"] = (
+                    img if isinstance(img, str) or img is None else img["url"]
+                )
             return row
 
     @classmethod

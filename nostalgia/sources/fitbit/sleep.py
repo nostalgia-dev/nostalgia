@@ -20,10 +20,11 @@ class FitbitSleep(NDF):
             for x in d:
                 data = pd.DataFrame(
                     x["levels"]["data"]
-                    + [{'dateTime': x['endTime'], 'level': None, 'seconds': None}]
+                    + [{"dateTime": x["endTime"], "level": None, "seconds": None}]
                 )
                 data["dateTime"] = [
-                    datetime_from_format(x, "%Y-%m-%dT%H:%M:%S.%f") for x in data.dateTime
+                    datetime_from_format(x, "%Y-%m-%dT%H:%M:%S.%f")
+                    for x in data.dateTime
                 ]
                 start = data.dateTime.iloc[:-1]
                 end = data.dateTime.iloc[1:]

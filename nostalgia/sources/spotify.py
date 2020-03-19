@@ -8,6 +8,7 @@ from nostalgia.times import datetime_from_format
 
 flatten = lambda l: [item for sublist in l for item in sublist]
 
+
 class Spotify(NDF):
     @classmethod
     def load(cls, nrows=None):
@@ -15,11 +16,12 @@ class Spotify(NDF):
         spotify = pd.DataFrame(
             [
                 (
-                    datetime_from_format(x["endTime"], "%Y-%m-%d %H:%M") - timedelta(milliseconds=x["msPlayed"]),
+                    datetime_from_format(x["endTime"], "%Y-%m-%d %H:%M")
+                    - timedelta(milliseconds=x["msPlayed"]),
                     datetime_from_format(x["endTime"], "%Y-%m-%d %H:%M"),
                     x["trackName"],
                     x["artistName"],
-                    x["msPlayed"] / 1000
+                    x["msPlayed"] / 1000,
                 )
                 for x in flatten(just.multi_read(files).values())
             ],

@@ -89,7 +89,10 @@ class Anonymizer(pd.DataFrame):
             width, _ = console.get_console_size()
         else:
             width = None
-        formatters = [(Anon(x).get_value if x in self.anonymized else normal) for x in self.columns]
+        formatters = [
+            (Anon(x).get_value if x in self.anonymized else normal)
+            for x in self.columns
+        ]
         self.to_string(
             buf=buf,
             max_rows=max_rows,

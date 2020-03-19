@@ -46,7 +46,9 @@ class Places(NDF):
         return self.__class__(self[self.city == "Hometown"])
 
     def near_(self, distance_in_meters, other_places=None):
-        places = get_type_from_registry("places") if other_places is None else other_places
+        places = (
+            get_type_from_registry("places") if other_places is None else other_places
+        )
         nearbies = []
         for _, row in places[["lat", "lon"]].drop_duplicates().iterrows():
             nearbies.append(haversine(self.lat, self.lon, *row) < distance_in_meters)

@@ -50,7 +50,11 @@ def get_nearby_results(latlng, name, excluded_transport_names):
     near = get_nearby(latlng, name, excluded_transport_names)
     if near is None:
         return None
-    res = [x for x in near["results"] if name in excluded_transport_names or x["name"] == name]
+    res = [
+        x
+        for x in near["results"]
+        if name in excluded_transport_names or x["name"] == name
+    ]
     for x in res:
         if "opening_hours" in x:
             return x
@@ -62,13 +66,13 @@ def get_nearby_results(latlng, name, excluded_transport_names):
 
 
 def get_details(place_id):
-    params = {'placeid': place_id, 'sensor': 'false', 'key': KEY}
+    params = {"placeid": place_id, "sensor": "false", "key": KEY}
     return api_call(DETAILS_URL, params).get("result", {})
 
 
 def get_(details, *types):
     for tp in types:
-        for addr in details.get('address_components', []):
+        for addr in details.get("address_components", []):
             if tp in addr["types"]:
                 return addr["long_name"]
 
@@ -85,7 +89,7 @@ GEOCODE_URL = "https://maps.googleapis.com/maps/api/geocode/json"
 
 def get_address(json_response):
     for res in json_response.get("results", []):
-        addr = res.get('formatted_address')
+        addr = res.get("formatted_address")
         if addr:
             return addr
 
@@ -93,7 +97,7 @@ def get_address(json_response):
 def geo_get_(json_response, *types):
     for res in json_response.get("results", []):
         for tp in types:
-            for addr in res.get('address_components', []):
+            for addr in res.get("address_components", []):
                 if tp in addr["types"]:
                     return addr["long_name"]
 
@@ -123,7 +127,7 @@ else:
 CACHE = get_cache("google_timeline")
 
 DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/json"
-NEARBY_URL = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json'
+NEARBY_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
 
 s = requests.Session()
 # {'Boating', 'Cycling', 'Driving', 'Flying', 'In transit', 'Moving', 'On a bus', 'On a ferry', 'On a train', 'On a tram', 'On the subway', 'Running', 'Walking'}
@@ -144,11 +148,11 @@ def get_results(latlng, name, excluded_transport_names):
         "rating": details,
         "details_name": details.get("name"),
         "formatted_address": details.get("formatted_address"),
-        'international_phone_number': details.get('international_phone_number'),
-        'opening_hours': details.get('opening_hours'),
-        'user_ratings_total': details.get('user_ratings_total'),
-        'rating': details.get('rating'),
-        'website': details.get('website'),
+        "international_phone_number": details.get("international_phone_number"),
+        "opening_hours": details.get("opening_hours"),
+        "user_ratings_total": details.get("user_ratings_total"),
+        "rating": details.get("rating"),
+        "website": details.get("website"),
     }
 
 
@@ -161,9 +165,13 @@ def process(df, excluded_transport_names, home_regex, work_regex, hometown_regex
     df["transporting"] = df.category.isin(excluded_transport_names)
 
     if work_regex:
-        df.loc[df.name.str.contains(work_regex, regex=True, na=False), "category"] = "Work"
+        df.loc[
+            df.name.str.contains(work_regex, regex=True, na=False), "category"
+        ] = "Work"
     if home_regex:
-        df.loc[df.name.str.contains(home_regex, regex=True, na=False), "category"] = "Home"
+        df.loc[
+            df.name.str.contains(home_regex, regex=True, na=False), "category"
+        ] = "Home"
     # if hometown_regex:
     #     df.loc[
     #         df.name.str.contains(hometown_regex, regex=True, na=False), "category"
@@ -174,7 +182,7 @@ def process(df, excluded_transport_names, home_regex, work_regex, hometown_regex
         del df["Unnamed: 0"]
     df["start"] = df["start"].dt.tz_convert(tz)
     df["end"] = df["end"].dt.tz_convert(tz)
-    df.index = pd.IntervalIndex.from_arrays(df['start'], df['end'])
+    df.index = pd.IntervalIndex.from_arrays(df["start"], df["end"])
     return df
 
 
@@ -186,7 +194,9 @@ class GooglePlaces(Places):
     def load(cls, file_glob="~/Downloads/timeline_data-*", nrows=None):
         df = pd.read_csv(max(just.glob(file_glob)), nrows=nrows)
 
-        unique_locs = set([((y, z), x) for x, y, z in zip(df.name, df.lat, df.lon) if y != "nan"])
+        unique_locs = set(
+            [((y, z), x) for x, y, z in zip(df.name, df.lat, df.lon) if y != "nan"]
+        )
 
         excluded_transport_names = set(df[df.name == df.category].name)
 
@@ -210,12 +220,21 @@ class GooglePlaces(Places):
         home_regex = "|".join(cls.home)
         work_regex = "|".join(cls.work)
         hometown_regex = "|".join(cls.hometown)
-        places = process(places, excluded_transport_names, home_regex, work_regex, hometown_regex)
+        places = process(
+            places, excluded_transport_names, home_regex, work_regex, hometown_regex
+        )
 
         return cls(places)
 
 
-GooglePlaces.work = ["Jibes", "Sleepboot", "De Meerpaal", "Papendorp", "Vektis", "Work "]
+GooglePlaces.work = [
+    "Jibes",
+    "Sleepboot",
+    "De Meerpaal",
+    "Papendorp",
+    "Vektis",
+    "Work ",
+]
 
 
 # at_work = places.at_work()

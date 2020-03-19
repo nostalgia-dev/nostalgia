@@ -8,14 +8,16 @@ def expand_shadow_element(base, tags):
     for tag in tags:
         print(tag)
         element = base.find_element_by_css_selector(tag)
-        base = driver.execute_script('return arguments[0].shadowRoot', element)
+        base = driver.execute_script("return arguments[0].shadowRoot", element)
     return base
 
 
 if __name__ == "__main__":
     chrome_options = webdriver.ChromeOptions()
     chrome_options.binary_location = "/usr/bin/google-chrome-stable"
-    driver = webdriver.Chrome(executable_path="/usr/bin/chromedriver", options=chrome_options)
+    driver = webdriver.Chrome(
+        executable_path="/usr/bin/chromedriver", options=chrome_options
+    )
 
     url = "https://mijn.ing.nl/banking/service"
 

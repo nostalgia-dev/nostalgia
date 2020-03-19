@@ -8,7 +8,7 @@ import dateutil
 from dateutil.rrule import rrule
 
 tz = tzlocal.get_localzone()
-utc = timezone('UTC')
+utc = timezone("UTC")
 
 
 def now(**kwargs):
@@ -36,7 +36,9 @@ def last_month():
 
 
 def last_year():
-    return now(years=1).replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
+    return now(years=1).replace(
+        month=1, day=1, hour=0, minute=0, second=0, microsecond=0
+    )
 
 
 def week_ago(weeks):
@@ -132,7 +134,10 @@ def datetime_from_format(s, fmt, in_utc=False):
 
 
 freqs = dict(
-    zip(("yearly", "monthly", "weekly", "daily", "hourly", "minutely", "secondly"), range(7))
+    zip(
+        ("yearly", "monthly", "weekly", "daily", "hourly", "minutely", "secondly"),
+        range(7),
+    )
 )
 
 

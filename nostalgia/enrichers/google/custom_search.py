@@ -21,7 +21,11 @@ def google_custom_search(search_term, **kwargs):
         return []
     service = build("customsearch", "v1", developerKey=os.environ["MY_API_KEY"])
     try:
-        res = service.cse().list(q=search_term, cx=os.environ["MY_CSE_ID"], **kwargs).execute()
+        res = (
+            service.cse()
+            .list(q=search_term, cx=os.environ["MY_CSE_ID"], **kwargs)
+            .execute()
+        )
     except HttpError as e:
         print("error", e)
         errored_count += 1

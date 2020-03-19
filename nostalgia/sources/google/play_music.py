@@ -25,7 +25,9 @@ class PlayMusic(Google):
         data = data.sort_values("_start")
         data["skipping_this"] = data.shift(-1).skip
         data["_end"] = data.shift(-1)._start
-        data["fake"] = data.skipping_this & (data._end - data._start < timedelta(seconds=15))
+        data["fake"] = data.skipping_this & (
+            data._end - data._start < timedelta(seconds=15)
+        )
         data["long"] = data._end - data._start > timedelta(minutes=10)
         data.loc[data.long, "_end"] = data[data.long]["_start"] + timedelta(minutes=10)
         data = data[~data.fake & data.listen]
@@ -58,8 +60,8 @@ class PlayMusic(Google):
 
     @classmethod
     def load(cls, nrows=None, from_cache=True, **kwargs):
-        file_path = (
-            "~/nostalgia_data/input/google/Takeout/My Activity/Google Play Music/My Activity.json"
+        file_path = "~/nostalgia_data/input/google/Takeout/My Activity/Google Play Music/My Activity.json"
+        data = cls.load_data_file_modified_time(
+            file_path, nrows=nrows, from_cache=from_cache
         )
-        data = cls.load_data_file_modified_time(file_path, nrows=nrows, from_cache=from_cache)
         return cls(data)

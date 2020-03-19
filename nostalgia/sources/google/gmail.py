@@ -41,19 +41,25 @@ class Gmail(Google):
         ].str.strip('"')
         data["sent"] = data.sender.str.contains("|".join(cls.me), na=False)
         data["receiver"] = data["to"].str.extract("<([^>]+)>")
-        data.loc[data["receiver"].isnull(), "receiver"] = data.loc[data["receiver"].isnull(), "to"]
+        data.loc[data["receiver"].isnull(), "receiver"] = data.loc[
+            data["receiver"].isnull(), "to"
+        ]
         data["received"] = data.receiver.str.contains("|".join(cls.me), na=False)
-        data["timestamp"] = pd.to_datetime([try_parse(x) for x in data.date], utc=True).tz_convert(
-            tz
-        )
+        data["timestamp"] = pd.to_datetime(
+            [try_parse(x) for x in data.date], utc=True
+        ).tz_convert(tz)
         data.drop("date", axis=1, inplace=True)
         return data
 
     @classmethod
     def load(cls, nrows=None, from_cache=True, **kwargs):
         dfs = [
-            cls.load_data_file_modified_time(file_path, nrows=nrows, from_cache=from_cache)
-            for file_path in just.glob("~/nostalgia_data/input/google/Takeout/Mail/*.mbox")
+            cls.load_data_file_modified_time(
+                file_path, nrows=nrows, from_cache=from_cache
+            )
+            for file_path in just.glob(
+                "~/nostalgia_data/input/google/Takeout/Mail/*.mbox"
+            )
         ]
         dfs = [x for x in dfs if not x.empty]
         return cls(pd.concat(dfs))

@@ -7,7 +7,9 @@ from nostalgia.times import tz
 class PageVisit(Google):
     @classmethod
     def handle_dataframe_per_file(cls, data, file_path):
-        data["time"] = pd.to_datetime(data.time_usec, utc=True, unit="us").dt.tz_convert(tz)
+        data["time"] = pd.to_datetime(
+            data.time_usec, utc=True, unit="us"
+        ).dt.tz_convert(tz)
         del data["time_usec"]
         return data
 

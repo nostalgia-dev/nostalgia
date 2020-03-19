@@ -16,7 +16,8 @@ class FacebookPosts(Facebook, PostInterface):
             location = "self"
             title = post.get("title", "")
             location_res = re.findall(
-                "(?:on|to) ([^']+)'s? [tT]imeline|posted in ([^.]+)|was with ([^.]+)[.]$", title
+                "(?:on|to) ([^']+)'s? [tT]imeline|posted in ([^.]+)|was with ([^.]+)[.]$",
+                title,
             )
             if location_res:
                 location = [x for x in location_res[0] if x][0]
@@ -26,7 +27,7 @@ class FacebookPosts(Facebook, PostInterface):
                 row = {
                     "location": location,
                     "title": x["post"],
-                    "time": datetime_from_timestamp(post['timestamp']),
+                    "time": datetime_from_timestamp(post["timestamp"]),
                 }
                 posts.append(row)
         return posts

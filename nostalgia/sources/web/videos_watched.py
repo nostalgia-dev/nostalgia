@@ -5,7 +5,11 @@ import urllib.parse
 
 def get_thumbnail(url):
     img = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)
-    return "http://i3.ytimg.com/vi/{}/maxresdefault.jpg".format(img["v"][0]) if "v" in img else None
+    return (
+        "http://i3.ytimg.com/vi/{}/maxresdefault.jpg".format(img["v"][0])
+        if "v" in img
+        else None
+    )
 
 
 class VideosWatched(NDF):
@@ -13,8 +17,12 @@ class VideosWatched(NDF):
 
     @classmethod
     def handle_dataframe_per_file(cls, data, fname):
-        data["playingSince"] = [datetime_from_timestamp(x, "utc") for x in data["playingSince"]]
-        data["playingUntil"] = [datetime_from_timestamp(x, "utc") for x in data["playingUntil"]]
+        data["playingSince"] = [
+            datetime_from_timestamp(x, "utc") for x in data["playingSince"]
+        ]
+        data["playingUntil"] = [
+            datetime_from_timestamp(x, "utc") for x in data["playingUntil"]
+        ]
         return data
 
     @classmethod
