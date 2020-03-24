@@ -42,9 +42,7 @@ for fname in sorted(just.glob("/home/pascal/Downloads/ghistory/history-*.kml")):
         address = address[0] if address else None
         start = date_parse(placemark.xpath("./klm:TimeSpan/klm:begin/text()", namespaces=N)[0])
         end = date_parse(placemark.xpath("./klm:TimeSpan/klm:end/text()", namespaces=N)[0])
-        category = placemark.xpath(
-            "./klm:ExtendedData/klm:Data[@name='Category']/klm:value/text()", namespaces=N
-        )
+        category = placemark.xpath("./klm:ExtendedData/klm:Data[@name='Category']/klm:value/text()", namespaces=N)
         category = category[0] if category else None
         # just a location
         if category is None and address is None:
@@ -53,9 +51,7 @@ for fname in sorted(just.glob("/home/pascal/Downloads/ghistory/history-*.kml")):
             category = name.split(" (")[0]
         if "Steynlaan" in name:
             category = "Home"
-        distance = placemark.xpath(
-            "./klm:ExtendedData/klm:Data[@name='Distance']/klm:value/text()", namespaces=N
-        )
+        distance = placemark.xpath("./klm:ExtendedData/klm:Data[@name='Distance']/klm:value/text()", namespaces=N)
         distance = distance[0] if distance else None
         # fuckers, lon|lat instead of lat|lon
         coords = placemark.xpath("./klm:Point/klm:coordinates/text()", namespaces=N)
@@ -75,11 +71,7 @@ for fname in sorted(just.glob("/home/pascal/Downloads/ghistory/history-*.kml")):
         loc = {"lat": None, "lon": None, "coordinates": []}
         # here switch lon|lat
         coor = sum(
-            [
-                [format_latlng((x.split(",")[1], x.split(",")[0])).split(", ") for x in c.split()]
-                for c in coords
-            ],
-            [],
+            [[format_latlng((x.split(",")[1], x.split(",")[0])).split(", ") for x in c.split()] for c in coords], [],
         )
         if coor:
             loc["coordinates"] = coor

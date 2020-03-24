@@ -9,5 +9,6 @@ class Apple(NDF):
         "delete_existing": False,
     }
 
+
 if __name__ == "__main__":
     Apple.ingest()

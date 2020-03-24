@@ -19,9 +19,7 @@ class VideosWatched(NDF):
 
     @classmethod
     def load(cls, nrows=None):
-        data = cls.load_data_file_modified_time(
-            "~/nostalgia_data/videos_watched.jsonl", nrows=nrows
-        )
+        data = cls.load_data_file_modified_time("~/nostalgia_data/videos_watched.jsonl", nrows=nrows)
         data["image"] = [get_thumbnail(x) for x in data["loc"]]
 
         return cls(data.reset_index(drop=True))

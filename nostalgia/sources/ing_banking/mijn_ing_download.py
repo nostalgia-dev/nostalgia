@@ -8,7 +8,7 @@ def expand_shadow_element(base, tags):
     for tag in tags:
         print(tag)
         element = base.find_element_by_css_selector(tag)
-        base = driver.execute_script('return arguments[0].shadowRoot', element)
+        base = driver.execute_script("return arguments[0].shadowRoot", element)
     return base
 
 
@@ -33,9 +33,7 @@ if __name__ == "__main__":
         "ing-orange-service-self-control",
     ]
     ele = expand_shadow_element(driver, tags)
-    ele.find_element_by_css_selector(
-        "div:nth-child(2) > .card__content > ul > li:nth-child(2) > a"
-    ).click()
+    ele.find_element_by_css_selector("div:nth-child(2) > .card__content > ul > li:nth-child(2) > a").click()
 
     time.sleep(5)
 
@@ -47,9 +45,7 @@ if __name__ == "__main__":
         "#viewInput",
     ]
     form = expand_shadow_element(driver, tags)
-    inp = form.find_element_by_css_selector(
-        "ing-uic-input-container > ing-uic-native-input > input"
-    )
+    inp = form.find_element_by_css_selector("ing-uic-input-container > ing-uic-native-input > input")
     inp.clear()
     inp.send_keys("01-01-2011")
 
@@ -61,9 +57,7 @@ if __name__ == "__main__":
         "#viewInput",
     ]
     form = expand_shadow_element(driver, tags)
-    inp = form.find_element_by_css_selector(
-        "ing-uic-input-container > ing-uic-native-input > input"
-    )
+    inp = form.find_element_by_css_selector("ing-uic-input-container > ing-uic-native-input > input")
     now = datetime.now() - relativedelta(days=1)
     inp.clear()
     inp.send_keys("{}-{}-{}".format(now.day, now.month, now.year))
@@ -75,9 +69,7 @@ if __name__ == "__main__":
     ]
     form = expand_shadow_element(driver, tags)
 
-    form.find_element_by_css_selector(
-        "ing-uic-form > form > div > ing-uic-select.format-container"
-    ).click()
+    form.find_element_by_css_selector("ing-uic-form > form > div > ing-uic-select.format-container").click()
 
     time.sleep(2)
 
@@ -87,9 +79,7 @@ if __name__ == "__main__":
 
     time.sleep(2)
 
-    form.find_element_by_css_selector(
-        "ing-uic-form > form > paper-button[data-type='submit']"
-    ).click()
+    form.find_element_by_css_selector("ing-uic-form > form > paper-button[data-type='submit']").click()
 
     time.sleep(15)
 
