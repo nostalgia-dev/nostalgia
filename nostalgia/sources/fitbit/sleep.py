@@ -18,8 +18,19 @@ class FitbitSleep(NDF):
             if not d:
                 continue
             for x in d:
+<<<<<<< HEAD
                 data = pd.DataFrame(x["levels"]["data"] + [{"dateTime": x["endTime"], "level": None, "seconds": None}])
                 data["dateTime"] = [datetime_from_format(x, "%Y-%m-%dT%H:%M:%S.%f") for x in data.dateTime]
+=======
+                data = pd.DataFrame(
+                    x["levels"]["data"]
+                    + [{"dateTime": x["endTime"], "level": None, "seconds": None}]
+                )
+                data["dateTime"] = [
+                    datetime_from_format(x, "%Y-%m-%dT%H:%M:%S.%f")
+                    for x in data.dateTime
+                ]
+>>>>>>> 4e8899e90f2816e9acc47d2f69fbdecd68165673
                 start = data.dateTime.iloc[:-1]
                 end = data.dateTime.iloc[1:]
                 interval_index = pd.IntervalIndex.from_arrays(start, end)

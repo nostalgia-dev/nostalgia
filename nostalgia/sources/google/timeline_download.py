@@ -44,7 +44,9 @@ def get_last_day_of_month(year, num_month):
 def select_year(year):
     driver.find_element_by_class_name("year-picker").click()
     time.sleep(0.3)
-    for ele in driver.find_elements_by_xpath("//div[text() = '{}']/parent::*".format(year)):
+    for ele in driver.find_elements_by_xpath(
+        "//div[text() = '{}']/parent::*".format(year)
+    ):
         try:
             ele.click()
             break
@@ -56,7 +58,9 @@ def select_year(year):
 def select_month(month):
     driver.find_element_by_class_name("month-picker").click()
     time.sleep(0.3)
-    for ele in driver.find_elements_by_xpath("//div[text() = '{}']/parent::*".format(month)):
+    for ele in driver.find_elements_by_xpath(
+        "//div[text() = '{}']/parent::*".format(month)
+    ):
         try:
             ele.click()
             break
@@ -68,7 +72,9 @@ def select_month(month):
 def click_download():
     driver.find_element_by_xpath("//div[@aria-label=' Settings ']").click()
     time.sleep(1)
-    for ele in driver.find_elements_by_xpath("//div[text() = 'Export this day to KML']/parent::*"):
+    for ele in driver.find_elements_by_xpath(
+        "//div[text() = 'Export this day to KML']/parent::*"
+    ):
         try:
             ele.click()
             break

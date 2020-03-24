@@ -26,7 +26,9 @@ def get_weather_at_nearest_hour(latitude, longitude, dt):
     json_response = _historic_weather(latitude, longitude, day_timestamp)
     t = dt.timestamp()
     try:
-        return min([(abs(x["time"] - t), x) for x in json_response["hourly"]["data"]])[1]
+        return min([(abs(x["time"] - t), x) for x in json_response["hourly"]["data"]])[
+            1
+        ]
     except (IndexError, KeyError) as e:
         print("ERROR with get_weather_at_nearest_hour:", e)
         return {}

@@ -16,7 +16,9 @@ class Calendar(Google):
     @classmethod
     def load(cls, nrows=None, from_cache=True, **kwargs):
         dfs = [
-            cls.load_data_file_modified_time(file_path, nrows=nrows, from_cache=from_cache)
+            cls.load_data_file_modified_time(
+                file_path, nrows=nrows, from_cache=from_cache
+            )
             for file_path in just.glob("~/nostalgia_data/input/google/Takeout/*/*.ics")
         ]
         dfs = [x for x in dfs if not x.empty]

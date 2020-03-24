@@ -50,7 +50,11 @@ def get_nearby_results(latlng, name, excluded_transport_names):
     near = get_nearby(latlng, name, excluded_transport_names)
     if near is None:
         return None
-    res = [x for x in near["results"] if name in excluded_transport_names or x["name"] == name]
+    res = [
+        x
+        for x in near["results"]
+        if name in excluded_transport_names or x["name"] == name
+    ]
     for x in res:
         if "opening_hours" in x:
             return x
@@ -161,9 +165,13 @@ def process(df, excluded_transport_names, home_regex, work_regex, hometown_regex
     df["transporting"] = df.category.isin(excluded_transport_names)
 
     if work_regex:
-        df.loc[df.name.str.contains(work_regex, regex=True, na=False), "category"] = "Work"
+        df.loc[
+            df.name.str.contains(work_regex, regex=True, na=False), "category"
+        ] = "Work"
     if home_regex:
-        df.loc[df.name.str.contains(home_regex, regex=True, na=False), "category"] = "Home"
+        df.loc[
+            df.name.str.contains(home_regex, regex=True, na=False), "category"
+        ] = "Home"
     # if hometown_regex:
     #     df.loc[
     #         df.name.str.contains(hometown_regex, regex=True, na=False), "category"
@@ -186,7 +194,9 @@ class GooglePlaces(Places):
     def load(cls, file_glob="~/Downloads/timeline_data-*", nrows=None):
         df = pd.read_csv(max(just.glob(file_glob)), nrows=nrows)
 
-        unique_locs = set([((y, z), x) for x, y, z in zip(df.name, df.lat, df.lon) if y != "nan"])
+        unique_locs = set(
+            [((y, z), x) for x, y, z in zip(df.name, df.lat, df.lon) if y != "nan"]
+        )
 
         excluded_transport_names = set(df[df.name == df.category].name)
 
@@ -210,12 +220,21 @@ class GooglePlaces(Places):
         home_regex = "|".join(cls.home)
         work_regex = "|".join(cls.work)
         hometown_regex = "|".join(cls.hometown)
-        places = process(places, excluded_transport_names, home_regex, work_regex, hometown_regex)
+        places = process(
+            places, excluded_transport_names, home_regex, work_regex, hometown_regex
+        )
 
         return cls(places)
 
 
-GooglePlaces.work = ["Jibes", "Sleepboot", "De Meerpaal", "Papendorp", "Vektis", "Work "]
+GooglePlaces.work = [
+    "Jibes",
+    "Sleepboot",
+    "De Meerpaal",
+    "Papendorp",
+    "Vektis",
+    "Work ",
+]
 
 
 # at_work = places.at_work()

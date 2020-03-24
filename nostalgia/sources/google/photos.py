@@ -24,7 +24,13 @@ class Photos(Google):
             if rows == nrows:
                 break
             date = datetime.fromtimestamp(int(meta["photoTakenTime"]["timestamp"]), tz)
+<<<<<<< HEAD
             latitude, longitude = format_latlng((meta["geoData"]["latitude"], meta["geoData"]["longitude"])).split(", ")
+=======
+            latitude, longitude = format_latlng(
+                (meta["geoData"]["latitude"], meta["geoData"]["longitude"])
+            ).split(", ")
+>>>>>>> 4e8899e90f2816e9acc47d2f69fbdecd68165673
             title = meta["title"]
             pics.append(
                 {"path": "file://" + fname, "lat": latitude, "lon": longitude, "title": title, "time": date,}

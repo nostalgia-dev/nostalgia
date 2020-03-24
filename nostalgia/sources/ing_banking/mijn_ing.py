@@ -41,8 +41,12 @@ class Payments(NDF):
         ing = data
         ing["Bedrag (EUR)"] = [float(x.replace(",", ".")) for x in ing["Bedrag (EUR)"]]
         ing["Datum"] = [pd.to_datetime(x, format="%Y%m%d") for x in ing["Datum"]]
-        ing["Naam / Omschrijving"] = [x.replace("'", "''") for x in ing["Naam / Omschrijving"]]
-        ing["Naam / Omschrijving"] = [x.replace('"', '""') for x in ing["Naam / Omschrijving"]]
+        ing["Naam / Omschrijving"] = [
+            x.replace("'", "''") for x in ing["Naam / Omschrijving"]
+        ]
+        ing["Naam / Omschrijving"] = [
+            x.replace('"', '""') for x in ing["Naam / Omschrijving"]
+        ]
         ing["timestamp"] = [
             x if pd.notnull(x) else try_date(y, min_level=3)  # only minutes and below
             for x, y in zip(old_date(ing["Naam / Omschrijving"]), ing.Mededelingen)
@@ -63,7 +67,9 @@ class Payments(NDF):
 
     @classmethod
     def load(cls, file_glob="~/Downloads/NL*20*20*.csv", nrows=None, from_cache=True):
-        data = cls.latest_file_is_historic(file_glob, nrows=nrows, from_cache=from_cache)
+        data = cls.latest_file_is_historic(
+            file_glob, nrows=nrows, from_cache=from_cache
+        )
         return cls(data)
 
     @property

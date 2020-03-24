@@ -55,7 +55,9 @@ for fname in sorted(just.glob("/home/pascal/Downloads/ghistory/history-*.kml")):
         distance = distance[0] if distance else None
         # fuckers, lon|lat instead of lat|lon
         coords = placemark.xpath("./klm:Point/klm:coordinates/text()", namespaces=N)
-        coords = coords or placemark.xpath("./klm:LineString/klm:coordinates/text()", namespaces=N)
+        coords = coords or placemark.xpath(
+            "./klm:LineString/klm:coordinates/text()", namespaces=N
+        )
         d = {
             "date": start.date(),
             "name": name,

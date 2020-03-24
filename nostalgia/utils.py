@@ -117,7 +117,9 @@ def parse_price(x):
             regex += "$"
             if re.match(regex, x):
                 try:
-                    result = float(x.replace(thousand_sep, "").replace(decimal_sep, "."))
+                    result = float(
+                        x.replace(thousand_sep, "").replace(decimal_sep, ".")
+                    )
                 except ValueError:
                     continue
                 return result

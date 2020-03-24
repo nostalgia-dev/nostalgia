@@ -4,7 +4,14 @@ import sys
 import pandas as pd
 import numpy as np
 import nostalgia
-from nostalgia.times import now, yesterday, last_week, last_month, last_year, parse_date_tz
+from nostalgia.times import (
+    now,
+    yesterday,
+    last_week,
+    last_month,
+    last_year,
+    parse_date_tz,
+)
 from metadate import is_mp
 from datetime import timedelta
 import just
@@ -155,7 +162,15 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
                     if w in BLACKLIST:
                         continue
                     if w and isinstance(w, str):
+<<<<<<< HEAD
                         nlp_registry[w].add(ResultInfo(C, "filter", col_contains_wrapper(word, col), col, word))
+=======
+                        nlp_registry[w].add(
+                            ResultInfo(
+                                C, "filter", col_contains_wrapper(word, col), col, word
+                            )
+                        )
+>>>>>>> 4e8899e90f2816e9acc47d2f69fbdecd68165673
                 if n.is_verb(word):
                     for w in n.get_verbs(word).values():
                         if w in BLACKLIST:
@@ -275,7 +290,9 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         if "heartrate_value" not in self.columns:
             self.add_heartrate()
         if high is not None and low is not None:
-            return self[(self["heartrate_value"] >= low) & self["heartrate_value"] < high]
+            return self[
+                (self["heartrate_value"] >= low) & self["heartrate_value"] < high
+            ]
         if low is not None:
             return self[self["heartrate_value"] >= low]
         if high is not None:
@@ -310,7 +327,9 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
     @property
     def _office_hours(self):
         if (self.time.dt.hour == 0).all():
-            raise ValueError("Hours are not set, thus unreliable. Use `office_days` instead?")
+            raise ValueError(
+                "Hours are not set, thus unreliable. Use `office_days` instead?"
+            )
         if self.start is not None:
             return np.array(
                 [(x >= 8 and x <= 17 and y >= 8 and y <= 17) for x, y in zip(self.start.dt.hour, self.end.dt.hour)]
@@ -369,7 +388,9 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
     @classmethod
     def load_sample_data(cls):
         nostalgia_dir = os.path.dirname(nostalgia.__file__)
-        fname = os.path.join(nostalgia_dir, "data/samples/" + cls.class_df_name() + ".parquet")
+        fname = os.path.join(
+            nostalgia_dir, "data/samples/" + cls.class_df_name() + ".parquet"
+        )
         if os.path.exists(fname):
             print("loaded method 1")
             df = pd.read_parquet(fname)
@@ -410,7 +431,11 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         # workaround
         # start: 10:00:00
         # end:   10:00:59
-        times = [t for t, l in zip(times, levels) if l == max_level or (l == 2 and max_level == 3)]
+        times = [
+            t
+            for t, l in zip(times, levels)
+            if l == max_level or (l == 2 and max_level == 3)
+        ]
         num_times = len(times)
         self.num_times = num_times
         if num_times == 0:
@@ -480,7 +505,9 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
     def by_me(self):
         return self
 
-    def containing(self, string, col_name=None, case=False, regex=True, na=False, bound=True):
+    def containing(
+        self, string, col_name=None, case=False, regex=True, na=False, bound=True
+    ):
         """
         Filters using string in all string columns when col_name is None, otherwise in just that one
         When `bound=True` it means to add word boundaries to the regex.
@@ -492,7 +519,14 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
             string = r"\b" + string + r"\b"
         if col_name is not None:
             return self.col_contains(string, col_name, case, regex, na)
+<<<<<<< HEAD
         bool_cols = [self[x].str.contains(string, case=case, regex=regex, na=na) for x in self.text_cols]
+=======
+        bool_cols = [
+            self[x].str.contains(string, case=case, regex=regex, na=na)
+            for x in self.text_cols
+        ]
+>>>>>>> 4e8899e90f2816e9acc47d2f69fbdecd68165673
         bool_array = bool_cols[0]
         for b in bool_cols[1:]:
             bool_array = np.logical_or(bool_array, b)
@@ -514,7 +548,16 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
             "value": getattr(self, "value", None),
             "index_loc": self.index,
         }
-        for x in ["title", "name", "naam", "subject", "url", "content", "text", "value"]:
+        for x in [
+            "title",
+            "name",
+            "naam",
+            "subject",
+            "url",
+            "content",
+            "text",
+            "value",
+        ]:
             res = getattr(self, x, None)
             if res is not None:
                 data["title"] = res
@@ -654,7 +697,9 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         if self._start_col is None:
             res = self[ab_overlap_c(start, end, self[self._time_col])]
         else:
-            res = self[ab_overlap_cd(self[self._start_col], self[self._end_col], start, end)]
+            res = self[
+                ab_overlap_cd(self[self._start_col], self[self._end_col], start, end)
+            ]
         if not res.empty and sort_diff:
             # avg_time = start + (end - start) / 2
             # res["sort_score"] = -abs(res[self._time_col] - avg_time)
@@ -669,21 +714,42 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
     def duration(self):
         return self.end - self.start
 
+<<<<<<< HEAD
     def sort_values(self, by, axis=0, ascending=True, inplace=False, kind="quicksort", na_position="last"):
         return self.__class__(pd.DataFrame.sort_values(self, by, axis, ascending, inplace, kind, na_position))
+=======
+    def sort_values(
+        self,
+        by,
+        axis=0,
+        ascending=True,
+        inplace=False,
+        kind="quicksort",
+        na_position="last",
+    ):
+        return self.__class__(
+            pd.DataFrame.sort_values(
+                self, by, axis, ascending, inplace, kind, na_position
+            )
+        )
+>>>>>>> 4e8899e90f2816e9acc47d2f69fbdecd68165673
 
     @nlp("filter", "last", "last time", "most recently")
     def last(self):
         _ = self.time  # to get inferred time if not set
         col = self._time_col or self._start_col
-        return self.__class__(self.sort_values(col, na_position="last", ascending=False).iloc[:1])
+        return self.__class__(
+            self.sort_values(col, na_position="last", ascending=False).iloc[:1]
+        )
 
     # maybe which/what could be showing only unique?
     @nlp("end", "show", "show me", "show me the", "show the", "what")
     def show_me(self):
         _ = self.time  # to get inferred time if not set
         col = self._time_col or self._start_col
-        return self.__class__(self.sort_values(col, na_position="last", ascending=False))
+        return self.__class__(
+            self.sort_values(col, na_position="last", ascending=False)
+        )
 
     def at(self, time_or_place):
         if isinstance(time_or_place, NDF) and time_or_place.df_name.endswith("places"):
@@ -695,7 +761,9 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
                 end = mp.end_date
                 return self.at_time(start, end)
             else:
-                return self.when_at(get_type_from_registry("places").containing(time_or_place))
+                return self.when_at(
+                    get_type_from_registry("places").containing(time_or_place)
+                )
         raise ValueError("neither time nor place was passed")
 
     def to_html(self):

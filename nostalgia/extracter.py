@@ -11,7 +11,9 @@ def load_from_download(ingest_glob, vendor, recent_only=True, delete_existing=Tr
     if delete_existing:
         just.remove(nostalgia_input, allow_recursive=True)
     elif just.exists(nostalgia_input):
-        raise ValueError(f"Cannot overwrite path {nostalgia_input}, pass delete_existing=True")
+        raise ValueError(
+            f"Cannot overwrite path {nostalgia_input}, pass delete_existing=True"
+        )
     fnames = sorted(ingest_files, key=os.path.getctime)
     if recent_only:
         fnames = fnames[-1:]

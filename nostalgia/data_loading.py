@@ -95,7 +95,9 @@ class Loader:
             elif fname.endswith(".ics"):
                 from icalevents.icalevents import events
 
-                evs = events(file=fname, start=datetime.fromtimestamp(0), end=datetime.now())
+                evs = events(
+                    file=fname, start=datetime.fromtimestamp(0), end=datetime.now()
+                )
                 data = [
                     {
                         "title": ev.summary,
@@ -172,13 +174,20 @@ class Loader:
                     text = cache[fname]
                 else:
                     try:
-                        text = pytesseract.image_to_string(Image.open(just.make_path(fname)))
+                        text = pytesseract.image_to_string(
+                            Image.open(just.make_path(fname))
+                        )
                     except OSError as e:
                         print("ERR", fname, e)
                         continue
                     cache[fname] = text
                 time = datetime_from_timestamp(os.path.getmtime(fname), "utc")
-                data = {"text": text, "path": fname, "title": fname.split("/")[-1], "time": time}
+                data = {
+                    "text": text,
+                    "path": fname,
+                    "title": fname.split("/")[-1],
+                    "time": time,
+                }
                 objects.append(data)
             data = pd.DataFrame(objects)
             if processed_files and nrows is None:

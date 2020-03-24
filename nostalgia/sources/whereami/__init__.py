@@ -19,7 +19,12 @@ class Whereami(NDF):
     nlp_columns = ["name"]
 
     @classmethod
-    def load(cls, file_path="~/nostalgia_data/input/whereami/history.tsv", nrows=None, **kwargs):
+    def load(
+        cls,
+        file_path="~/nostalgia_data/input/whereami/history.tsv",
+        nrows=None,
+        **kwargs
+    ):
         file_path = os.path.expanduser(file_path)
         ndata = []
         nrows = nrows or float("inf")
@@ -39,7 +44,9 @@ class Whereami(NDF):
         whereami = pd.DataFrame(ndata, columns=["start", "name"]).sort_values("start")
         whereami = whereami[whereami.name != "unknown"]
         whereami["end"] = whereami.start.shift(-1)
-        whereami["in_range"] = (whereami.end - whereami.start) < pd.Timedelta(minutes=20)
+        whereami["in_range"] = (whereami.end - whereami.start) < pd.Timedelta(
+            minutes=20
+        )
         whereami["new"] = (whereami.name != whereami.name.shift(1)).cumsum()
 
         groups = []

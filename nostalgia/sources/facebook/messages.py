@@ -34,7 +34,9 @@ class FacebookChat(Facebook, ChatInterface):
                 df.loc[df.sender_name == senders[0], "receiver_name"] = senders[1]
                 df.loc[df.sender_name == senders[1], "receiver_name"] = senders[0]
             elif len(senders) > 2:
-                df["receiver_name"] = ", ".join([x for x in senders if isinstance(x, str)])
+                df["receiver_name"] = ", ".join(
+                    [x for x in senders if isinstance(x, str)]
+                )
         face = [x for x in face]
         face = pd.concat(face)
         face = face.reset_index(drop=True).sort_values("timestamp_ms")

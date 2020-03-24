@@ -52,7 +52,11 @@ class ResultInfo(object):
         return hash((self.cls, self.col_name, self.orig_word))
 
     def __eq__(self, o):
-        return (self.cls, self.col_name, self.orig_word) == (o.cls, o.col_name, o.orig_word)
+        return (self.cls, self.col_name, self.orig_word) == (
+            o.cls,
+            o.col_name,
+            o.orig_word,
+        )
 
 
 COLUMN_BLACKLIST = set(["did", "was", "the", "a", "are", "i", "from", "hard", "for"])
@@ -141,5 +145,9 @@ def find_entities(sentence):
         for l, e in mp.spans:
             wrongs.update(range(l, e))
         ents = [x for x in ents if x.start not in wrongs and x.end not in wrongs]
-        ents.append(ResultInfo("MP", "filter", at_time_wrapper(mp), orig_word=" ".join(mp.matches)))
+        ents.append(
+            ResultInfo(
+                "MP", "filter", at_time_wrapper(mp), orig_word=" ".join(mp.matches)
+            )
+        )
     return ents

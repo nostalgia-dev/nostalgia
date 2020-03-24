@@ -16,7 +16,8 @@ class Spotify(NDF):
         spotify = pd.DataFrame(
             [
                 (
-                    datetime_from_format(x["endTime"], "%Y-%m-%d %H:%M") - timedelta(milliseconds=x["msPlayed"]),
+                    datetime_from_format(x["endTime"], "%Y-%m-%d %H:%M")
+                    - timedelta(milliseconds=x["msPlayed"]),
                     datetime_from_format(x["endTime"], "%Y-%m-%d %H:%M"),
                     x["trackName"],
                     x["artistName"],
