@@ -3,6 +3,7 @@ import pandas as pd
 
 from nostalgia.ndf import NDF
 
+
 class StoresActivity(NDF):
     @classmethod
     def load(cls, nrows=None):

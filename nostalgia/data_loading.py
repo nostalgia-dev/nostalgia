@@ -72,9 +72,7 @@ def read_array_of_dict_from_json(fname, key_name=None, nrows=None):
 
 class Loader:
     @classmethod
-    def load_data_file_modified_time(
-        cls, fname, key_name="", nrows=None, from_cache=True, **kwargs
-    ):
+    def load_data_file_modified_time(cls, fname, key_name="", nrows=None, from_cache=True, **kwargs):
         """
         It will load from cache if filename is not changed since last run (and there is a cache).
         If it has changed, it will reprocess and save it in cache (including the modified_time).
@@ -113,9 +111,7 @@ class Loader:
                 import mailbox
 
                 m = mailbox.mbox(fname)
-                data = pd.DataFrame(
-                    [{l: x[l] for l in ["from", "to", "date", "subject"]} for x in m]
-                )
+                data = pd.DataFrame([{l: x[l] for l in ["from", "to", "date", "subject"]} for x in m])
             else:
                 data = read_array_of_dict_from_json(fname, key_name, nrows, **kwargs)
             data = cls.handle_dataframe_per_file(data, fname)

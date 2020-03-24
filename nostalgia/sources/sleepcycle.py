@@ -8,7 +8,7 @@ from nostalgia.ndf import NDF
 from nostalgia.times import tz
 
 login_url = "https://s.sleepcycle.com/site/login"
-export_url = 'https://s.sleepcycle.com/export/original'
+export_url = "https://s.sleepcycle.com/export/original"
 
 
 class SleepCycle(NDF):
@@ -24,7 +24,7 @@ class SleepCycle(NDF):
         }
         _ = just.post(login_url, data=data)
 
-        str_data = just.get('https://s.sleepcycle.com/export/original')
+        str_data = just.get("https://s.sleepcycle.com/export/original")
 
         start = str_data.index("data_json.txt") + len("data_json.txt")
         end = str_data[start:].index("}]PK") + 2

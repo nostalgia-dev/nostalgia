@@ -46,9 +46,7 @@ class Whereami(NDF):
         group_id = None
         start = None
         name = None
-        for s, n, e, ir, new in zip(
-            whereami.start, whereami.name, whereami.end, whereami.in_range, whereami.new
-        ):
+        for s, n, e, ir, new in zip(whereami.start, whereami.name, whereami.end, whereami.in_range, whereami.new):
             if group_id is None:
                 group_id = new
                 start = s
