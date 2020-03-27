@@ -1,4 +1,5 @@
 name: apply-black
+# Support only when "pull request" is executed
 on: pull_request
 jobs:
   auto-format:
@@ -11,10 +12,10 @@ jobs:
         uses: lgeiger/black-action@v1.0.1
         with:
           args: .
-      - name: Check for modified files
+      - name: check
         id: git-check
         run: echo ::set-output name=modified::$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)
-      - name: Push changes
+      - name: push
         if: steps.git-check.outputs.modified == 'true'
         run: |
           git config --global user.email "action@github.com"
