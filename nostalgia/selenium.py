@@ -16,7 +16,7 @@ def get_driver(
     # set options
     chrome_options = webdriver.ChromeOptions()
     if headless:
-        chrome_options.add_argument('headless')
+        chrome_options.add_argument("headless")
     if binary_location is not None:
         setattr(chrome_options, "binary_location", binary_location)
     for k, v in options.items():

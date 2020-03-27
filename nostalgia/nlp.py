@@ -13,7 +13,7 @@ n = None
 
 
 class ResultInfo(object):
-    __slots__ = ('cls', 'role', 'cls_fn', 'col_name', 'orig_word')
+    __slots__ = ("cls", "role", "cls_fn", "col_name", "orig_word")
 
     def __init__(self, cls, role, cls_fn=None, col_name=None, orig_word=None):
         self.cls = cls
@@ -45,10 +45,7 @@ class ResultInfo(object):
         except AttributeError:
             c = getattr(self, "cls")
         return "!{}({})".format(
-            c,
-            ", ".join(
-                ["{}={!r}".format(x, self.repr_wrapper(x)) for x in self.__slots__ if x != "cls"]
-            ),
+            c, ", ".join(["{}={!r}".format(x, self.repr_wrapper(x)) for x in self.__slots__ if x != "cls"]),
         )
 
     def __hash__(self):
@@ -76,14 +73,10 @@ def regex(role, *keywords):
     def real_decorator(fn):
         for keyword in keywords:
             if isinstance(keyword, str):
-                nlp_registry[keyword].add(
-                    ResultInfo(fn.__qualname__, role, att_getter(fn), orig_word=keyword)
-                )
+                nlp_registry[keyword].add(ResultInfo(fn.__qualname__, role, att_getter(fn), orig_word=keyword))
             else:
                 for kw in keyword:
-                    nlp_registry[kw].add(
-                        ResultInfo(fn.__qualname__, role, att_getter(fn), orig_word=kw)
-                    )
+                    nlp_registry[kw].add(ResultInfo(fn.__qualname__, role, att_getter(fn), orig_word=kw))
 
         @wraps(fn)
         def wrapper(*args, **kwargs):
@@ -103,14 +96,10 @@ def nlp(role, *keywords):
         #     defin = "({})".format(defin)
         for keyword in keywords:
             if isinstance(keyword, str):
-                nlp_registry[keyword].add(
-                    ResultInfo(fn.__qualname__, role, att_getter(fn), orig_word=keyword)
-                )
+                nlp_registry[keyword].add(ResultInfo(fn.__qualname__, role, att_getter(fn), orig_word=keyword))
             else:
                 for kw in keyword:
-                    nlp_registry[kw].add(
-                        ResultInfo(fn.__qualname__, role, att_getter(fn), orig_word=kw)
-                    )
+                    nlp_registry[kw].add(ResultInfo(fn.__qualname__, role, att_getter(fn), orig_word=kw))
 
         @wraps(fn)
         def wrapper(*args, **kwargs):

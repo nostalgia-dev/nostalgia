@@ -8,7 +8,7 @@ import dateutil
 from dateutil.rrule import rrule
 
 tz = tzlocal.get_localzone()
-utc = timezone('UTC')
+utc = timezone("UTC")
 
 
 def now(**kwargs):
@@ -65,10 +65,7 @@ def years_ago(years):
 
 def in_month(month):
     year = now().year - 1 if now().month <= month else now().year
-    return lambda: (
-        datetime(year, month, 1).date(),
-        datetime(year, month, 1).date() + relativedelta(month=month + 1),
-    )
+    return lambda: (datetime(year, month, 1).date(), datetime(year, month, 1).date() + relativedelta(month=month + 1),)
 
 
 def in_year(year):
@@ -131,9 +128,7 @@ def datetime_from_format(s, fmt, in_utc=False):
         return tz.localize(base)
 
 
-freqs = dict(
-    zip(("yearly", "monthly", "weekly", "daily", "hourly", "minutely", "secondly"), range(7))
-)
+freqs = dict(zip(("yearly", "monthly", "weekly", "daily", "hourly", "minutely", "secondly"), range(7)))
 
 
 def iterate_time(start, until=now(), freq="hourly"):

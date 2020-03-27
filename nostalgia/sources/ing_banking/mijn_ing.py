@@ -18,9 +18,7 @@ digits = set(string.digits)
 
 
 def old_date(col):
-    return pd.to_datetime(
-        col.str.slice(0, 14), format="%d-%m-%y %H:%M", errors="coerce"
-    ).dt.tz_localize(tz)
+    return pd.to_datetime(col.str.slice(0, 14), format="%d-%m-%y %H:%M", errors="coerce").dt.tz_localize(tz)
 
 
 class Payments(NDF):
@@ -53,9 +51,7 @@ class Payments(NDF):
 
         ing["pas"] = [
             x if y == "Betaalautomaat" and x.startswith("0") else "---"
-            for x, y in zip(
-                ing.Mededelingen.str.replace(":", "").str.slice(10, 13), ing.MutatieSoort
-            )
+            for x, y in zip(ing.Mededelingen.str.replace(":", "").str.slice(10, 13), ing.MutatieSoort)
         ]
         # ing = ing.drop(["Code", "Tegenrekening", "Rekening", "Mededelingen"], axis=1)
         ing.columns = ["bedrag" if x == "Bedrag (EUR)" else x for x in ing.columns]

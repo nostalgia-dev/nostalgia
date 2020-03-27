@@ -16,12 +16,8 @@ class SamsungSleep(Samsung):
         path = "~/nostalgia_data/input/samsung/samsunghealth_*/com.samsung.health.sleep_stage.*.csv"
         fname = just.glob(path)[0]
         data = cls.load_data_file_modified_time(fname, nrows=nrows, skiprows=1)
-        data["start_time"] = [
-            datetime_from_format(x, "%Y-%m-%d %H:%M:%S.%f") for x in data["start_time"]
-        ]
-        data["end_time"] = [
-            datetime_from_format(x, "%Y-%m-%d %H:%M:%S.%f") for x in data["end_time"]
-        ]
+        data["start_time"] = [datetime_from_format(x, "%Y-%m-%d %H:%M:%S.%f") for x in data["start_time"]]
+        data["end_time"] = [datetime_from_format(x, "%Y-%m-%d %H:%M:%S.%f") for x in data["end_time"]]
         return cls(data)
 
     @property

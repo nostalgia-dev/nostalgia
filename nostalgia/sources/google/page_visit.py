@@ -15,7 +15,5 @@ class PageVisit(Google):
     @classmethod
     def load(cls, nrows=None, from_cache=True, **kwargs):
         file_path = "~/nostalgia_data/input/google/Takeout/Chrome/BrowserHistory.json"
-        page_visit = cls.load_data_file_modified_time(
-            file_path, "Browser History", nrows=nrows, from_cache=from_cache
-        )
+        page_visit = cls.load_data_file_modified_time(file_path, "Browser History", nrows=nrows, from_cache=from_cache)
         return cls(page_visit)
