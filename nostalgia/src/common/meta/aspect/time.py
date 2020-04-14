@@ -44,6 +44,10 @@ class Time(Aspect):
         return getattr(self, self._time_col)
 
     def duration_longer_than(self, **timedelta_kwargs):
+        """
+                sdf = ExampleSource().build_sdf()
+                sd.du
+        """
         return self[(self.end - self.time) >= timedelta(**timedelta_kwargs)]
 
     def duration_shorter_than(self, **timedelta_kwargs):

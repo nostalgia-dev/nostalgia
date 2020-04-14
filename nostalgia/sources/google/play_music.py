@@ -20,7 +20,7 @@ class PlayMusic(Google):
 
         data = data.rename(columns={"description": "artist"})
         data = data[~data.title.str.startswith("Searched for ", na=False)]
-        data.loc[:, "skip"] = data.title.str.startswith("Skipped ")
+        data.loc[:, "skip"] = data.titlex.str.startswith("Skipped ")
         data.loc[:, "listen"] = data.title.str.startswith("Listened to ")
         data = data.sort_values("_start")
         data["skipping_this"] = data.shift(-1).skip

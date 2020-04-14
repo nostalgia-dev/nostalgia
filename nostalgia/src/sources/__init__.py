@@ -40,7 +40,7 @@ class Source(Vendor, metaclass=ABCMeta):
         return "~/nostalgia_data/input/"
 
 
-    def download(self, start_time: datetime = None, end_time: datetime = None, **kwargs) -> str:
+    def download(self, start_time: datetime = None, end_time: datetime = None, **kwargs) -> pd.DataFrame:
         """
         This method is used for retrieving data from some external resource.
         That can be some API, parsed page etc.
@@ -109,8 +109,8 @@ class Source(Vendor, metaclass=ABCMeta):
             sdf[column] = aspects[column](sdf)
 
 
-
-        a = [aspect for aspect in self.aspects.values() if not isinstance(aspect, types.FunctionType)]
+        # TODO is this wrong, as we don't keep all aspects' dict?
+        a = set(aspect for aspect in self.aspects.values() if not isinstance(aspect, types.FunctionType))
 
         sdf.__class__.__bases__ = tuple(sdf.__class__.__bases__ + tuple(a))
 

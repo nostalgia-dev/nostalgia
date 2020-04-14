@@ -1,4 +1,4 @@
-import unittest
+import pytest
 from datetime import datetime
 import json
 from datetime import datetime
@@ -68,7 +68,7 @@ class ExampleSource(Source):
 
 
 
-class TestCase(unittest.TestCase):
+class TestCase(pytest):
 
     @classmethod
     def resources_path(cls):
