@@ -36,7 +36,7 @@ class AbnAmro(Source):
             "transactiondate": Time,
             "preciseDate": Time,
             "description": Subject
-            # "accountNumber": Anonymized TODO refactor Anonymized into Aspect
+            # "accountNumber": Account Anonymized TODO refactor Anonymized into Aspect
         }
 
     def ingest(self, delta_data, **kwargs):

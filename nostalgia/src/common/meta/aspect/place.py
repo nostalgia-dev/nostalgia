@@ -9,7 +9,7 @@ from nostalgia.times import parse_date_tz
 from nostalgia.utils import haversine
 
 
-class Place(NDF, Aspect):
+class Place(Aspect):
     keywords = [
         "did i go",
         "i was in",
@@ -26,6 +26,8 @@ class Place(NDF, Aspect):
     home = []
     work = []
     hometown = []
+
+
 
     @nlp("filter", "at home")
     def at_home(self):

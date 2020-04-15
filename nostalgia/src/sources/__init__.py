@@ -52,7 +52,7 @@ class Source(Vendor, metaclass=ABCMeta):
         return ""
 
     @abstractmethod
-    def ingest(self, delta_data, **kwargs):
+    def ingest(self, delta_data, **kwargs) -> pd.DataFrame:
         """
         TODO what exactly should it do and why we should expose it
         Data will be stored in internal long-running storage.
@@ -68,7 +68,7 @@ class Source(Vendor, metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def load(self, data) -> pd.DataFrame:
+    def load(self, data: pd.DataFrame) -> pd.DataFrame:
         """
         This method should return marked Source Data Frame
         Mandatory: specify one of columns with Time aspect
