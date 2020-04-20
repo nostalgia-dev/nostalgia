@@ -9,9 +9,6 @@ from src.sources import Source
 
 
 class ICloud(Source):
-
-
-
     @property
     def category(self) -> list:
         return [Service]

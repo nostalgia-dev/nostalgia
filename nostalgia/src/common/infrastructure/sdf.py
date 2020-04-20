@@ -131,13 +131,22 @@ class SDF(pd.DataFrame):
         # if self.df_name not in registry:
         #     registry[self.df_name] = self
         if self.df_name != "results":
+            # TODO add registry layer
             if self.df_name not in registry:
                 registry[self.df_name] = self
             # if the new data is smaller than what is in the registry, do not overwrite the registry
+            # TODO add merging of df
             elif len(data) > registry[self.df_name].shape[0]:
                 registry[self.df_name] = self
-        if n is None:
-            return
+        # TODO what is n?
+        # ===============================
+        # df analysis part
+        # ===============================
+        if n:
+            self.analyze(C)
+
+
+    def analyze(self, C):
         seen_keyword_keywords = set()
         for kw in self.keywords:
             for w in n.simple_extend(kw):
@@ -349,330 +358,6 @@ class SDF(pd.DataFrame):
         return super().to_html()
 
     ####################################################################################################################
-    ### TODO -- TIME SECTION
-    """
-    See nostalgia/src/common/meta/aspect/time.py
-    """
-    ####################################################################################################################
-    #
-    # @property
-    # def time(self):
-    #     if not self.inferred_time:
-    #         self.infer_time()
-    #         self.inferred_time = True
-    #     if self._time_col == "time":
-    #         return self._get_item_cache(self._time_col)
-    #     if self._time_col not in self:
-    #         return None
-    #     return getattr(self, self._time_col)
-    #
-    # def duration_longer_than(self, **timedelta_kwargs):
-    #     return self[(self.end - self.time) >= timedelta(**timedelta_kwargs)]
-    #
-    # def duration_shorter_than(self, **timedelta_kwargs):
-    #     return self[(self.end - self.time) <= timedelta(**timedelta_kwargs)]
-    #
-    # @property
-    # def start(self):
-    #     if not self.inferred_time:
-    #         self.infer_time()
-    #         self.inferred_time = True
-    #     if self._start_col == "start":
-    #         return self._get_item_cache(self._start_col)
-    #     if self._start_col not in self:
-    #         return None
-    #     return getattr(self, self._start_col)
-    #
-    # @property
-    # def _office_days(self):
-    #     return self.time.dt.weekday < 5
-    #
-    # @property
-    # def _office_hours(self):
-    #     if (self.time.dt.hour == 0).all():
-    #         raise ValueError("Hours are not set, thus unreliable. Use `office_days` instead?")
-    #     if self.start is not None:
-    #         return np.array(
-    #             [
-    #                 (x >= 8 and x <= 17 and y >= 8 and y <= 17)
-    #                 for x, y in zip(self.start.dt.hour, self.end.dt.hour)
-    #             ]
-    #         )
-    #     return np.array([(x >= 8 and x <= 17) for x in self.time.dt.hour])
-    #
-    # @property
-    # def in_office_days(self):
-    #     return self[self._office_days]
-    #
-    # @property
-    # def in_office_hours(self):
-    #     return self[self._office_hours]
-    #
-    # @property
-    # def during_office_hours(self):
-    #     return self[self._office_hours & self._office_days]
-    #
-    # @property
-    # def outside_office_hours(self):
-    #     return self[~(self._office_hours & self._office_days)]
-    #
-    # @property
-    # def end(self):
-    #     if not self.inferred_time:
-    #         self.infer_time()
-    #         self.inferred_time = True
-    #     if self._end_col == "end":
-    #         return self._get_item_cache(self._end_col)
-    #     if self._end_col not in self:
-    #         return None
-    #     return getattr(self, self._end_col)
-    #
-    # def at_night(self, start=22, end=8):
-    #     return self.between_hours(start, end)
-    #
-    # def between_hours(self, start=22, end=8):
-    #     if self._start_col is not None:
-    #         return self[(self.start.dt.hour > start) | (self.end.dt.hour < end)]
-    #     return self[(self.time.dt.hour > start) & (self.time.dt.hour < end)]
-    #
-    # @property
-    # def when_asleep(self):
-    #     return self.__class__(join_time(registry["sleep"].asleep, self))
-    #
-    # def _select_at_day(self, day_or_class):
-    #     if isinstance(day_or_class, pd.DataFrame):
-    #         days = day_or_class.time.dt.date.unique()
-    #         return self.time.dt.date.isin(days)
-    #     elif isinstance(day_or_class, (list, tuple, set, pd.Series)):
-    #         return self.time.dt.date.isin(set(day_or_class))
-    #     else:
-    #         mp = parse_date_tz(day_or_class)
-    #         return (self.time.dt.date >= mp.start_date.date()) & (
-    #             self.time.dt.date < mp.end_date.date()
-    #         )
-    #
-    # def at_day(self, day_or_class):
-    #     return self[self._select_at_day(day_or_class)]
-    #
-    # def not_at_day(self, day_or_class):
-    #     return self[~self._select_at_day(day_or_class)]
-    #
-    # @property
-    # def last_day(self):
-    #     return self[(self.time > yesterday()) & (self.time < now())]
-    #
-    # @property
-    # def yesterday(self):
-    #     return self[(self.time > yesterday()) & (self.time < now())]
-    #
-    # @property
-    # def last_week(self):
-    #     return self[(self.time > last_week()) & (self.time < now())]
-    #
-    # @property
-    # def last_month(self):
-    #     return self[(self.time > last_month()) & (self.time < now())]
-    #
-    # @property
-    # def last_year(self):
-    #     return self[(self.time > last_year()) & (self.time < now())]
-    #
-    # @property
-    # def duration(self):
-    #     return self.end - self.start
-    #
-    # def time_level(self, col):
-    #     if (col.dt.microsecond != 0).any():
-    #         return 4
-    #     if (col.dt.second != 0).any():
-    #         return 3
-    #     if (col.dt.minute != 0).any():
-    #         return 2
-    #     if (col.dt.hour != 0).any():
-    #         return 1
-    #     return 0
-    #
-    # def infer_time(self):
-    #     if self.__class__.__name__ == "Results":
-    #         self._start_col, self._time_col, self._end_col = "start", "start", "end"
-    #         return
-    #     times = [x for x, y in zip(self.columns, self.dtypes) if "datetime" in str(y)]
-    #     levels = [self.time_level(self[x]) for x in times]
-    #     if not levels:
-    #         raise ValueError(
-    #             f"Either 1 or 2 columns should be of type datetime for {self.__class__.__name__} (0 found)"
-    #         )
-    #     max_level = max(levels)
-    #     # workaround
-    #     # start: 10:00:00
-    #     # end:   10:00:59
-    #     times = [t for t, l in zip(times, levels) if l == max_level or (l == 2 and max_level == 3)]
-    #     num_times = len(times)
-    #     self.num_times = num_times
-    #     if num_times == 0:
-    #         self._start_col, self._time_col, self._end_col = None, None, None
-    #     elif num_times == 1:
-    #         self._start_col, self._time_col, self._end_col = None, times[0], None
-    #     elif num_times == 2:
-    #         col1, col2 = times
-    #         sub = self[self[col1].notnull() & self[col2].notnull()]
-    #         a, b = sub[col1], sub[col2]
-    #         if (a >= b).all():
-    #             col1, col2 = col2, col1
-    #         elif not (a <= b).all():
-    #             raise ValueError(
-    #                 "Not strictly one col higher than other with dates, can't determine"
-    #             )
-    #         if col1 == "end" and col2 == "start":
-    #             col2, col1 = col1, col2
-    #         self._start_col, self._time_col, self._end_col = col1, col1, col2
-    #         interval_index = pd.IntervalIndex.from_arrays(
-    #             self[self._start_col], self[self._end_col]
-    #         )
-    #         self.set_index(interval_index, inplace=True)
-    #         self.sort_index(inplace=True)
-    #     else:
-    #         msg = 'infer time failed: there can only be 1 or 2 datetime columns at the same granularity.'
-    #
-    #         raise Exception(msg + " Found: " + str(times))
-    #
-    # def at_time(self, start, end=None, sort_diff=True, **window_kwargs):
-    #     if is_mp(start):
-    #         start = start.start_date
-    #         end = start.end_date
-    #     elif isinstance(start, str) and end is None:
-    #         mp = parse_date_tz(start)
-    #         start = mp.start_date
-    #         end = mp.end_date
-    #     elif isinstance(start, str) and isinstance(end, str):
-    #         mp = parse_date_tz(start)
-    #         start = mp.start_date
-    #         mp = parse_date_tz(end)
-    #         end = mp.end_date
-    #     elif end is None and window_kwargs:
-    #         end = start
-    #     elif end is None:
-    #         raise ValueError(
-    #             "Either a metaperiod, a date string, 2 times, or time + window_kwargs."
-    #         )
-    #     self.infer_time()
-    #     if window_kwargs:
-    #         start = start - pd.Timedelta(**window_kwargs)
-    #         end = end + pd.Timedelta(**window_kwargs)
-    #     if self._start_col is None:
-    #         res = self[ab_overlap_c(start, end, self[self._time_col])]
-    #     else:
-    #         res = self[ab_overlap_cd(self[self._start_col], self[self._end_col], start, end)]
-    #     if not res.empty and sort_diff:
-    #         # avg_time = start + (end - start) / 2
-    #         # res["sort_score"] = -abs(res[self._time_col] - avg_time)
-    #         # res = res.sort_values('sort_score').drop('sort_score', axis=1)
-    #         res["sort_score"] = res[self._time_col]
-    #         res = res.sort_values('sort_score').drop('sort_score', axis=1)
-    #     return self.__class__(res)
-    #
-    # @nlp("filter", "last", "last time", "most recently")
-    # def last(self):
-    #     _ = self.time  # to get inferred time if not set
-    #     col = self._time_col or self._start_col
-    #     return self.__class__(self.sort_values(col, na_position="last", ascending=False).iloc[:1])
-
-    ####################################################################################################################
-    ### TODO -- MEASURE (HEALTH) SECTION
-    ####################################################################################################################
-
-    # def add_heartrate(self):
-    #     return self.take_from("heartrate", "value")
-    #
-    # def heartrate_range(self, low, high=None):
-    #     if "heartrate_value" not in self.columns:
-    #         self.add_heartrate()
-    #     if high is not None and low is not None:
-    #         return self[(self["heartrate_value"] >= low) & self["heartrate_value"] < high]
-    #     if low is not None:
-    #         return self[self["heartrate_value"] >= low]
-    #     if high is not None:
-    #         return self[self["heartrate_value"] < high]
-    #
-    # def heartrate_above(self, value):
-    #     return self.heartrate_range(value)
-    #
-    # def heartrate_below(self, value):
-    #     return self.heartrate_range(None, value)
-
-    ####################################################################################################################
-    ### TODO -- PLACE SECTION
-    ####################################################################################################################
-
-    # def when_at(self, other, **window_kwargs):
-    #     if isinstance(other, str):
-    #         other = get_type_from_registry("places").containing(other)
-    #     return self.__class__(join_time(other, self, **window_kwargs))
-    #
-    # when = when_at
-    #
-    # def near(self, s):
-    #     if isinstance(s, SDF) and s.df_name.endswith("places"):
-    #         selection = s
-    #     else:
-    #         selection = get_type_from_registry("places").containing(s)
-    #     return self.when_at(selection)
-    #
-    # def to_place(self):
-    #     results = []
-    #     places = get_type_from_registry("places")
-    #     for time in self.time:
-    #         try:
-    #             results.append(places.iloc[places.index.get_loc(time)].iloc[0])
-    #         except (TypeError, KeyError):
-    #             pass
-    #     return places.__class__(results)
-    #
-    # def in_a(self, s):
-    #     return self.near(s)
-    #
-    # @property
-    # def at_home(self):
-    #     self.take_from("places", "category")
-    #     return self[self["places_category"] == "Home"]
-    #
-    # @property
-    # def at_work(self):
-    #     self.take_from("places", "category")
-    #     return self[self["places_category"] == "Work"]
-    #
-    # def at(self, time_or_place):
-    #     if isinstance(time_or_place, SDF) and time_or_place.df_name.endswith("places"):
-    #         return self.when_at(time_or_place)
-    #     if isinstance(time_or_place, str):
-    #         mp = parse_date_tz(time_or_place)
-    #         if mp:
-    #             start = mp.start_date
-    #             end = mp.end_date
-    #             return self.at_time(start, end)
-    #         else:
-    #             return self.when_at(get_type_from_registry("places").containing(time_or_place))
-    #     raise ValueError("neither time nor place was passed")
-
-    ####################################################################################################################
-    ### TODO -- SERVICE (WEB) SECTION
-    ####################################################################################################################
-
-    ##filter sdf when I was browsing
-    def browsing(self, other, **window_kwargs):
-        if isinstance(other, str):
-            other = get_type_from_registry("browser").containing(other)
-        return self.__class__(join_time(other, self, **window_kwargs))
-
-    ####################################################################################################################
-    ### TODO -- ACCOUNT SECTION
-    ####################################################################################################################
-
-    # @nlp("filter", "by me", "i", "my")
-    # def by_me(self):
-    #     return self
-
-    ####################################################################################################################
     ### TODO -- UNCLASSIFIED
     ####################################################################################################################
 
@@ -755,7 +440,8 @@ class SDF(pd.DataFrame):
         col = self._time_col or self._start_col
         return self.__class__(self.sort_values(col, na_position="last", ascending=False))
 
-    def get_type_from_registry(self, tp):
+    @staticmethod
+    def get_type_from_registry(tp):
         for key, value in registry.items():
             if key.endswith(tp):
                 return value
