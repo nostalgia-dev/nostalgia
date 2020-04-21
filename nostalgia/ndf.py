@@ -28,7 +28,7 @@ def ab_overlap_c(a, b, c):
 def join_time_naive(locs, df, **window_kwargs):
     tmp = []
     if not locs.inferred_time:
-        locs.infer_time()
+        locs.infer_time_range()
     for _, row in locs.iterrows():
         if df.start is not None:
             if locs._start_col is None:

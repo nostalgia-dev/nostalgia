@@ -1,3 +1,5 @@
+import unittest
+
 import pytest
 from datetime import datetime
 import json
@@ -15,10 +17,12 @@ from src.sources import Source
 import os
 import pathlib
 
+
 class ExternalApi:
     """
     This class imitates external api, that provides data
     """
+
     @classmethod
     def download(cls, start_time: datetime = None, end_time: datetime = None, **kwargs):
         response = []
@@ -52,7 +56,8 @@ class ExampleSource(Source):
         return ExternalApi.download(start_time, end_time)
 
     def ingest(self, delta_data, **kwargs):
-        self.resolve_filename = MagicMock(return_value=TestCase.resources_path() / "test_data/example_source/ingested_data.json")
+        self.resolve_filename = MagicMock(
+            return_value=TestCase.resources_path() / "test_data/example_source/ingested_data.json")
         file = self.read_file("")
         return file
 
@@ -67,10 +72,8 @@ class ExampleSource(Source):
         )
 
 
-
-class TestCase(pytest):
+class TestCase(unittest.TestCase):
 
     @classmethod
     def resources_path(cls):
         return (pathlib.Path(__file__).parent / 'resources').absolute()
-

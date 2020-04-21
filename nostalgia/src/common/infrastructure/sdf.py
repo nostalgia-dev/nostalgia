@@ -25,7 +25,7 @@ def ab_overlap_c(a, b, c):
 def join_time_naive(locs, df, **window_kwargs):
     tmp = []
     if not locs.inferred_time:
-        locs.infer_time()
+        locs.infer_time_range()
     for _, row in locs.iterrows():
         if df.start is not None:
             if locs._start_col is None:
@@ -124,7 +124,7 @@ class SDF(pd.DataFrame):
     def __init__(self, data):
         super().__init__(data)
         C = self.__class__
-        self.num_times = None
+        # self.num_times = None
         self._start_col, self._time_col, self._end_col = None, None, None
         self.inferred_time = False
         # IF BIG BREAK, THEN THIS IS HERE
