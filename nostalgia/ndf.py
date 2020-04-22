@@ -1,10 +1,10 @@
 import os
 from datetime import timedelta
 
-import just
 import numpy as np
 import pandas as pd
 from metadate import is_mp
+import just
 
 import nostalgia
 import nostalgia.anonymizer
@@ -12,9 +12,12 @@ from nostalgia.anonymizer import Anonymizer
 from nostalgia.data_loading import Loader
 from nostalgia.extracter import load_from_download
 from nostalgia.file_caching import save_df, load_df
+
 from nostalgia.nlp import nlp_registry, nlp, n, COLUMN_BLACKLIST, ResultInfo
 from nostalgia.times import now, yesterday, last_week, last_month, last_year, parse_date_tz
 from nostalgia.utils import get_token_set, normalize_name, view
+
+from nostalgia.times import iterate_time
 
 
 def ab_overlap_cd(a, b, c, d):
@@ -152,30 +155,22 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
                     if w in BLACKLIST:
                         continue
                     if w and isinstance(w, str):
-                        nlp_registry[w].add(
-                            ResultInfo(C, "filter", col_contains_wrapper(word, col), col, word)
-                        )
+                        nlp_registry[w].add(ResultInfo(C, "filter", col_contains_wrapper(word, col), col, word))
                 if n.is_verb(word):
                     for w in n.get_verbs(word).values():
                         if w in BLACKLIST:
                             continue
                         if w in words or not isinstance(w, str):
                             continue
-                        nlp_registry[w].add(
-                            ResultInfo(C, "filter", col_contains_wrapper(word, col), col, word)
-                        )
+                        nlp_registry[w].add(ResultInfo(C, "filter", col_contains_wrapper(word, col), col, word))
                 if n.is_verb(word):
                     for w in n.get_verbs(word).values():
                         if w in BLACKLIST:
                             continue
                         if w in words or not isinstance(w, str):
                             continue
-                        nlp_registry[w].add(
-                            ResultInfo(C, "filter", col_contains_wrapper(word, col), col, word)
-                        )
-                nlp_registry[word].add(
-                    ResultInfo(C, "filter", col_contains_wrapper(word, col), col, word)
-                )
+                        nlp_registry[w].add(ResultInfo(C, "filter", col_contains_wrapper(word, col), col, word))
+                nlp_registry[word].add(ResultInfo(C, "filter", col_contains_wrapper(word, col), col, word))
         if self.nlp_when:
             nlp_registry["when"].add(ResultInfo(C, "end", time, orig_word="when"))
 
@@ -318,10 +313,7 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
             raise ValueError("Hours are not set, thus unreliable. Use `office_days` instead?")
         if self.start is not None:
             return np.array(
-                [
-                    (x >= 8 and x <= 17 and y >= 8 and y <= 17)
-                    for x, y in zip(self.start.dt.hour, self.end.dt.hour)
-                ]
+                [(x >= 8 and x <= 17 and y >= 8 and y <= 17) for x, y in zip(self.start.dt.hour, self.end.dt.hour)]
             )
         return np.array([(x >= 8 and x <= 17) for x in self.time.dt.hour])
 
@@ -357,7 +349,7 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         fname = os.path.join(nostalgia_dir, "data/samples/" + self.df_name + ".parquet")
         # verify that we can process it
         _ = self.as_simple()
-        sample = self.iloc[:100].reset_index().drop("index", axis=1)
+        sample = self.iloc[:1000].reset_index().drop("index", axis=1)
         # if self.is_anonymized:
         #     for x in self.anonymized:
         #         dtype = self.dtypes[x]
@@ -369,13 +361,8 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         n = min(sample.shape[0], 5)
         if n == 0:
             raise ValueError("Empty DataFrame, cannot make sample")
-        sample = (
-            sample.sample(n)
-            .reset_index()
-            .drop("index", axis=1)
-            .drop("level_0", axis=1, errors="ignore")
-        )
-        sample.to_parquet(fname)
+        sample = sample.sample(n).reset_index().drop("index", axis=1).drop("level_0", axis=1, errors="ignore")
+        sample.to_parquet(fname, allow_truncated_timestamps=True)
         print(f"Sample save as {os.path.abspath(fname)}")
         return sample
 
@@ -437,19 +424,15 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
             if (a >= b).all():
                 col1, col2 = col2, col1
             elif not (a <= b).all():
-                raise ValueError(
-                    "Not strictly one col higher than other with dates, can't determine"
-                )
+                raise ValueError("Not strictly one col higher than other with dates, can't determine")
             if col1 == "end" and col2 == "start":
                 col2, col1 = col1, col2
             self._start_col, self._time_col, self._end_col = col1, col1, col2
-            interval_index = pd.IntervalIndex.from_arrays(
-                self[self._start_col], self[self._end_col]
-            )
+            interval_index = pd.IntervalIndex.from_arrays(self[self._start_col], self[self._end_col])
             self.set_index(interval_index, inplace=True)
             self.sort_index(inplace=True)
         else:
-            msg = 'infer time failed: there can only be 1 or 2 datetime columns at the same granularity.'
+            msg = "infer time failed: there can only be 1 or 2 datetime columns at the same granularity."
 
             raise Exception(msg + " Found: " + str(times))
 
@@ -491,7 +474,7 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
 
     @property
     def text_cols(self):
-        return [x for x, t in zip(self.columns, self.dtypes) if t == np.dtype('O')]
+        return [x for x, t in zip(self.columns, self.dtypes) if t == np.dtype("O")]
 
     @nlp("filter", "by me", "i", "my")
     def by_me(self):
@@ -509,9 +492,7 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
             string = r"\b" + string + r"\b"
         if col_name is not None:
             return self.col_contains(string, col_name, case, regex, na)
-        bool_cols = [
-            self[x].str.contains(string, case=case, regex=regex, na=na) for x in self.text_cols
-        ]
+        bool_cols = [self[x].str.contains(string, case=case, regex=regex, na=na) for x in self.text_cols]
         bool_array = bool_cols[0]
         for b in bool_cols[1:]:
             bool_array = np.logical_or(bool_array, b)
@@ -575,9 +556,7 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
             return self.time.dt.date.isin(set(day_or_class))
         else:
             mp = parse_date_tz(day_or_class)
-            return (self.time.dt.date >= mp.start_date.date()) & (
-                self.time.dt.date < mp.end_date.date()
-            )
+            return (self.time.dt.date >= mp.start_date.date()) & (self.time.dt.date < mp.end_date.date())
 
     def at_day(self, day_or_class):
         return self[self._select_at_day(day_or_class)]
@@ -667,9 +646,7 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         elif end is None and window_kwargs:
             end = start
         elif end is None:
-            raise ValueError(
-                "Either a metaperiod, a date string, 2 times, or time + window_kwargs."
-            )
+            raise ValueError("Either a metaperiod, a date string, 2 times, or time + window_kwargs.")
         self.infer_time()
         if window_kwargs:
             start = start - pd.Timedelta(**window_kwargs)
@@ -683,7 +660,7 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
             # res["sort_score"] = -abs(res[self._time_col] - avg_time)
             # res = res.sort_values('sort_score').drop('sort_score', axis=1)
             res["sort_score"] = res[self._time_col]
-            res = res.sort_values('sort_score').drop('sort_score', axis=1)
+            res = res.sort_values("sort_score").drop("sort_score", axis=1)
         return self.__class__(res)
 
     when = when_at
@@ -692,12 +669,8 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
     def duration(self):
         return self.end - self.start
 
-    def sort_values(
-        self, by, axis=0, ascending=True, inplace=False, kind='quicksort', na_position='last'
-    ):
-        return self.__class__(
-            pd.DataFrame.sort_values(self, by, axis, ascending, inplace, kind, na_position)
-        )
+    def sort_values(self, by, axis=0, ascending=True, inplace=False, kind="quicksort", na_position="last"):
+        return self.__class__(pd.DataFrame.sort_values(self, by, axis, ascending, inplace, kind, na_position))
 
     @nlp("filter", "last", "last time", "most recently")
     def last(self):
@@ -735,6 +708,18 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         for key, value in registry.items():
             if key.endswith(tp):
                 return value
+
+    def iterate_time(self, start=None, until=None, freq="hourly"):
+        start = start if start is not None else self.start.min()
+        until = until if until is not None else self.end.max()
+        for dt in iterate_time(start, until, freq):
+            try:
+                series = self.loc[dt]
+                if not isinstance(series, pd.Series):
+                    series = series.iloc[0]
+                yield dt, series
+            except KeyError:
+                pass
 
     def __call_(self):
         return self

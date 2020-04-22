@@ -58,8 +58,6 @@ class PlayMusic(Google):
 
     @classmethod
     def load(cls, nrows=None, from_cache=True, **kwargs):
-        file_path = (
-            "~/nostalgia_data/input/google/Takeout/My Activity/Google Play Music/My Activity.json"
-        )
+        file_path = "~/nostalgia_data/input/google/Takeout/My Activity/Google Play Music/My Activity.json"
         data = cls.load_data_file_modified_time(file_path, nrows=nrows, from_cache=from_cache)
         return cls(data)

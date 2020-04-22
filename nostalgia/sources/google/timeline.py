@@ -62,13 +62,13 @@ def get_nearby_results(latlng, name, excluded_transport_names):
 
 
 def get_details(place_id):
-    params = {'placeid': place_id, 'sensor': 'false', 'key': KEY}
+    params = {"placeid": place_id, "sensor": "false", "key": KEY}
     return api_call(DETAILS_URL, params).get("result", {})
 
 
 def get_(details, *types):
     for tp in types:
-        for addr in details.get('address_components', []):
+        for addr in details.get("address_components", []):
             if tp in addr["types"]:
                 return addr["long_name"]
 
@@ -85,7 +85,7 @@ GEOCODE_URL = "https://maps.googleapis.com/maps/api/geocode/json"
 
 def get_address(json_response):
     for res in json_response.get("results", []):
-        addr = res.get('formatted_address')
+        addr = res.get("formatted_address")
         if addr:
             return addr
 
@@ -93,7 +93,7 @@ def get_address(json_response):
 def geo_get_(json_response, *types):
     for res in json_response.get("results", []):
         for tp in types:
-            for addr in res.get('address_components', []):
+            for addr in res.get("address_components", []):
                 if tp in addr["types"]:
                     return addr["long_name"]
 
@@ -123,7 +123,7 @@ else:
 CACHE = get_cache("google_timeline")
 
 DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/json"
-NEARBY_URL = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json'
+NEARBY_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
 
 s = requests.Session()
 # {'Boating', 'Cycling', 'Driving', 'Flying', 'In transit', 'Moving', 'On a bus', 'On a ferry', 'On a train', 'On a tram', 'On the subway', 'Running', 'Walking'}
@@ -144,11 +144,11 @@ def get_results(latlng, name, excluded_transport_names):
         "rating": details,
         "details_name": details.get("name"),
         "formatted_address": details.get("formatted_address"),
-        'international_phone_number': details.get('international_phone_number'),
-        'opening_hours': details.get('opening_hours'),
-        'user_ratings_total': details.get('user_ratings_total'),
-        'rating': details.get('rating'),
-        'website': details.get('website'),
+        "international_phone_number": details.get("international_phone_number"),
+        "opening_hours": details.get("opening_hours"),
+        "user_ratings_total": details.get("user_ratings_total"),
+        "rating": details.get("rating"),
+        "website": details.get("website"),
     }
 
 
@@ -174,7 +174,7 @@ def process(df, excluded_transport_names, home_regex, work_regex, hometown_regex
         del df["Unnamed: 0"]
     df["start"] = df["start"].dt.tz_convert(tz)
     df["end"] = df["end"].dt.tz_convert(tz)
-    df.index = pd.IntervalIndex.from_arrays(df['start'], df['end'])
+    df.index = pd.IntervalIndex.from_arrays(df["start"], df["end"])
     return df
 
 
@@ -191,12 +191,12 @@ class GooglePlaces(Places):
         excluded_transport_names = set(df[df.name == df.category].name)
 
         details_data = []
-        for (lat, lon), name in unique_locs:
-            d = get_results((lat, lon), name, excluded_transport_names)
+        for (latitude, longitude), name in unique_locs:
+            d = get_results((latitude, longitude), name, excluded_transport_names)
             if d is None:
                 continue
-            d["lat"] = lat
-            d["lon"] = lon
+            d["lat"] = latitude
+            d["lon"] = longitude
             d["name"] = name
             details_data.append(d)
 

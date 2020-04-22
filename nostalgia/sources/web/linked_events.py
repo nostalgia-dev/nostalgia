@@ -34,10 +34,10 @@ def get_linked_data_jd(art):
         if y.get("@type") != "Event":
             continue
         return {
-            'description': getter(y, "description"),
-            'startDate': getter(y, "startDate"),
-            'endDate': getter(y, "endDate"),
-            'location': getter(y, "location"),
+            "description": getter(y, "description"),
+            "startDate": getter(y, "startDate"),
+            "endDate": getter(y, "endDate"),
+            "location": getter(y, "location"),
             "source": "jsonld",
         }
 

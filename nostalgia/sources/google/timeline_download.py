@@ -105,9 +105,7 @@ if __name__ == "__main__":
     today = (now.year, now.month, now.day)
 
     # wait for being logged in
-    while not driver.find_elements_by_xpath(
-        "//span[@class='header-feature-name' and text() = ' Timeline ']"
-    ):
+    while not driver.find_elements_by_xpath("//span[@class='header-feature-name' and text() = ' Timeline ']"):
         time.sleep(2)
 
     time.sleep(5)
@@ -136,9 +134,7 @@ if __name__ == "__main__":
                     # handle day
                     driver.find_element_by_class_name("day-picker").click()
 
-                    driver.find_element_by_xpath(
-                        "//td[@aria-label='{} {}']".format(day, month[:3])
-                    ).click()
+                    driver.find_element_by_xpath("//td[@aria-label='{} {}']".format(day, month[:3])).click()
 
                     time.sleep(3)
 

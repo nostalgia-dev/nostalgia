@@ -14,9 +14,7 @@ class FacebookPosts(Facebook, PostInterface):
                 continue
             location = "self"
             title = post.get("title", "")
-            location_res = re.findall(
-                "(?:on|to) ([^']+)'s? [tT]imeline|posted in ([^.]+)|was with ([^.]+)[.]$", title
-            )
+            location_res = re.findall("(?:on|to) ([^']+)'s? [tT]imeline|posted in ([^.]+)|was with ([^.]+)[.]$", title)
             if location_res:
                 location = [x for x in location_res[0] if x][0]
             for x in post["data"]:
@@ -25,14 +23,12 @@ class FacebookPosts(Facebook, PostInterface):
                 row = {
                     "location": location,
                     "title": x["post"],
-                    "time": datetime_from_timestamp(post['timestamp']),
+                    "time": datetime_from_timestamp(post["timestamp"]),
                 }
                 posts.append(row)
         return posts
 
     @classmethod
     def load(cls, nrows=None):
-        data = cls.load_json_file_modified_time(
-            "~/nostalgia_data/input/facebook/posts/your_posts_1.json"
-        )
+        data = cls.load_json_file_modified_time("~/nostalgia_data/input/facebook/posts/your_posts_1.json")
         return cls(data)

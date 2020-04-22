@@ -10,21 +10,17 @@ class SamsungStress(Samsung, NDF):
     def handle_dataframe_per_file(cls, df, fname):
         if df.empty:
             return None
-        df["start"] = [
-            datetime_from_timestamp(x) if isinstance(x, int) else tz.localize(x)
-            for x in df.start_time
-        ]
-        df["end"] = [
-            datetime_from_timestamp(x) if isinstance(x, int) else tz.localize(x)
-            for x in df.end_time
-        ]
+        df["start"] = [datetime_from_timestamp(x) if isinstance(x, int) else tz.localize(x) for x in df.start_time]
+        df["end"] = [datetime_from_timestamp(x) if isinstance(x, int) else tz.localize(x) for x in df.end_time]
         del df["start_time"]
         del df["end_time"]
         return df
 
     @classmethod
     def load(cls, nrows=None, **kwargs):
-        file_glob = "~/nostalgia_data/input/samsung/samsunghealth_*/jsons/com.samsung.shealth.stress/*.binning_data.json"
+        file_glob = (
+            "~/nostalgia_data/input/samsung/samsunghealth_*/jsons/com.samsung.shealth.stress/*.binning_data.json"
+        )
         print(file_glob)
         # TODO FIX
         stress = cls.load_dataframe_per_json_file(file_glob, nrows=nrows)

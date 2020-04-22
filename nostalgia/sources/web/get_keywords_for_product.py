@@ -22,10 +22,10 @@ for prefix in ["og:", "twitter:", ""]:
         "title",
         "description",
         "name",
-        'manufacturer_name',
-        'category_name_singular',
-        'long_description',
-        'snippet',
+        "manufacturer_name",
+        "category_name_singular",
+        "long_description",
+        "snippet",
     ]:
         interesting_keys.add(prefix + key)
 
@@ -53,15 +53,7 @@ def get_keywords_for_product(product_string):
     zzz = recurse_json(res)
     c = Counter()
     for x in zzz:
-        c.update(
-            set(
-                [
-                    singularize(y.lower())
-                    for y in t.word_tokenize(x)
-                    if re.search("^[a-z]+$", y.lower())
-                ]
-            )
-        )
+        c.update(set([singularize(y.lower()) for y in t.word_tokenize(x) if re.search("^[a-z]+$", y.lower())]))
     # print([(k,v) for k,v in c.most_common(1000) if is_noun(k) and is_verb(k)])
     return [
         x

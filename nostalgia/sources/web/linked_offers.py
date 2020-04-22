@@ -53,7 +53,7 @@ def get_linked_data_jd(art):
         if isinstance(brand, dict):
             brand = brand.get("name")
         for offer in offers:
-            currency = offer.get('priceCurrency')
+            currency = offer.get("priceCurrency")
             if currency is None:
                 continue
             price = offer.get("price") or offer.get("lowPrice")
@@ -112,9 +112,7 @@ def deeper_price_md(art):
                 image = [v for k, v in prop.items() if "url" in k.lower()]
                 if image:
                     image = image[0]
-            description = (
-                y.get("description") or props.get("description") or offer.get("description")
-            )
+            description = y.get("description") or props.get("description") or offer.get("description")
             if isinstance(description, list):
                 description = description[0]
             elif isinstance(description, dict):
@@ -172,7 +170,7 @@ def get_linked_data_md(art):
             offer_properties = offer.get("properties")
             if offer_properties is None:
                 continue
-            currency = offer_properties.get('priceCurrency')
+            currency = offer_properties.get("priceCurrency")
             if currency is None:
                 continue
             price = offer_properties.get("price") or offer_properties.get("lowPrice")

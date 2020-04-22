@@ -38,10 +38,10 @@ def get_linked_data_jd(art):
         if y.get("@type") != "Person":
             continue
         return {
-            'description': getter(y, "description"),
-            'startDate': getter(y, "startDate"),
-            'endDate': getter(y, "endDate"),
-            'location': getter(y, "location"),
+            "description": getter(y, "description"),
+            "startDate": getter(y, "startDate"),
+            "endDate": getter(y, "endDate"),
+            "location": getter(y, "location"),
             "source": "jsonld",
         }
 
@@ -128,15 +128,15 @@ if __name__ == "__main__":
             mc_count = 0
             for mc in y["microdata"]:
                 if mc.get("type") in [
-                    'http://schema.org/ImageObject',
-                    'http://schema.org/QAPage',
-                    'http://schema.org/Movie',
-                    'http://schema.org/videoObject',
-                    'http://schema.org/Organization',
-                    'http://schema.org/VideoObject',
-                    'http://schema.org/Question',
-                    'http://schema.org/CreativeWork',
-                    'http://schema.org/Code',
+                    "http://schema.org/ImageObject",
+                    "http://schema.org/QAPage",
+                    "http://schema.org/Movie",
+                    "http://schema.org/videoObject",
+                    "http://schema.org/Organization",
+                    "http://schema.org/VideoObject",
+                    "http://schema.org/Question",
+                    "http://schema.org/CreativeWork",
+                    "http://schema.org/Code",
                 ]:
                     continue
                 mc_count += 1

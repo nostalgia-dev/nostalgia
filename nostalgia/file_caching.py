@@ -5,7 +5,7 @@ import pandas as pd
 
 
 def slugify(name):
-    return re.sub(r'[\W_]+', '-', name)
+    return re.sub(r"[\W_]+", "-", name)
 
 
 def file_modified_since_last(fname, name):
