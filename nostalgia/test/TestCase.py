@@ -8,6 +8,7 @@ from unittest.mock import MagicMock
 
 # also use doctest
 import pandas as pd
+import just
 
 from nostalgia.src.common.infrastructure.utils import Functional
 from nostalgia.src.common.meta.aspect.time import Time
@@ -30,12 +31,8 @@ class ExternalApi:
             start_time = datetime.fromtimestamp(0)
         if not end_time:
             end_time = datetime.now()
-        with open("../../resources/test_data/example_source/data_to_download.json") as download:
-            response = [
-                x
-                for x in json.loads(download.read())
-                if start_time < datetime.strptime(x["endTime"], "%Y-%m-%d %H:%M") < end_time
-            ]
+        data = just.read("nostalgia/test/resources/test_data/example_source/data_to_download.json")
+        response = [x for x in data if start_time < datetime.strptime(x["endTime"], "%Y-%m-%d %H:%M") < end_time]
         return json.dumps(response)
 
 
