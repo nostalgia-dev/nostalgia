@@ -1,4 +1,5 @@
-from src.common.meta.category import Category
+from nostalgia.src.common.meta.category import Category
 
 
-class Health(Category): pass
+class Health(Category):
+    pass

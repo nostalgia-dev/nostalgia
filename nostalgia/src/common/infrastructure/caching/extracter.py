@@ -16,7 +16,7 @@ def load_from_download(ingest_glob, vendor, recent_only=True, delete_existing=Tr
     if recent_only:
         fnames = fnames[-1:]
     for fname in fnames:
-        with zipfile.ZipFile(fname, 'r') as zip_ref:
+        with zipfile.ZipFile(fname, "r") as zip_ref:
             out = os.path.expanduser(nostalgia_input)
             print("unpacking from", fname, "to", out)
             zip_ref.extractall(out)

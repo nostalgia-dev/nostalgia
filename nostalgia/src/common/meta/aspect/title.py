@@ -1,4 +1,5 @@
-from src.common.meta.aspect import Aspect
+from nostalgia.src.common.meta.aspect import Aspect
 
 
-class Title(Aspect): pass
+class Title(Aspect):
+    pass

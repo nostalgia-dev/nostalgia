@@ -3,6 +3,7 @@ from typing import Callable
 
 import pandas as pd
 
+
 class Aspect(metaclass=ABCMeta):
     @classmethod
     def apply(cls, series: pd.Series):

@@ -8,7 +8,7 @@ import pandas as pd
 import types
 
 from nostalgia.src.common.infrastructure.sdf import SDF
-from src.common.meta.aspect import Aspect
+from nostalgia.src.common.meta.aspect import Aspect
 
 
 class Vendor(metaclass=ABCMeta):
@@ -22,9 +22,9 @@ class Vendor(metaclass=ABCMeta):
         "delete_existing": False,
     }
 
+
 ### Reuse Loader
 class Source(Vendor, metaclass=ABCMeta):
-
     @property
     @abstractmethod
     def category(self) -> list:
@@ -38,7 +38,6 @@ class Source(Vendor, metaclass=ABCMeta):
     @property
     def data_path(self):
         return "~/nostalgia_data/input/"
-
 
     def download(self, start_time: datetime = None, end_time: datetime = None, **kwargs) -> pd.DataFrame:
         """
@@ -91,7 +90,6 @@ class Source(Vendor, metaclass=ABCMeta):
         # [aspect.__class__.verify() for aspect in df.aspects]
         # [category.__class__.verify() for category in df.categories]
 
-
     def __resolve_aspects(self, sdf: pd.DataFrame):
         aspects = self.aspects if isinstance(self.aspects, defaultdict) else defaultdict(lambda: Aspect, **self.aspects)
         columns = sdf.columns.to_list()
@@ -107,7 +105,6 @@ class Source(Vendor, metaclass=ABCMeta):
         # then produce new
         for column in generated_aspects:
             sdf[column] = aspects[column](sdf)
-
 
         # TODO is this wrong, as we don't keep all aspects' dict?
         a = set(aspect for aspect in self.aspects.values() if not isinstance(aspect, types.FunctionType))
@@ -144,7 +141,7 @@ class Source(Vendor, metaclass=ABCMeta):
 
         pdf = self.load(data)
 
-        #inspect sdf categories and aspects
+        # inspect sdf categories and aspects
         ndf = SDF(pdf)
         ndf = self.__mixin(ndf)
 
@@ -158,4 +155,3 @@ class Source(Vendor, metaclass=ABCMeta):
     def read_file(self, file: str) -> list:
         filename = self.resolve_filename(file)
         return just.multi_read(str(filename)).values()
-

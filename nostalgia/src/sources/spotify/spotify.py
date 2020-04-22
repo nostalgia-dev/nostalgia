@@ -1,14 +1,13 @@
 import pandas as pd
 
-from src.common.infrastructure.utils import Functional
-from src.common.meta.aspect.time import Time
-from src.common.meta.aspect.title import Title
-from src.common.meta.category.services.music import Music
-from src.sources import Source
+from nostalgia.src.common.infrastructure.utils import Functional
+from nostalgia.src.common.meta.aspect.time import Time
+from nostalgia.src.common.meta.aspect.title import Title
+from nostalgia.src.common.meta.category.services.music import Music
+from nostalgia.src.sources import Source
 
 
 class Spotify(Source):
-
     @property
     def category(self):
         return [Music]
@@ -16,9 +15,9 @@ class Spotify(Source):
     @property
     def aspects(self):
         return {
-            'time_start': Time.of_duration("time_end", "seconds_listened", duration_unit='s'),
-            'time_end': Time,
-            'title': Title
+            "time_start": Time.of_duration("time_end", "seconds_listened", duration_unit="s"),
+            "time_end": Time,
+            "title": Title,
         }
 
     def ingest(self, delta_data, **kwargs):
@@ -27,13 +26,9 @@ class Spotify(Source):
 
     @classmethod
     def load(cls, data) -> pd.DataFrame:
-        spotify = pd.DataFrame([(
-            x["endTime"],
-            x["trackName"],
-            x["artistName"],
-            x["msPlayed"] // 1000
-        ) for x in Functional.flatten(data)],
-            columns=["time_end", "title", "artist", "seconds_listened"]
+        spotify = pd.DataFrame(
+            [(x["endTime"], x["trackName"], x["artistName"], x["msPlayed"] // 1000) for x in Functional.flatten(data)],
+            columns=["time_end", "title", "artist", "seconds_listened"],
         )
         return spotify
 

@@ -13,13 +13,13 @@ from pytz import timezone
 
 from nostalgia.nlp import nlp
 from nostalgia.times import now, yesterday, last_week, last_month, last_year, parse_date_tz
-from src.common.meta.aspect import Aspect
+from nostalgia.src.common.meta.aspect import Aspect
 
-from ndf import ab_overlap_c
-from ndf import ab_overlap_cd
+from nostalgia.ndf import ab_overlap_c
+from nostalgia.ndf import ab_overlap_cd
 
 tz = tzlocal.get_localzone()
-utc = timezone('UTC')
+utc = timezone("UTC")
 
 
 class Time(Aspect):
@@ -29,7 +29,7 @@ class Time(Aspect):
     ###
 
     @classmethod
-    def of_duration(cls, time_column: str, duration_column: str, duration_unit: str = 's'):
+    def of_duration(cls, time_column: str, duration_column: str, duration_unit: str = "s"):
         return lambda df: df[time_column] - pd.to_timedelta(df[duration_column], unit=duration_unit)
 
     @classmethod
@@ -67,7 +67,6 @@ class Time(Aspect):
             return None
         return getattr(self, self._end_col)
 
-
     def infer_time_range(self):
         ####
         #   TODO Results
@@ -88,20 +87,16 @@ class Time(Aspect):
             if (a >= b).all():
                 col1, col2 = col2, col1
             elif not (a <= b).all():
-                raise ValueError(
-                    "Not strictly one col higher than other with dates, can't determine"
-                )
+                raise ValueError("Not strictly one col higher than other with dates, can't determine")
             if col1 == "end" and col2 == "start":
                 col2, col1 = col1, col2
             self._start_col, self._time_col, self._end_col = col1, col1, col2
-            interval_index = pd.IntervalIndex.from_arrays(
-                self[self._start_col], self[self._end_col]
-            )
+            interval_index = pd.IntervalIndex.from_arrays(self[self._start_col], self[self._end_col])
             self.set_index(interval_index, inplace=True)
             self.sort_index(inplace=True)
             self.inferred_time = True
         else:
-            msg = 'infer time failed: there can only be 1 or 2 datetime columns at the same granularity.'
+            msg = "infer time failed: there can only be 1 or 2 datetime columns at the same granularity."
 
             raise Exception(msg + " Found: " + str(time_columns))
 
@@ -116,8 +111,11 @@ class Time(Aspect):
         # workaround
         # start: 10:00:00
         # end:   10:00:59
-        time_columns = [t for t, l in zip(time_columns, time_granularity_per_column) if
-                        l == max_level or (l == 2 and max_level == 3)]
+        time_columns = [
+            t
+            for t, l in zip(time_columns, time_granularity_per_column)
+            if l == max_level or (l == 2 and max_level == 3)
+        ]
         return time_columns
 
     def at_time(self, start, end=None, sort_diff=True, **window_kwargs):
@@ -136,9 +134,7 @@ class Time(Aspect):
         elif end is None and window_kwargs:
             end = start
         elif end is None:
-            raise ValueError(
-                "Either a metaperiod, a date string, 2 times, or time + window_kwargs."
-            )
+            raise ValueError("Either a metaperiod, a date string, 2 times, or time + window_kwargs.")
         self.infer_time_range()
         if window_kwargs:
             start = start - pd.Timedelta(**window_kwargs)
@@ -152,7 +148,7 @@ class Time(Aspect):
             # res["sort_score"] = -abs(res[self._time_col] - avg_time)
             # res = res.sort_values('sort_score').drop('sort_score', axis=1)
             res["sort_score"] = res[self._time_col]
-            res = res.sort_values('sort_score').drop('sort_score', axis=1)
+            res = res.sort_values("sort_score").drop("sort_score", axis=1)
         return self.__class__(res)
 
     def time_level(self, col):
@@ -189,12 +185,7 @@ class Time(Aspect):
         if (self.time.dt.hour == 0).all():
             raise ValueError("Hours are not set, thus unreliable. Use `office_days` instead?")
         if self.start is not None:
-            return np.array(
-                [
-                    (8 <= x <= 17 and 8 <= y <= 17)
-                    for x, y in zip(self.start.dt.hour, self.end.dt.hour)
-                ]
-            )
+            return np.array([(8 <= x <= 17 and 8 <= y <= 17) for x, y in zip(self.start.dt.hour, self.end.dt.hour)])
         return np.array([(8 <= x <= 17) for x in self.time.dt.hour])
 
     @property
@@ -233,9 +224,7 @@ class Time(Aspect):
             return self.time.dt.date.isin(set(day_or_class))
         else:
             mp = parse_date_tz(day_or_class)
-            return (self.time.dt.date >= mp.start_date.date()) & (
-                    self.time.dt.date < mp.end_date.date()
-            )
+            return (self.time.dt.date >= mp.start_date.date()) & (self.time.dt.date < mp.end_date.date())
 
     def at_day(self, day_or_class):
         return self[self._select_at_day(day_or_class)]
@@ -328,10 +317,7 @@ def years_ago(years):
 
 def in_month(month):
     year = now().year - 1 if now().month <= month else now().year
-    return lambda: (
-        datetime(year, month, 1).date(),
-        datetime(year, month, 1).date() + relativedelta(month=month + 1),
-    )
+    return lambda: (datetime(year, month, 1).date(), datetime(year, month, 1).date() + relativedelta(month=month + 1),)
 
 
 def in_year(year):
@@ -395,10 +381,10 @@ def datetime_from_any_format(date, in_utc=False):
     else:
         return tz.localize(base)
 
+
 def datetime_from_format(s, fmt, in_utc=False):
     base = datetime.strptime(s, fmt)
     if in_utc:
         return utc.localize(base).astimezone(tz)
     else:
         return tz.localize(base)
-

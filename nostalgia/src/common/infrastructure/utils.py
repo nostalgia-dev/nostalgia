@@ -11,8 +11,8 @@ from tok import word_tokenize
 if sys.argv[-1].endswith("ipython"):
     pd.set_option("display.precision", 10)
     pd.set_option("precision", 10)
-    pd.set_option('display.max_columns', 500)
-    pd.set_option('display.max_colwidth', -1)
+    pd.set_option("display.max_columns", 500)
+    pd.set_option("display.max_colwidth", -1)
 
 has_alpha = re.compile("[a-zA-Z]")
 num = re.compile("[0-9]")
@@ -20,7 +20,6 @@ num = re.compile("[0-9]")
 
 class Functional:
     flatten = itertools.chain.from_iterable
-
 
 
 class MockCredentials:
@@ -35,9 +34,7 @@ def get_tokens(sentence, lower=True):
     if sentence is None:
         return []
     return [
-        x
-        for x in word_tokenize(sentence, to_lower=lower)
-        if len(x) > 2 and has_alpha.search(x) and not num.search(x)
+        x for x in word_tokenize(sentence, to_lower=lower) if len(x) > 2 and has_alpha.search(x) and not num.search(x)
     ]
 
 
@@ -84,9 +81,7 @@ def haversine(lat1, lon1, lat2, lon2):
 
     a = np.add(
         np.power(np.sin(np.divide(dlat, 2)), 2),
-        np.multiply(
-            np.cos(lat1), np.multiply(np.cos(lat2), np.power(np.sin(np.divide(dlon, 2)), 2))
-        ),
+        np.multiply(np.cos(lat1), np.multiply(np.cos(lat2), np.power(np.sin(np.divide(dlon, 2)), 2))),
     )
     c = np.multiply(2, np.arcsin(np.sqrt(a)))
     # km

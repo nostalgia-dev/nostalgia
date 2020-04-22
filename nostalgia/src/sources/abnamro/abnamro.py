@@ -7,19 +7,20 @@ import pandas as pd
 
 from nostalgia.times import datetime_from_format
 from nostalgia.times import datetime_from_timestamp
-from src.common.meta.aspect.money import Money
-from src.common.meta.aspect.subject import Subject
-from src.common.meta.aspect.time import Time
-from src.common.meta.category.transaction import Transaction
-from src.sources import Source
+from nostalgia.src.common.meta.aspect.money import Money
+from nostalgia.src.common.meta.aspect.subject import Subject
+from nostalgia.src.common.meta.aspect.time import Time
+from nostalgia.src.common.meta.category.transaction import Transaction
+from nostalgia.src.sources import Source
 
 
 def find_date(x):
     date_regex = ".*(\d{2}[\.-]\d{2}[\.-]\d{2,4}[\/]\d{2}[\.-]\d{2}).*"
-    value = str(x).replace('\\','\\\\')
+    value = str(x).replace("\\", "\\\\")
     m = re.match(date_regex, value)
     if m:
-        return datetime_from_format(m.group(1),"%d.%m.%y/%H.%M")
+        return datetime_from_format(m.group(1), "%d.%m.%y/%H.%M")
+
 
 class AbnAmro(Source):
     @property
@@ -40,7 +41,7 @@ class AbnAmro(Source):
         }
 
     def ingest(self, delta_data, **kwargs):
-        return pd.concat([pd.read_excel(x) for x in just.glob('~/nostalgia_data/input/abnamro/*.xls')])
+        return pd.concat([pd.read_excel(x) for x in just.glob("~/nostalgia_data/input/abnamro/*.xls")])
 
     @classmethod
     def load(cls, data):
@@ -56,12 +57,14 @@ class AbnAmro(Source):
         if data.preciseDate.isnull().iloc[-1]:
             data.preciseDate.iloc[-1] = datetime_from_format(str(data.transactiondate.iloc[-1]), "%Y%m%d")
 
-        data.preciseDate = data.preciseDate.map(lambda x: time.mktime(pd.datetime.timetuple(x)) if not pd.isna(x) else np.nan) \
-            .interpolate('values') \
+        data.preciseDate = (
+            data.preciseDate.map(lambda x: time.mktime(pd.datetime.timetuple(x)) if not pd.isna(x) else np.nan)
+            .interpolate("values")
             .map(datetime_from_timestamp)
-
+        )
 
         return data
+
 
 if __name__ == "__main__":
     d = AbnAmro().build_sdf()

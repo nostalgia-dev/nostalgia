@@ -1,5 +1,5 @@
-from src.common.infrastructure.sdf import SDF, join_time
-from src.common.meta.aspect import Aspect
+from nostalgia.src.common.infrastructure.sdf import SDF, join_time
+from nostalgia.src.common.meta.aspect import Aspect
 
 import pandas as pd
 import numpy as np
@@ -26,8 +26,6 @@ class Place(Aspect):
     home = []
     work = []
     hometown = []
-
-
 
     @nlp("filter", "at home")
     def at_home(self):
@@ -88,25 +86,13 @@ class Place(Aspect):
         return self.col_contains("Driving", "category")
 
     @nlp(
-        "filter",
-        "drive by bus",
-        "by bus",
-        "travel by bus",
-        "using the bus",
-        "going by bus",
-        "on a bus",
+        "filter", "drive by bus", "by bus", "travel by bus", "using the bus", "going by bus", "on a bus",
     )
     def travel_by_bus(self):
         return self.col_contains("On a bus", "category")
 
     @nlp(
-        "filter",
-        "drive by train",
-        "by train",
-        "travel by train",
-        "using the train",
-        "going by train",
-        "on a train",
+        "filter", "drive by train", "by train", "travel by train", "using the train", "going by train", "on a train",
     )
     def travel_by_train(self):
         return self.col_contains("On a train", "category")

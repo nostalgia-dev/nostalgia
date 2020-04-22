@@ -22,6 +22,7 @@ def ab_overlap_cd(a, b, c, d):
 def ab_overlap_c(a, b, c):
     return a <= c <= b
 
+
 def join_time_naive(locs, df, **window_kwargs):
     tmp = []
     if not locs.inferred_time:
@@ -83,6 +84,7 @@ def join_time(locs, df, **window_kwargs):
         fn = join_time_index
     return fn(locs, df, **window_kwargs)
 
+
 ########################################################################################################################
 ### TODO - REGISTRY SECTION
 ########################################################################################################################
@@ -93,6 +95,7 @@ def get_type_from_registry(tp):
     for key, value in registry.items():
         if key.endswith(tp):
             return value
+
 
 ########################################################################################################################
 ### TODO - TIME SECTION
@@ -106,6 +109,7 @@ def col_contains_wrapper(word, col):
         return x.col_contains(word, col)
 
     return col_contains
+
 
 ########################################################################################################################
 ### TODO ---------------------------------------
@@ -145,7 +149,6 @@ class SDF(pd.DataFrame):
         if n:
             self.analyze(C)
 
-
     def analyze(self, C):
         seen_keyword_keywords = set()
         for kw in self.keywords:
@@ -168,30 +171,22 @@ class SDF(pd.DataFrame):
                     if w in BLACKLIST:
                         continue
                     if w and isinstance(w, str):
-                        nlp_registry[w].add(
-                            ResultInfo(C, "filter", col_contains_wrapper(word, col), col, word)
-                        )
+                        nlp_registry[w].add(ResultInfo(C, "filter", col_contains_wrapper(word, col), col, word))
                 if n.is_verb(word):
                     for w in n.get_verbs(word).values():
                         if w in BLACKLIST:
                             continue
                         if w in words or not isinstance(w, str):
                             continue
-                        nlp_registry[w].add(
-                            ResultInfo(C, "filter", col_contains_wrapper(word, col), col, word)
-                        )
+                        nlp_registry[w].add(ResultInfo(C, "filter", col_contains_wrapper(word, col), col, word))
                 if n.is_verb(word):
                     for w in n.get_verbs(word).values():
                         if w in BLACKLIST:
                             continue
                         if w in words or not isinstance(w, str):
                             continue
-                        nlp_registry[w].add(
-                            ResultInfo(C, "filter", col_contains_wrapper(word, col), col, word)
-                        )
-                nlp_registry[word].add(
-                    ResultInfo(C, "filter", col_contains_wrapper(word, col), col, word)
-                )
+                        nlp_registry[w].add(ResultInfo(C, "filter", col_contains_wrapper(word, col), col, word))
+                nlp_registry[word].add(ResultInfo(C, "filter", col_contains_wrapper(word, col), col, word))
         if self.nlp_when:
             nlp_registry["when"].add(ResultInfo(C, "end", time, orig_word="when"))
 
@@ -269,12 +264,7 @@ class SDF(pd.DataFrame):
         n = min(sample.shape[0], 5)
         if n == 0:
             raise ValueError("Empty DataFrame, cannot make sample")
-        sample = (
-            sample.sample(n)
-                .reset_index()
-                .drop("index", axis=1)
-                .drop("level_0", axis=1, errors="ignore")
-        )
+        sample = sample.sample(n).reset_index().drop("index", axis=1).drop("level_0", axis=1, errors="ignore")
         sample.to_parquet(fname)
         print(f"Sample save as {os.path.abspath(fname)}")
         return sample
@@ -397,7 +387,7 @@ class SDF(pd.DataFrame):
 
     @property
     def text_cols(self):
-        return [x for x, t in zip(self.columns, self.dtypes) if t == np.dtype('O')]
+        return [x for x, t in zip(self.columns, self.dtypes) if t == np.dtype("O")]
 
     def containing(self, string, col_name=None, case=False, regex=True, na=False, bound=True):
         """
@@ -411,9 +401,7 @@ class SDF(pd.DataFrame):
             string = r"\b" + string + r"\b"
         if col_name is not None:
             return self.col_contains(string, col_name, case, regex, na)
-        bool_cols = [
-            self[x].str.contains(string, case=case, regex=regex, na=na) for x in self.text_cols
-        ]
+        bool_cols = [self[x].str.contains(string, case=case, regex=regex, na=na) for x in self.text_cols]
         bool_array = bool_cols[0]
         for b in bool_cols[1:]:
             bool_array = np.logical_or(bool_array, b)
@@ -426,12 +414,8 @@ class SDF(pd.DataFrame):
     def count(self):
         return self.shape[0]
 
-    def sort_values(
-        self, by, axis=0, ascending=True, inplace=False, kind='quicksort', na_position='last'
-    ):
-        return self.__class__(
-            pd.DataFrame.sort_values(self, by, axis, ascending, inplace, kind, na_position)
-        )
+    def sort_values(self, by, axis=0, ascending=True, inplace=False, kind="quicksort", na_position="last"):
+        return self.__class__(pd.DataFrame.sort_values(self, by, axis, ascending, inplace, kind, na_position))
 
     # maybe which/what could be showing only unique?
     @nlp("end", "show", "show me", "show me the", "show the", "what")
@@ -448,7 +432,6 @@ class SDF(pd.DataFrame):
 
     def __call_(self):
         return self
-
 
 
 class Results(SDF):

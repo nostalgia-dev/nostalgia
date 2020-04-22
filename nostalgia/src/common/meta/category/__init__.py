@@ -7,5 +7,5 @@ class Checkable(metaclass=ABCMeta):
         pass
 
 
-
-class Category(Checkable, metaclass=ABCMeta): pass
+class Category(Checkable, metaclass=ABCMeta):
+    pass

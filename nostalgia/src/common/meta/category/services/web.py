@@ -1,6 +1,7 @@
-from src.common.meta.category.services import Service
-from src.common.infrastructure.sdf import join_time
-from src.common.infrastructure.sdf import get_type_from_registry
+from nostalgia.src.common.meta.category.services import Service
+from nostalgia.src.common.infrastructure.sdf import join_time
+from nostalgia.src.common.infrastructure.sdf import get_type_from_registry
+
 
 class Web(Service):
     ##filter sdf when I was browsing
@@ -8,4 +9,3 @@ class Web(Service):
         if isinstance(other, str):
             other = get_type_from_registry("browser").containing(other)
         return self.__class__(join_time(other, self, **window_kwargs))
-

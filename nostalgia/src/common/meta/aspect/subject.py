@@ -1,3 +1,5 @@
-from src.common.meta.aspect import Aspect
+from nostalgia.src.common.meta.aspect import Aspect
 
-class Subject(Aspect): pass
+
+class Subject(Aspect):
+    pass

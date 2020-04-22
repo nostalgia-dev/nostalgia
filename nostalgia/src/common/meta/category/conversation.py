@@ -1,6 +1,6 @@
 from nostalgia.ndf import NDF
 from nostalgia.nlp import nlp
-from src.common.meta.category import Category
+from nostalgia.src.common.meta.category import Category
 
 
 class Conversation(Category, NDF):
