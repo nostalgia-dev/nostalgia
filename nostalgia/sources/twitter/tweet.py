@@ -2,6 +2,7 @@ import just
 import pandas as pd
 from nostalgia.sources.twitter import Twitter
 
+
 class Tweet(Twitter):
     @classmethod
     def handle_dataframe_per_file(cls, data, *args, **kwargs):
@@ -14,12 +15,14 @@ class Tweet(Twitter):
 
         result = []
         for tweet in tweets:
-            result.append({
-                "text": tweet.get("full_text", ""),
-                "start": pd.to_datetime(tweet.get("created_at", 0), utc=True),
-                "source": tweet.get("source", "Unknown"),
-                "lang": tweet.get("lang", "Unknown")
-            })
+            result.append(
+                {
+                    "text": tweet.get("full_text", ""),
+                    "start": pd.to_datetime(tweet.get("created_at", 0), utc=True),
+                    "source": tweet.get("source", "Unknown"),
+                    "lang": tweet.get("lang", "Unknown"),
+                }
+            )
 
         return pd.DataFrame(result)
 
