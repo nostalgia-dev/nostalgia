@@ -17,7 +17,7 @@ class DeviceToken(Twitter):
                 {
                     "text": token.get("clientApplicationName", ""),
                     "title": token.get("clientApplicationName", None),
-                    "created_at": pd.to_datetime(token.get("createdAt", 0), utc=True)
+                    "created_at": pd.to_datetime(token.get("createdAt", 0), utc=True),
                 }
             )
 

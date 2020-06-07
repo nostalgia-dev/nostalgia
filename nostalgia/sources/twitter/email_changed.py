@@ -15,7 +15,9 @@ class EmailChanged(Twitter):
             change = change[0]
             result.append(
                 {
-                    "text": change["emailChange"]["changedFrom"] if "changedFrom" in change["emailChange"] else change["emailChange"]["changedTo"],
+                    "text": change["emailChange"]["changedFrom"]
+                    if "changedFrom" in change["emailChange"]
+                    else change["emailChange"]["changedTo"],
                     "title": change["emailChange"]["changedTo"],
                     "created_at": pd.to_datetime(change["emailChange"].get("changedAt", 0), utc=True),
                 }
