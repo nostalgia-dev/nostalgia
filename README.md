@@ -32,10 +32,10 @@ Full list of current [sources](https://github.com/nostalgia-dev/nostalgia/tree/m
 - Chat Conversations ([WhatsApp](https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/whatsapp.py), [Facebook Messages](https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/facebook/messages.py))
 - Music listening ([Google Play Music](https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/google/play_music.py))
 - Music identification ([Shazam](https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/shazam.py))
-- Posts ([Reddit](https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/reddit_posts.py), [Facebook](https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/facebook/messages.py))
+- Posts ([Reddit](https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/reddit_posts.py), [Facebook](https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/facebook/messages.py), [Twitter](https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/twitter/tweet.py))
 - File Visits ([Emacs](https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/emacs_file_visits.py))
 - Annotated Screenshots (Tesseract)
-- Web ([Nostalgia Chrome Plugin](https://github.com/nostalgia-dev/nostalgia_chrome))
+- Web ([Nostalgia Chrome Plugin](https://github.com/nostalgia-dev/nostalgia_chrome)) - works in Opera, Firefox, Brave, too!
   - Products
   - Events
   - Videos
