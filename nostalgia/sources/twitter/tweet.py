@@ -16,7 +16,6 @@ class Tweet(Twitter):
             result.append(
                 {
                     "text": tweet.get("full_text", ""),
-                    "title": tweet.get("full_text", None),
                     "created_at": pd.to_datetime(tweet.get("created_at", 0), utc=True),
                     "source": tweet.get("source", "Unknown"),
                     "lang": tweet.get("lang", "Unknown"),

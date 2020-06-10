@@ -30,7 +30,6 @@ class AdEngagements(Twitter):
                 result.append(
                     {
                         "text": ad_text,
-                        "title": ad_text,
                         "created_at": pd.to_datetime(impression.get("impressionTime", 0), utc=True),
                     }
                 )

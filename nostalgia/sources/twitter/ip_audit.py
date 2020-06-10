@@ -16,7 +16,6 @@ class IpAudit(Twitter):
             result.append(
                 {
                     "text": audit.get("loginIp", ""),
-                    "title": audit.get("loginIp", None),
                     "created_at": pd.to_datetime(audit.get("createdAt", 0), utc=True),
                 }
             )
