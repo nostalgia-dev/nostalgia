@@ -22,7 +22,6 @@ class DirectMessage(Twitter):
                 result.append(
                     {
                         "text": message.get("text", ""),
-                        "title": message.get("text", None),
                         "created_at": pd.to_datetime(message.get("createdAt", 0), utc=True),
                     }
                 )

@@ -16,7 +16,6 @@ class Like(Twitter):
             result.append(
                 {
                     "text": like.get("fullText", ""),
-                    "title": like.get("fullText", None),
                     "created_at": pd.to_datetime(like.get("createdAt", 0), utc=True),  # N/A!
                 }
             )

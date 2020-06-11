@@ -14,11 +14,7 @@ class IpAudit(Twitter):
         for audit in data.values.tolist():
             audit = audit[0]
             result.append(
-                {
-                    "text": audit.get("loginIp", ""),
-                    "title": audit.get("loginIp", None),
-                    "created_at": pd.to_datetime(audit.get("createdAt", 0), utc=True),
-                }
+                {"text": audit.get("loginIp", ""), "created_at": pd.to_datetime(audit.get("createdAt", 0), utc=True),}
             )
 
         cls.save_df(result)
