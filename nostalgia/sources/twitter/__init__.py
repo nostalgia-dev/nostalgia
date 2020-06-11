@@ -5,31 +5,41 @@ import just
 from nostalgia.ndf import NDF
 
 
-file_mappings = [{
-    "from_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/ad-engagements.js"),
-    "to_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/ad-engagements.json")
-}, {
-    "from_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/connected-application.js"),
-    "to_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/connected-application.json")
-}, {
-    "from_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/direct-messages.js"),
-    "to_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/direct-messages.json")
-}, {
-    "from_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/device-token.js"),
-    "to_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/device-token.json")
-}, {
-    "from_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/email-address-change.js"),
-    "to_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/email-address-change.json")
-}, {
-    "from_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/ip-audit.js"),
-    "to_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/ip-audit.json")
-}, {
-    "from_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/like.js"),
-    "to_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/like.json")
-}, {
-    "from_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/tweet.js"),
-    "to_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/tweet.json")
-}]
+file_mappings = [
+    {
+        "from_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/ad-engagements.js"),
+        "to_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/ad-engagements.json"),
+    },
+    {
+        "from_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/connected-application.js"),
+        "to_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/connected-application.json"),
+    },
+    {
+        "from_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/direct-messages.js"),
+        "to_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/direct-messages.json"),
+    },
+    {
+        "from_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/device-token.js"),
+        "to_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/device-token.json"),
+    },
+    {
+        "from_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/email-address-change.js"),
+        "to_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/email-address-change.json"),
+    },
+    {
+        "from_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/ip-audit.js"),
+        "to_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/ip-audit.json"),
+    },
+    {
+        "from_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/like.js"),
+        "to_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/like.json"),
+    },
+    {
+        "from_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/tweet.js"),
+        "to_path": os.path.expanduser("~/nostalgia_data/input/twitter/data/tweet.json"),
+    },
+]
+
 
 class Twitter(NDF):
     vendor = "twitter"

@@ -28,10 +28,7 @@ class AdEngagements(Twitter):
                 ad_text = info.get("tweetText", info.get("description", "N/A"))
 
                 result.append(
-                    {
-                        "text": ad_text,
-                        "created_at": pd.to_datetime(impression.get("impressionTime", 0), utc=True),
-                    }
+                    {"text": ad_text, "created_at": pd.to_datetime(impression.get("impressionTime", 0), utc=True),}
                 )
 
         cls.save_df(result)
