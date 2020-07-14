@@ -69,6 +69,7 @@ setup(
         # extras
         "nostalgia_chrome",
         "nostalgia_fitbit",
+        "imap-tools",
     ],
     package_data={
         # If any package contains *.txt or *.rst files, include them:
