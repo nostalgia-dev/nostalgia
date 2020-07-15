@@ -25,7 +25,7 @@ class Email(NDF):
     @classmethod
     def handle_dataframe_per_file(cls, data, fname):
         if data.empty:
-            return None
+            return pd.DataFrame(columns=["text"])
 
         data["subject"] = data["subject"].astype(str)
         data["to"] = data["to"].astype(str)
