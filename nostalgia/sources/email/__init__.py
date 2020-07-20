@@ -44,7 +44,7 @@ class Email(NDF):
 
     @classmethod
     def load(cls, nrows=None, from_cache=True, **kwargs):
-        file_glob = "~/nostalgia_data/input/imap/**/*.json"
+        file_glob = "~/nostalgia_data/input/imap/**/**/*.json"
         dfs = [cls.load_dataframe_per_json_file(file_glob, nrows=nrows)]
         dfs = [x for x in dfs if not x.empty]
         return cls(pd.concat(dfs))

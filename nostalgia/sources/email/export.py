@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import re
 
 import just
 from imap_tools import MailBox
@@ -25,7 +26,9 @@ class ImapExport(object):
         self.root = just.make_path("~/nostalgia_data/input/imap")
 
     def filename(self, *args):
-        return os.path.join(self.root, self.hostname, *args)
+        hostname = self._get_valid_filename(self.hostname)
+        email_alias = self._get_valid_filename(self.username.split("@")[0])
+        return os.path.join(self.root, hostname, email_alias, *args)
 
     def walk_folder(self, mailbox, folder_name):
         mails = []
@@ -46,7 +49,9 @@ class ImapExport(object):
         with MailBox(self.hostname).login(self.username, self.password) as mailbox:
             for folder in mailbox.folder.list():
                 folder_name = folder["name"]
-                filename = self.filename("{}.json".format(folder_name.lower()))
+                filename = self.filename("{}.json".format(
+                    self._get_valid_filename(folder_name.lower())
+                ))
 
                 if not os.path.isfile(filename):
                     log.info("Downloading {}".format(filename))
@@ -54,6 +59,11 @@ class ImapExport(object):
                     self.write(filename, mails)
                 else:
                     log.info("Cached {}".format(filename))
+
+    # Inspired by https://github.com/django/django/blob/796be5901a67da44e251e092641682cb2d778176/django/utils/text.py#L221-L232
+    def _get_valid_filename(self, raw_filename):
+        s = str(raw_filename).strip().replace(" ", "_")
+        return re.sub(r"(?u)[^-\w.]", "", s)
 
     def _validate_constructor_arguments(self, hostname, username, password):
         if hostname is None:
