@@ -26,7 +26,7 @@ Full list of current [sources][sources].
 - Places (Google Timeline)
 - Bank Payments (ING)
 - Pictures ([Google Photos][picasa])
-- Emails ([Gmail][gmail])
+- Emails ([Gmail][gmail], [Others (IMAP based)](imap))
 - App Usage ([Android][android])
 - Calendar ([Google][calendar])
 - Chat Conversations ([WhatsApp][whatsapp], [Facebook Messages][facebook])
@@ -96,6 +96,7 @@ Please contribute the data sources that others could use as well!
 [fitbit]: https://github.com/nostalgia-dev/nostalgia_fitbit
 [fitbit_sleep]: https://github.com/kootenpv/nostalgia_fitbit
 [gmail]: https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/google/gmail.py
+[imap]: https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/email/__init__.py
 [home_assistant]: https://github.com/home-assistant/home-assistant
 [issues]: https://github.com/nostalgia-dev/nostalgia/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc
 [music]: https://github.com/nostalgia-dev/nostalgia/tree/master/nostalgia/sources/google/play_music.py
