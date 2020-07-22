@@ -26,7 +26,7 @@ Full list of current [sources][sources].
 - Places (Google Timeline)
 - Bank Payments (ING)
 - Pictures ([Google Photos][picasa])
-- Emails ([Gmail][gmail], [Others (IMAP based)](imap))
+- Emails ([Gmail][gmail], [Others (IMAP based)][imap])
 - App Usage ([Android][android])
 - Calendar ([Google][calendar])
 - Chat Conversations ([WhatsApp][whatsapp], [Facebook Messages][facebook])
