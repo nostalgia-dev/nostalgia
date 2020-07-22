@@ -20,4 +20,5 @@ __pycache__/
 .coverage
 .coverage.*
 .coveralls.yml
-*.env
+.vscode
+*.env.vscode
