@@ -34,24 +34,26 @@ class ImapExport(object):
         mails = []
         mailbox.folder.set(folder_name)
         for msg in mailbox.fetch(mark_seen=False):
-            mails.append(
-                {
-                    "from": msg.from_,
-                    "to": msg.to,
-                    "subject": msg.subject,
-                    "text": msg.text,
-                    "sent_date": msg.date.isoformat(),
-                }
-            )
+            try:
+                mails.append(
+                    {
+                        "from": msg.from_,
+                        "to": msg.to,
+                        "subject": msg.subject,
+                        "text": msg.text,
+                        "sent_date": msg.date.isoformat(),
+                    }
+                )
+            except TypeError as exc:
+                logger.error("Could not append mail for {}".format(folder_name))
+                logger.error(exc)
         return mails
 
     def walk_folders(self):
         with MailBox(self.hostname).login(self.username, self.password) as mailbox:
             for folder in mailbox.folder.list():
                 folder_name = folder["name"]
-                filename = self.filename("{}.json".format(
-                    self._get_valid_filename(folder_name.lower())
-                ))
+                filename = self.filename("{}.json".format(self._get_valid_filename(folder_name.lower())))
 
                 if not os.path.isfile(filename):
                     log.info("Downloading {}".format(filename))
