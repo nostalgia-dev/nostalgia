@@ -517,7 +517,7 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         for x in ["title", "name", "naam", "subject", "url", "content", "text", "value"]:
             res = getattr(self, x, None)
             if res is not None:
-                data["title"] = res
+                data["title"] = list(res)
                 break
         res = getattr(self, "sender", None)
         if res is not None:
@@ -527,7 +527,7 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
             if res is not None:
                 data["url"] = res
                 break
-        for x in ["start", "time", "timestamp"]:
+        for x in ["start", "time", "timestamp", "playingSince"]:
             res = getattr(self, x, None)
             if res is not None:
                 data["start"] = res
