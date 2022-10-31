@@ -10,15 +10,15 @@ from nostalgia.sources.facebook import Facebook
 
 class FacebookChat(Facebook, ChatInterface):
     """# Facebook Chat
-       Facebook allows you to export all your data. This source is about the chat between two people using Facebook Messenger.
+    Facebook allows you to export all your data. This source is about the chat between two people using Facebook Messenger.
 
-       ### Obtaining the data
-       Go to https://www.facebook.com/settings?tab=your_facebook_information and click "Download your information".
+    ### Obtaining the data
+    Go to https://www.facebook.com/settings?tab=your_facebook_information and click "Download your information".
 
-       Make sure to select at least **Messages**, and choose **JSON** format above.
+    Make sure to select at least **Messages**, and choose **JSON** format above.
 
-       Afterwards, unpack the ZIP-archive and provide the root folder as "file_path".
-       For "user", fill in a subfolder name (e.g. johnsmith_nx44ludqrh)."""
+    Afterwards, unpack the ZIP-archive and provide the root folder as "file_path".
+    For "user", fill in a subfolder name (e.g. johnsmith_nx44ludqrh)."""
 
     me = ""
     sender_column = "sender_name"
@@ -28,13 +28,14 @@ class FacebookChat(Facebook, ChatInterface):
         file_path = "~/nostalgia_data/input/facebook"
         chat_paths = just.glob(f"{file_path}/messages/inbox/*/message_*.json")
         face = [read_array_of_dict_from_json(chat_file, "messages", nrows) for chat_file in chat_paths]
-        for df in face:
+        for chat_file, df in zip(chat_paths, face):
             senders = df.sender_name.unique()
             if len(senders) == 2:
                 df.loc[df.sender_name == senders[0], "receiver_name"] = senders[1]
                 df.loc[df.sender_name == senders[1], "receiver_name"] = senders[0]
             elif len(senders) > 2:
                 df["receiver_name"] = ", ".join([x for x in senders if isinstance(x, str)])
+            df["_fname"] = chat_file
         face = [x for x in face]
         face = pd.concat(face)
         face = face.reset_index(drop=True).sort_values("timestamp_ms")

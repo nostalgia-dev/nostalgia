@@ -83,13 +83,25 @@ class Places(NDF):
         return self.col_contains("Driving", "category")
 
     @nlp(
-        "filter", "drive by bus", "by bus", "travel by bus", "using the bus", "going by bus", "on a bus",
+        "filter",
+        "drive by bus",
+        "by bus",
+        "travel by bus",
+        "using the bus",
+        "going by bus",
+        "on a bus",
     )
     def travel_by_bus(self):
         return self.col_contains("On a bus", "category")
 
     @nlp(
-        "filter", "drive by train", "by train", "travel by train", "using the train", "going by train", "on a train",
+        "filter",
+        "drive by train",
+        "by train",
+        "travel by train",
+        "using the train",
+        "going by train",
+        "on a train",
     )
     def travel_by_train(self):
         return self.col_contains("On a train", "category")

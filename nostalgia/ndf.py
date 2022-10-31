@@ -15,7 +15,7 @@ from nostalgia.extracter import load_from_download
 from nostalgia.file_caching import save_df, load_df
 from nostalgia.times import datetime_from_timestamp, iterate_time
 from nostalgia.cache import get_cache
-from nostalgia.data_loading import Loader
+from nostalgia.data_loading import Loader, read_csv
 from nostalgia.anonymizer import Anonymizer
 import nostalgia.anonymizer
 
@@ -116,6 +116,7 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
     nlp_when = True
     selected_columns = []
     vendor = None
+    is_chat = False
 
     def __init__(self, data):
         super().__init__(data)
@@ -192,6 +193,10 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         return load_df(cls.get_normalized_name(), nrows)
 
     @classmethod
+    def read_csv(cls, fname, **kwargs):
+        return cls(read_csv(fname, **kwargs))
+
+    @classmethod
     def save_df(cls, df, name=None):
         return save_df(df, name or cls.get_normalized_name())
 
@@ -202,6 +207,7 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
 
     @classmethod
     def register(cls):
+        print("Registering", cls.class_df_name())
         return cls.load(nrows=5)
 
     @property
@@ -474,7 +480,7 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
 
     @property
     def text_cols(self):
-        return [x for x, t in zip(self.columns, self.dtypes) if t == np.dtype("O")]
+        return [x for x, t in zip(self.columns, self.dtypes) if t == np.dtype("O")]  # why wrong sometimes
 
     @nlp("filter", "by me", "i", "my")
     def by_me(self):
@@ -492,7 +498,11 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
             string = r"\b" + string + r"\b"
         if col_name is not None:
             return self.col_contains(string, col_name, case, regex, na)
-        bool_cols = [self[x].str.contains(string, case=case, regex=regex, na=na) for x in self.text_cols]
+        bool_cols = [
+            print(x) or self[x].str.contains(string, case=case, regex=regex, na=na)
+            for x in self.text_cols
+            if x not in {"start", "end", "index_loc"}
+        ]
         bool_array = bool_cols[0]
         for b in bool_cols[1:]:
             bool_array = np.logical_or(bool_array, b)
@@ -540,6 +550,9 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         if data["end"] is None:
             data["end"] = data["start"] + pd.Timedelta(minutes=5)
             data["interval"] = False
+        # to ensure no creation issues
+        data["start"] = [x for x in data["start"]]
+        data["end"] = [x for x in data["end"]]
         try:
             data = pd.DataFrame(data).sort_values("start")
             if max_n is not None:
@@ -660,7 +673,8 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
             # res["sort_score"] = -abs(res[self._time_col] - avg_time)
             # res = res.sort_values('sort_score').drop('sort_score', axis=1)
             res["sort_score"] = res[self._time_col]
-            res = res.sort_values("sort_score").drop("sort_score", axis=1)
+            res = res.sort_values("sort_score")
+            res = res[[x for x in res.columns if x != "sort_score"]]
         return self.__class__(res)
 
     when = when_at

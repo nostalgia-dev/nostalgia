@@ -1,44 +1,46 @@
 import just
 import pandas as pd
 from nostalgia.interfaces.chat import ChatInterface
-from nostalgia.times import datetime_from_format
+from nostalgia.times import datetime_from_format, parse_datetime, tz
 
 offset = len("01/10/2019, 20:02 - ")
+
+from datetime import datetime
 
 
 class WhatsappChat(ChatInterface):
     """# WhatsApp Chat
-    WhatsApp allows you to export a single conversation (.txt) by email using a mobile app. Below official instructions for each platform:
+     WhatsApp allows you to export a single conversation (.txt) by email using a mobile app. Below official instructions for each platform:
 
-    - [Android](https://faq.whatsapp.com/en/android/23756533/)
-    - iPhone (does not work)
-    - [Windows Phone](https://faq.whatsapp.com/en/wp/22548236)
+     - [Android](https://faq.whatsapp.com/en/android/23756533/)
+     - iPhone (does not work)
+     - [Windows Phone](https://faq.whatsapp.com/en/wp/22548236)
 
-   ### Other method
+    ### Other method
 
-    datas = []
-    for fname in just.glob("~/Downloads/*.csv"):
-        try:
-            with open(fname) as f:
-                chars = f.read(30)
-                if "Date1;Date2;Time;UserPhone" not in chars:
-                    continue
-                datas.append(pd.read_csv(fname, sep=";"))
-        except PermissionError:
-            continue
+     datas = []
+     for fname in just.glob("~/Downloads/*.csv"):
+         try:
+             with open(fname) as f:
+                 chars = f.read(30)
+                 if "Date1;Date2;Time;UserPhone" not in chars:
+                     continue
+                 datas.append(pd.read_csv(fname, sep=";"))
+         except PermissionError:
+             continue
 
-   ### Create instance
-   Click below on the `+` sign and fill in the path to the WhatsApp chat file."""
+    ### Create instance
+    Click below on the `+` sign and fill in the path to the WhatsApp chat file."""
 
     vendor = "whatsapp"
-    me = ""
+    me = "Pascal"
     sender_column = "sender"
 
     @classmethod
     def load(cls, nrows=None, **kwargs):
         old_text = ""
         results = []
-        nrows = nrows or float("inf")
+        nrows = nrows or 50_000_000_000
         for file_path in just.glob("~/nostalgia_data/input/whatsapp/*.txt"):
             row = 0
             for line in just.iread(file_path):
@@ -61,7 +63,23 @@ class WhatsappChat(ChatInterface):
                         break
                     row += 1
                     results.append((time, sender, text))
+        for x in just.glob("~/Downloads/*.csv"):
+            tmp_cols = pd.read_csv(x, nrows=1, sep=";").columns
+            if all([c in tmp_cols for c in ["Date2", "Time", "UserName", "MessageBody"]]):
+                just.rename(x, "~/nostalgia_data/input/whatsapp/" + x.split("/")[-1])
 
+        tz_str = None
+        for file_path in just.glob("~/nostalgia_data/input/whatsapp/*.csv"):
+            df = pd.read_csv(file_path, sep=";", nrows=nrows)
+            if tz_str is None:
+                d, t = df.Date2.iloc[0], df.Time.iloc[0]
+                tz_str = parse_datetime(d + "T" + t).replace(tzinfo=tz).isoformat()[-6:]
+            results.extend(
+                [
+                    (parse_datetime(f"{d}T{t}{tz_str}"), u, m)
+                    for d, t, u, m in zip(df.Date2, df.Time, df.UserName, df.MessageBody)
+                ]
+            )
         df = pd.DataFrame(results, columns=["time", "sender", "text"])
         # hack "order" into minute data
         same_minute = df.time == df.shift(1).time

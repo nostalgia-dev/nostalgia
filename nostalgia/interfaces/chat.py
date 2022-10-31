@@ -7,6 +7,7 @@ class ChatInterface(NDF):
     me = ""
     sender_column = ""
     _sender_updated = False
+    is_chat = True
 
     @nlp("filter", "by me", "i", "my")
     def by_me(self):

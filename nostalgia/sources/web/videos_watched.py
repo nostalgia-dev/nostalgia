@@ -15,7 +15,7 @@ class VideosWatched(NDF):
     def handle_dataframe_per_file(cls, data, fname):
         data["playingSince"] = [datetime_from_timestamp(x, "utc") for x in data["playingSince"]]
         data["playingUntil"] = [datetime_from_timestamp(x, "utc") for x in data["playingUntil"]]
-        return data
+        return data[[x for x in data.columns if x not in {"likes", "dislikes"}]]
 
     @classmethod
     def load(cls, nrows=None):

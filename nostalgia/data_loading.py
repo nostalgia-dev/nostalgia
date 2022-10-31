@@ -1,3 +1,4 @@
+import re
 import os
 from datetime import datetime
 
@@ -13,6 +14,16 @@ from nostalgia.file_caching import get_newline_count, save_newline_count
 from nostalgia.file_caching import get_processed_files, save_processed_files
 from nostalgia.file_caching import get_last_latest_file, save_last_latest_file
 from nostalgia.file_caching import get_last_mod_time, save_last_mod_time
+
+
+def strip(col_name):
+    return re.sub("[_/()_ -]+", "_", col_name).strip("_")
+
+
+def read_csv(fname: str, **kwargs) -> pd.DataFrame:
+    df = pd.read_csv(fname, **kwargs)
+    df = df.rename(columns={col: strip(col).lower() for col in df.columns})
+    return df
 
 
 def read_array_of_dict_from_json(fname, key_name=None, nrows=None):
@@ -91,7 +102,7 @@ class Loader:
         last_modified = get_last_mod_time(name)
         if modified_time != last_modified or not from_cache:
             if fname.endswith(".csv"):
-                data = pd.read_csv(fname, error_bad_lines=False, nrows=nrows, **kwargs)
+                data = read_csv(fname, on_bad_lines="skip", nrows=nrows, **kwargs)
             elif fname.endswith(".ics"):
                 from icalevents.icalevents import events
 
@@ -197,7 +208,7 @@ class Loader:
         return data
 
     @classmethod
-    def load_dataframe_per_json_file(cls, glob_pattern, key="", nrows=None):
+    def load_dataframe_per_json_file(cls, glob_pattern, key="", nrows=None, json=False):
         fnames = set(just.glob(glob_pattern))
         name = glob_pattern + "_" + normalize_name(cls.__name__)
         processed_files = get_processed_files(name)
@@ -211,8 +222,11 @@ class Loader:
         if to_process:
             print("processing {} files".format(len(to_process)))
             for fname in to_process:
-                data = read_array_of_dict_from_json(fname, key, nrows)
-                data = cls.handle_dataframe_per_file(data, fname)
+                if json:
+                    data = cls.handle_json_per_file(fname)
+                else:
+                    data = read_array_of_dict_from_json(fname, key, nrows)
+                    data = cls.handle_dataframe_per_file(data, fname)
                 if data is None:
                     continue
                 objects.append(data)
@@ -268,11 +282,11 @@ class Loader:
         return data
 
     @classmethod
-    def latest_file_is_historic(cls, glob, key_name="", nrows=None, from_cache=True):
+    def latest_file_is_historic(cls, glob, key_name="", nrows=None, from_cache=True, **kwargs):
         """
         Glob is for using a wildcard pattern, and the last created file will be loaded.
         See `load_data_file_modified_time` for further reference.
         Returns a pd.DataFrame
         """
         recent = max([x for x in just.glob(glob) if "(" not in x], key=os.path.getctime)
-        return cls.load_data_file_modified_time(recent, key_name, nrows, from_cache)
+        return cls.load_data_file_modified_time(recent, key_name, nrows, from_cache, **kwargs)

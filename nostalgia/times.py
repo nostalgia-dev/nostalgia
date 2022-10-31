@@ -1,14 +1,19 @@
 from pytz import timezone
-import tzlocal
+
+# import tzlocal
+import dateutil.tz
 from metadate import parse_date, Units
 from datetime import datetime
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 import dateutil
 from dateutil.rrule import rrule
+from ciso8601 import parse_datetime
+from tzlocal import get_localzone
 
-tz = tzlocal.get_localzone()
-utc = timezone("UTC")
+tzlocal = get_localzone()
+tz = dateutil.tz.tzlocal()
+utc = dateutil.tz.tzutc()
 
 
 def now(**kwargs):
@@ -65,7 +70,10 @@ def years_ago(years):
 
 def in_month(month):
     year = now().year - 1 if now().month <= month else now().year
-    return lambda: (datetime(year, month, 1).date(), datetime(year, month, 1).date() + relativedelta(month=month + 1),)
+    return lambda: (
+        datetime(year, month, 1).date(),
+        datetime(year, month, 1).date() + relativedelta(month=month + 1),
+    )
 
 
 def in_year(year):
@@ -97,9 +105,9 @@ def parse_date_tz(text):
     mp = parse_date(text)
     if mp is not None:
         if mp.start_date.tzinfo is None:
-            mp.start_date = tz.localize(mp.start_date)
+            mp.start_date = tzlocal.localize(mp.start_date)
         if mp.end_date.tzinfo is None:
-            mp.end_date = tz.localize(mp.end_date)
+            mp.end_date = tzlocal.localize(mp.end_date)
         return mp
 
 
@@ -116,7 +124,7 @@ def datetime_from_timestamp(x, tzone=tz):
         tzone = timezone(tzone)
     x = datetime.fromtimestamp(x, tz=tzone)
     if tzone != tz:
-        x = x.astimezone(tz)
+        x = x.astimezone(tzlocal)
     return x
 
 
@@ -124,6 +132,8 @@ def datetime_from_format(s, fmt, in_utc=False):
     base = datetime.strptime(s, fmt)
     if in_utc:
         return utc.localize(base).astimezone(tz)
+    elif in_utc is None:  # naive
+        return base.replace(tzinfo=tzlocal)
     else:
         return tz.localize(base)
 

@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 def expand_shadow_element(base, tags):
     for tag in tags:
         print(tag)
-        element = base.find_element_by_css_selector(tag)
+        element = base.find_elements("css selector", tag)[0]
         base = driver.execute_script("return arguments[0].shadowRoot", element)
     return base
 
@@ -21,6 +21,8 @@ if __name__ == "__main__":
 
     driver.get(url)
 
+    driver.get("https://mijn.ing.nl/banking/service?dialog=download-transactions")
+
     while driver.find_elements_by_xpath("/html/body/ing-app-authentication"):
         time.sleep(1)
 
@@ -28,9 +30,9 @@ if __name__ == "__main__":
 
     tags = [
         "dba-app",
-        "ing-app-daily-banking-service",
-        "ing-orange-service",
-        "ing-orange-service-self-control",
+        "config-renderer",
+        "ing-default-layout",
+        "dba-service",
     ]
     ele = expand_shadow_element(driver, tags)
     ele.find_element_by_css_selector("div:nth-child(2) > .card__content > ul > li:nth-child(2) > a").click()
@@ -84,3 +86,34 @@ if __name__ == "__main__":
     time.sleep(15)
 
     driver.close()
+
+# big_tree = []
+
+
+def _expand_element(element):
+    print(element)
+    subelements = element.find_elements("xpath", "./*")
+    tag = element.get_attribute("tagName")
+    tags_to_skip = [
+        "TEMPLATE",
+        "svg",
+        "g",
+        "path",
+        "STYLE",
+        "img",
+        "video",
+    ]
+    if tag in tags_to_skip:
+        return
+    if tag == "ING-UIC-NATIVE-INPUT":
+        big_tree.append(element)
+    shadowroot = expand_shadow_element(element)
+    if shadowroot:
+        subelements = driver.execute_script('return arguments[0].querySelectorAll("*")', shadowroot)
+    for obj in subelements:
+        expand_element(obj)
+
+
+def _expand_shadow_element(element):
+    shadow_root = driver.execute_script("return arguments[0].shadowRoot", element)
+    return shadow_root

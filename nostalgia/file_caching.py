@@ -1,6 +1,7 @@
-import re
-import just
 import os
+import re
+import traceback
+import just
 import pandas as pd
 
 
@@ -39,13 +40,13 @@ def save_last_latest_file(latest_file, name):
 
 
 def get_newline_count(name):
-    """ counts by row numbers in a file """
+    """counts by row numbers in a file"""
     path = "~/nostalgia_data/seen/" + slugify(name) + ".json"
     return just.read(path, no_exist=0)
 
 
 def save_newline_count(n, name):
-    """ counts by row numbers in a file """
+    """counts by row numbers in a file"""
     path = "~/nostalgia_data/seen/" + slugify(name) + ".json"
     return just.write(n, path)
 
@@ -57,7 +58,7 @@ def get_processed_files(name):
 
 def save_processed_files(fnames, name):
     path = "~/nostalgia_data/seen/" + slugify(name) + ".json"
-    just.write(fnames, path)
+    just.write(list(fnames), path)
 
 
 def check_seen(name, value):
@@ -94,7 +95,11 @@ def save_df(df, name):
     try:
         df.to_parquet(path, compression="zstd", allow_truncated_timestamps=True)
     except Exception as e:
+        __import__("ipdb").set_trace()
+
         print("ERROR with", name)
+        print(traceback.format_exc())
+        print("Debugging columns:")
         for x in df.columns:
             print(x, sum([str(y)[:1] == "{" for y in df[x]]))
         raise e

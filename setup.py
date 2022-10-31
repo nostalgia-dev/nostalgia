@@ -21,6 +21,7 @@ setup(
     license="MIT",
     packages=find_packages(),
     include_package_data=True,
+    entry_points={"console_scripts": ["nos = nostalgia.__init__:main"]},
     classifiers=[
         "Environment :: Console",
         "Intended Audience :: Developers",
@@ -65,7 +66,8 @@ setup(
         "selenium",
         "psaw",
         "icalevents",
-        "pytesseract",
+        # "pytesseract",
+        "ciso8601",
         # extras
         "nostalgia_chrome",
         "nostalgia_fitbit",

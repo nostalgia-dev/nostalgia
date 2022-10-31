@@ -30,7 +30,10 @@ def getter(dc, key, default=None):
 
 from natura import Finder
 
-finder = Finder()
+try:
+    finder = Finder()
+except AttributeError as e:
+    print("natura:", e)
 
 
 def get_linked_data_jd(art):
@@ -69,7 +72,7 @@ def get_linked_data_jd(art):
                 "name": name,
                 "origin": art.url,
                 "image": getter(y, "image"),
-                "brand": brand,
+                "brand": str(brand),
                 "description": getter(y, "description"),
                 "source": "jsonld",
             }
@@ -123,7 +126,7 @@ def deeper_price_md(art):
                 "name": name,
                 "origin": art.url,
                 "image": urljoin(art.url, image),
-                "brand": brand,
+                "brand": str(brand),
                 "description": description,
                 "source": "md",
             }
@@ -183,7 +186,7 @@ def get_linked_data_md(art):
                 "name": "".join(props.get("name", "")),
                 "origin": art.url,
                 "image": getter(props, "image"),
-                "brand": brand,
+                "brand": str(brand),
                 "description": getter(props, "description"),
                 "source": "md",
             }
@@ -226,11 +229,19 @@ def get_linked_amazon(art):
             "name": " ".join(art.title.split()),
             "origin": art.url,
             "image": None,
-            "brand": brand,
+            "brand": str(brand),
             "description": features,
             "source": "custom_amazon",
         }
         return data
+
+
+def convert_brand(x):
+    if isinstance(x, list):
+        x = ", ".join(x)
+    elif not isinstance(x, str):
+        x = ""
+    return x
 
 
 def get_linked_data(x):
@@ -251,6 +262,8 @@ def get_linked_data(x):
         linked_data = get_linked_data_md(art)
         if linked_data is None:
             linked_data = get_linked_data_jd(art)
+    if linked_data is not None and "brand" in linked_data:
+        linked_data["brand"] = convert_brand(linked_data["brand"])
     CACHE[path] = linked_data
     return linked_data
 
@@ -279,18 +292,24 @@ class Offers(NDF):
 
     @classmethod
     def object_to_row(cls, obj):
-        row = get_linked_data(obj)
+        try:
+            row = get_linked_data(obj)
+        except AttributeError:
+            print(obj)
+            return {}
         if row is not None:
             row["time"] = datetime.fromtimestamp(float(obj["time"]), tz=tz)
             row["url"] = obj["url"]
             row["path"] = obj["path"]
-            if row.get("name"):
-                row["keywords"] = " ".join([x[0] for x in get_keywords_for_product(row["name"])])
-            else:
-                row["keywords"] = ""
+            # if row.get("name"):
+            #     row["keywords"] = " ".join([x[0] for x in get_keywords_for_product(row["name"])])
+            # else:
+            #     row["keywords"] = ""
             if "image" in row:
                 img = row["image"]
                 row["image"] = img if isinstance(img, str) or img is None else img["url"]
+            if isinstance(row["image"], dict):
+                row["image"] = row["image"]["url"]
             return row
 
     @classmethod

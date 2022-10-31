@@ -39,31 +39,31 @@ class Payments(NDF):
     @classmethod
     def handle_dataframe_per_file(cls, data, fname=None):
         ing = data
-        ing["Bedrag (EUR)"] = [float(x.replace(",", ".")) for x in ing["Bedrag (EUR)"]]
-        ing["Datum"] = [pd.to_datetime(x, format="%Y%m%d") for x in ing["Datum"]]
-        ing["Naam / Omschrijving"] = [x.replace("'", "''") for x in ing["Naam / Omschrijving"]]
-        ing["Naam / Omschrijving"] = [x.replace('"', '""') for x in ing["Naam / Omschrijving"]]
+        ing["bedrag_eur"] = [float(x.replace(",", ".")) for x in ing["bedrag_eur"]]
+        ing["datum"] = [pd.to_datetime(x, format="%Y%m%d") for x in ing["datum"]]
+        ing["naam_omschrijving"] = [x.replace("'", "''") for x in ing["naam_omschrijving"]]
+        ing["naam_omschrijving"] = [x.replace('"', '""') for x in ing["naam_omschrijving"]]
         ing["timestamp"] = [
             x if pd.notnull(x) else try_date(y, min_level=3)  # only minutes and below
-            for x, y in zip(old_date(ing["Naam / Omschrijving"]), ing.Mededelingen)
+            for x, y in zip(old_date(ing["naam_omschrijving"]), ing["mededelingen"])
         ]
         ing["year"] = [x.year for x in ing.timestamp]
 
         ing["pas"] = [
             x if y == "Betaalautomaat" and x.startswith("0") else "---"
-            for x, y in zip(ing.Mededelingen.str.replace(":", "").str.slice(10, 13), ing.MutatieSoort)
+            for x, y in zip(ing["mededelingen"].str.replace(":", "").str.slice(10, 13), ing["mutatiesoort"])
         ]
         # ing = ing.drop(["Code", "Tegenrekening", "Rekening", "Mededelingen"], axis=1)
-        ing.columns = ["bedrag" if x == "Bedrag (EUR)" else x for x in ing.columns]
-        ing.columns = ["naam" if x == "Naam / Omschrijving" else x for x in ing.columns]
+        ing.columns = ["bedrag" if x == "bedrag_eur" else x for x in ing.columns]
+        ing.columns = ["naam" if x == "naam_omschrijving" else x for x in ing.columns]
         ing.columns = [x.lower().replace(" ", "_") for x in ing.columns]
         ing.loc[ing.timestamp.isnull(), "timestamp"] = ing.datum[ing.timestamp.isnull()]
         # ing = ing[ing.timestamp.notnull()]
-        return ing
+        return ing.drop("saldo_na_mutatie", axis=1)
 
     @classmethod
     def load(cls, file_glob="~/Downloads/NL*20*20*.csv", nrows=None, from_cache=True):
-        data = cls.latest_file_is_historic(file_glob, nrows=nrows, from_cache=from_cache)
+        data = cls.latest_file_is_historic(file_glob, nrows=nrows, from_cache=from_cache, sep=";")
         return cls(data)
 
     @property
@@ -72,7 +72,13 @@ class Payments(NDF):
 
     @nlp("filter", "by me", "i", "my")
     def by_me(self):
-        return self.query("pas == '010'")
+        return self.query("pas in ['008', '010', '012']")
+
+    def by_me_or_online(self):
+        return self.query("pas in ['008', '010', '012', '---']")
+
+    def online(self):
+        return self.query("pas in ['---']")
 
     @property
     def by_card(self):
@@ -86,4 +92,4 @@ class Payments(NDF):
         return self.query("bedrag == {}".format(amount))
 
     def amount_between(self, lower_bound, upper_bound):
-        return self.query("{} < bedrag < {}".format(lower_bound, upper_bound))
+        return self.query("({} < bedrag) & (bedrag < {})".format(lower_bound, upper_bound))

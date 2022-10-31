@@ -4,31 +4,30 @@ import just
 import pandas as pd
 
 from nostalgia.ndf import NDF
-from nostalgia.times import datetime_from_format
-
-flatten = lambda l: [item for sublist in l for item in sublist]
+from nostalgia.times import parse_datetime, tz
 
 
 class Spotify(NDF):
+    vendor = "spotify"
+    ingest_settings = {
+        "ingest_glob": "~/Downloads/my_spotify_data.zip",
+        "recent_only": False,
+        "delete_existing": False,
+    }
+
+    @classmethod
+    def process_row(cls, x: dict) -> dict:
+        return {
+            "time_start": parse_datetime(x["endTime"]).replace(tzinfo=tz) - timedelta(milliseconds=x["msPlayed"]),
+            "time_end": parse_datetime(x["endTime"]).replace(tzinfo=tz),
+            "title": x["trackName"],
+            "artist": x["artistName"],
+            "seconds": x["msPlayed"] / 1000,
+        }
+
     @classmethod
     def load(cls, nrows=None):
-        files = "~/nostalgia_data/input/spotify/StreamingHistory*.json"
-        spotify = pd.DataFrame(
-            [
-                (
-                    datetime_from_format(x["endTime"], "%Y-%m-%d %H:%M") - timedelta(milliseconds=x["msPlayed"]),
-                    datetime_from_format(x["endTime"], "%Y-%m-%d %H:%M"),
-                    x["trackName"],
-                    x["artistName"],
-                    x["msPlayed"] / 1000,
-                )
-                for x in flatten(just.multi_read(files).values())
-            ],
-            columns=["time_start", "time_end", "title", "artist", "seconds"],
-        )
-        return cls(spotify)
-
-
-if __name__ == "__main__":
-    j = Spotify.load()
-    print(j.create_sample_data())
+        files = "~/nostalgia_data/input/spotify/MyData/StreamingHistory*.json"
+        lists_of_data = [[cls.process_row(x) for x in file_data] for _fname, file_data in just.multi_read(files)]
+        df = pd.DataFrame(sum(lists_of_data, []))
+        return cls(df)

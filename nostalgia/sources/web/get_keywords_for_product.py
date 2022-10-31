@@ -2,7 +2,7 @@ import re
 from collections import Counter
 import just
 import requests
-from nearnlp.nearnlp import is_noun, is_verb, singularize
+from nltk.stem import WordNetLemmatizer
 import functools
 from tok import Tokenizer
 from nltk.corpus import stopwords
@@ -15,6 +15,13 @@ t.drop("<b>", "remove html")
 t.drop("<b/>", "remove html")
 
 # can also use qoogle
+
+wnl = WordNetLemmatizer()
+
+
+def singularize(word):
+    return wnl.lemmatize(word)
+
 
 interesting_keys = set()
 for prefix in ["og:", "twitter:", ""]:
@@ -58,7 +65,5 @@ def get_keywords_for_product(product_string):
     return [
         x
         for i, x in enumerate(c.most_common(1000))
-        if x[0] not in ENGLISH_STOP and len(x[0]) > 2 and x[1] > 1 and is_noun(x[0])
-        # if a verb would occur often then probably it is still important
-        and (not is_verb(x[0]) or i < 5)
+        if x[0] not in ENGLISH_STOP and len(x[0]) > 2 and x[1] > 1 and i < 5
     ]

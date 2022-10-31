@@ -1,21 +1,11 @@
-from nostalgia.times import datetime_from_format
-from datetime import timedelta
+from nostalgia.times import parse_datetime
 from nostalgia.sources.google import Google
-
-
-def custom_parse(x):
-    if not isinstance(x, str):
-        return x
-    try:
-        return datetime_from_format(x, "%Y-%m-%dT%H:%M:%SZ", in_utc=True)
-    except:
-        return datetime_from_format(x, "%Y-%m-%dT%H:%M:%S.%fZ", in_utc=True)
 
 
 class AppUsage(Google):
     @classmethod
     def handle_dataframe_per_file(cls, data, file_path):
-        data["time"] = [custom_parse(x) for x in data["time"]]
+        data["time"] = [parse_datetime(x) if isinstance(x, str) else x for x in data["time"]]
         data = data.rename(columns={"header": "name"})
         return data[["name", "time"]]
 
