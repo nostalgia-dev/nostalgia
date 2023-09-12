@@ -10,7 +10,7 @@ from nostalgia.times import datetime_from_format
 class Telegram(ChatInterface):
     vendor = "telegram"
     ingest_settings = {
-        "ingest_glob": "~/Downloads/Telegram Desktop/*/chats/chat_*/messages.html",
+        "ingest_glob": "~/Downloads/Telegram Desktop/*/chats/chat_*/message*.html",
         "recent_only": False,
         "delete_existing": False,
     }
@@ -24,8 +24,9 @@ class Telegram(ChatInterface):
     @classmethod
     def ingest(cls, *args, **kwargs):
         results = defaultdict(list)
-        for i, fname in enumerate(just.glob(cls.ingest_settings["ingest_glob"])):
-            print(i)
+        glob = just.glob(cls.ingest_settings["ingest_glob"])
+        for i, fname in enumerate(glob):
+            print(i, len(glob), fname)
             tree = just.read_tree(fname)
             last_from_name = None
             conversation_title = None
@@ -55,5 +56,4 @@ class Telegram(ChatInterface):
             sum([[(conv_title, *row) for row in rows] for conv_title, rows in results.items()], []),
             columns=["conversation", "dt", "sender", "text"],
         )
-
-        cls.save_df(df)
+        cls.save_df(df.drop_duplicates())

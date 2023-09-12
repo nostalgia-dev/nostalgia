@@ -1,5 +1,5 @@
 # import getpass
-# from nostalgia.selenium import get_driver
+# from nostalgia.seldriver import get_driver
 # import lxml.html
 
 # driver = get_driver(

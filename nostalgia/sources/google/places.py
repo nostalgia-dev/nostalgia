@@ -4,7 +4,7 @@ import pandas as pd
 import just
 from nostalgia.times import tz
 from nostalgia.times import parse_datetime
-from nostalgia.interfaces.places import Places
+from nostalgia.interfaces.places import PlacesInterface
 
 
 def get_city_country(formatted_address):
@@ -100,7 +100,7 @@ def extract_activity(x):
     }
 
 
-class GooglePlaces(Places):
+class GooglePlaces(PlacesInterface):
     nlp_columns = ["name", "city", "country"]
     selected_columns = ["date", "name", "city", "_office_hours"]
 

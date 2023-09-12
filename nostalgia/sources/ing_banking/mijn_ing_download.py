@@ -1,119 +1,64 @@
 from selenium import webdriver
+from selenium.webdriver.remote.webelement import WebElement
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 
-def expand_shadow_element(base, tags):
-    for tag in tags:
-        print(tag)
-        element = base.find_elements("css selector", tag)[0]
-        base = driver.execute_script("return arguments[0].shadowRoot", element)
-    return base
-
-
-if __name__ == "__main__":
+def get_driver():
     chrome_options = webdriver.ChromeOptions()
     chrome_options.binary_location = "/usr/bin/google-chrome-stable"
     driver = webdriver.Chrome(executable_path="/usr/bin/chromedriver", options=chrome_options)
+    return driver
 
-    url = "https://mijn.ing.nl/banking/service"
 
-    driver.get(url)
-
+def scrape_ing():
+    driver = get_driver()
     driver.get("https://mijn.ing.nl/banking/service?dialog=download-transactions")
 
-    while driver.find_elements_by_xpath("/html/body/ing-app-authentication"):
-        time.sleep(1)
+    while driver.find_elements_by_xpath("/html/body/ing-app-authentication-router"):
+        print("Waiting for user to login in browser... (don't forget to confirm using 2FA)")
+        time.sleep(2)
+
+    print("Logged in")
 
     time.sleep(5)
 
-    tags = [
-        "dba-app",
-        "config-renderer",
-        "ing-default-layout",
-        "dba-service",
-    ]
-    ele = expand_shadow_element(driver, tags)
-    ele.find_element_by_css_selector("div:nth-child(2) > .card__content > ul > li:nth-child(2) > a").click()
+    roots = {
+        x: driver.execute_script("return arguments[0].shadowRoot", x) for x in driver.find_elements_by_xpath("//*")
+    }
+    root_eles = [k for k, v in roots.items() if v]
 
-    time.sleep(5)
+    for x in root_eles:
+        if "download-transaction-loader" not in x.tag_name:
+            continue
+        tag_value = int(x.tag_name.split("-")[-1])
+        shadow_root_dict = driver.execute_script("return arguments[0].shadowRoot", x)
+        shadow_root = WebElement(driver, list(shadow_root_dict.values())[0], w3c=True)
+        shadow_content = shadow_root.find_element_by_css_selector(f"download-transaction-{tag_value+1}")
 
-    tags = [
-        "dba-download-transactions-dialog",
-        "ing-orange-transaction-download-dialog",
-        "ing-uic-dialog-next > section > ing-orange-transaction-download-filter",
-        "ing-uic-form > form > div > div > ing-uic-date-input",
-        "#viewInput",
-    ]
-    form = expand_shadow_element(driver, tags)
-    inp = form.find_element_by_css_selector("ing-uic-input-container > ing-uic-native-input > input")
+    shadow_root_dict = driver.execute_script("return arguments[0].shadowRoot", shadow_content)
+    shadow_root = WebElement(driver, list(shadow_root_dict.values())[0], w3c=True)
+    shadow_content = shadow_root.find_element_by_css_selector(f"ing-form-{tag_value+2}")
+
+    inp = shadow_content.find_element_by_xpath(".//*[@id = 'date-from-picker']/input")
     inp.clear()
-    inp.send_keys("01-01-2011")
+    inp.send_keys(f"01-01-{datetime.now().year-8}")
 
-    tags = [
-        "dba-download-transactions-dialog",
-        "ing-orange-transaction-download-dialog",
-        "ing-uic-dialog-next > section > ing-orange-transaction-download-filter",
-        "ing-uic-form > form > div > div > ing-uic-date-input[name='endDate']",
-        "#viewInput",
-    ]
-    form = expand_shadow_element(driver, tags)
-    inp = form.find_element_by_css_selector("ing-uic-input-container > ing-uic-native-input > input")
-    now = datetime.now() - relativedelta(days=1)
-    inp.clear()
-    inp.send_keys("{}-{}-{}".format(now.day, now.month, now.year))
+    shadow_content.find_element_by_xpath(".//*[@id = 'file-types-drop-down']/select/option[3]").click()
 
-    tags = [
-        "dba-download-transactions-dialog",
-        "ing-orange-transaction-download-dialog",
-        "ing-uic-dialog-next > section > ing-orange-transaction-download-filter",
-    ]
-    form = expand_shadow_element(driver, tags)
+    shadow_content.find_element_by_xpath(".//*[@data-tag-name = 'ing-button']").click()
 
-    form.find_element_by_css_selector("ing-uic-form > form > div > ing-uic-select.format-container").click()
-
-    time.sleep(2)
-
-    form.find_element_by_css_selector(
-        "ing-uic-form > form > div > ing-uic-select.format-container > paper-listbox > ing-uic-item[value='CSV']"
-    ).click()
-
-    time.sleep(2)
-
-    form.find_element_by_css_selector("ing-uic-form > form > paper-button[data-type='submit']").click()
-
-    time.sleep(15)
+    time.sleep(60)
 
     driver.close()
 
-# big_tree = []
 
-
-def _expand_element(element):
-    print(element)
-    subelements = element.find_elements("xpath", "./*")
-    tag = element.get_attribute("tagName")
-    tags_to_skip = [
-        "TEMPLATE",
-        "svg",
-        "g",
-        "path",
-        "STYLE",
-        "img",
-        "video",
-    ]
-    if tag in tags_to_skip:
-        return
-    if tag == "ING-UIC-NATIVE-INPUT":
-        big_tree.append(element)
-    shadowroot = expand_shadow_element(element)
-    if shadowroot:
-        subelements = driver.execute_script('return arguments[0].querySelectorAll("*")', shadowroot)
-    for obj in subelements:
-        expand_element(obj)
-
-
-def _expand_shadow_element(element):
-    shadow_root = driver.execute_script("return arguments[0].shadowRoot", element)
-    return shadow_root
+# def expand_shadow_element(base, tags):
+#     for tag in tags:
+#         print(tag)
+#         element = base.find_elements("css selector", tag)[0]
+#         base = driver.execute_script("return arguments[0].shadowRoot", element)
+#         if isinstance(base, dict):
+#             base = WebElement(driver, base, w3c=True)
+#     return base

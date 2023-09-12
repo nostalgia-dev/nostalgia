@@ -14,7 +14,7 @@ class FitbitSleep(NDF):
     def load(cls, nrows=None):
         file_glob = "~/nostalgia_data/input/fitbit/*/sleep/*.json"
         objects = []
-        for d in just.multi_read(file_glob).values():
+        for _, d in just.multi_read(file_glob):
             if not d:
                 continue
             for x in d:

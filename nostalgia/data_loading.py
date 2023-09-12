@@ -282,11 +282,15 @@ class Loader:
         return data
 
     @classmethod
-    def latest_file_is_historic(cls, glob, key_name="", nrows=None, from_cache=True, **kwargs):
+    def latest_file(cls, *globs):
+        # first checked for 'if "(" not in x' but seems better not to do that
+        return max(sum([just.glob(glob) for glob in globs], []), key=os.path.getctime)
+
+    @classmethod
+    def latest_file_is_historic(cls, *globs, key_name="", nrows=None, from_cache=True, **kwargs):
         """
         Glob is for using a wildcard pattern, and the last created file will be loaded.
         See `load_data_file_modified_time` for further reference.
         Returns a pd.DataFrame
         """
-        recent = max([x for x in just.glob(glob) if "(" not in x], key=os.path.getctime)
-        return cls.load_data_file_modified_time(recent, key_name, nrows, from_cache, **kwargs)
+        return cls.load_data_file_modified_time(cls.latest_file(*globs), key_name, nrows, from_cache, **kwargs)

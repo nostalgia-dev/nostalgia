@@ -1,9 +1,9 @@
 import json
-from datetime import datetime
+import orjson
 import just
 import pandas as pd
 
-from nostalgia.times import tz
+from nostalgia.times import datetime_from_timestamp
 
 from auto_extract import parse_article
 
@@ -35,6 +35,8 @@ def get_linked_data_jd(art):
             continue
         if isinstance(y, list):
             y = y[0]
+        if isinstance(y, str) and y[0] == "{":
+            y = orjson.loads(y)
         if y.get("@type") != "Event":
             continue
         return {
@@ -92,7 +94,7 @@ class Events(NDF):
     def object_to_row(cls, obj):
         row = get_linked_data(obj)
         if row is not None:
-            row["time"] = datetime.fromtimestamp(float(obj["time"]), tz=tz)
+            row["time"] = datetime_from_timestamp(float(obj["time"]))
             row["url"] = obj["url"]
             row["path"] = obj["path"]
             row["keywords"] = ""

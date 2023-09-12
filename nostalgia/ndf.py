@@ -512,47 +512,52 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
         return self.__class__(super().query(expr))
 
     def as_simple(self, max_n=None):
-        data = {
-            "title": self.df_name,  # default, to be overwritten
-            "url": None,
-            "start": None,
-            "end": None,
-            # "body": None,
-            "type": self.df_name,
-            "interval": True,
-            "sender": None,
-            "value": getattr(self, "value", None),
-            "index_loc": self.index,
-        }
-        for x in ["title", "name", "naam", "subject", "url", "content", "text", "value"]:
-            res = getattr(self, x, None)
+        try:
+            data = {
+                "title": self.df_name,  # default, to be overwritten
+                "url": None,
+                "start": None,
+                "end": None,
+                # "body": None,
+                "type": self.df_name,
+                "interval": True,
+                "sender": None,
+                "value": getattr(self, "value", None),
+                "index_loc": self.index,
+            }
+            for x in ["title", "name", "naam", "subject", "url", "content", "text", "value"]:
+                res = getattr(self, x, None)
+                if res is not None:
+                    data["title"] = list(res)
+                    break
+            res = getattr(self, "sender", None)
             if res is not None:
-                data["title"] = list(res)
-                break
-        res = getattr(self, "sender", None)
-        if res is not None:
-            data["sender"] = res
-        for x in ["url", "path", "file"]:
-            res = getattr(self, x, None)
-            if res is not None:
-                data["url"] = res
-                break
-        for x in ["start", "time", "timestamp", "playingSince"]:
-            res = getattr(self, x, None)
-            if res is not None:
-                data["start"] = res
-                break
-        for x in ["end"]:
-            res = getattr(self, x, None)
-            if res is not None:
-                data["end"] = res - pd.Timedelta(microseconds=1)
-                break
-        if data["end"] is None:
-            data["end"] = data["start"] + pd.Timedelta(minutes=5)
-            data["interval"] = False
-        # to ensure no creation issues
-        data["start"] = [x for x in data["start"]]
-        data["end"] = [x for x in data["end"]]
+                data["sender"] = res
+            for x in ["url", "path", "file"]:
+                res = getattr(self, x, None)
+                if res is not None:
+                    data["url"] = res
+                    break
+            for x in ["start", "time", "timestamp", "playingSince"]:
+                res = getattr(self, x, None)
+                if res is not None:
+                    data["start"] = res
+                    break
+            for x in ["end"]:
+                res = getattr(self, x, None)
+                if res is not None:
+                    data["end"] = res - pd.Timedelta(microseconds=1)
+                    break
+            if data["end"] is None:
+                data["end"] = data["start"] + pd.Timedelta(minutes=5)
+                data["interval"] = False
+            # to ensure no creation issues
+            data["start"] = [x for x in data["start"]]
+            data["end"] = [x for x in data["end"]]
+        except Exception as e:
+            print(e)
+            __import__("ipdb").set_trace()
+
         try:
             data = pd.DataFrame(data).sort_values("start")
             if max_n is not None:
@@ -683,8 +688,8 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
     def duration(self):
         return self.end - self.start
 
-    def sort_values(self, by, axis=0, ascending=True, inplace=False, kind="quicksort", na_position="last"):
-        return self.__class__(pd.DataFrame.sort_values(self, by, axis, ascending, inplace, kind, na_position))
+    def sort_values(self, by, **kwargs):
+        return self.__class__(pd.DataFrame.sort_values(self, **kwargs))
 
     @nlp("filter", "last", "last time", "most recently")
     def last(self):
@@ -758,7 +763,10 @@ class Results(NDF):
 
     def get_original(self, index_loc):
         row = self.iloc[index_loc]
-        rec = registry[row.type].loc[row["index_loc"]]
+        try:
+            rec = registry[row.type].loc[row["index_loc"]]
+        except KeyError:
+            rec = registry[row.type].iloc[row["index_loc"]]
         # rec.add_heartrate() # not here, but at the results level.. but then just to display
         # if a certain value
         if not isinstance(rec, pd.Series):

@@ -11,7 +11,7 @@ import just
 from nostalgia.times import tz
 from nostalgia.utils import format_latlng
 from nostalgia.cache import get_cache
-from nostalgia.interfaces.places import Places
+from nostalgia.interfaces.places import PlacesInterface
 
 
 def api_call(url, params):
@@ -179,7 +179,7 @@ def process(df, excluded_transport_names, home_regex, work_regex, hometown_regex
     return df
 
 
-class GooglePlaces(Places):
+class GooglePlaces(PlacesInterface):
     nlp_columns = ["name", "city", "country", "category", "website"]
     selected_columns = ["date", "name", "city", "_office_hours"]
 

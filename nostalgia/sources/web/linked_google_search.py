@@ -6,8 +6,7 @@ import lxml.html
 from nostalgia.cache import get_cache
 from nostalgia.ndf import NDF
 
-from datetime import datetime
-from nostalgia.times import tz
+from nostalgia.times import datetime_from_timestamp
 
 
 CACHE = get_cache("linked_google_search")
@@ -47,7 +46,7 @@ class GoogleSearch(NDF):
             return None
         row = get_linked_data(obj)
         if row is not None:
-            row["time"] = datetime.fromtimestamp(float(obj["time"]), tz=tz)
+            row["time"] = datetime_from_timestamp(float(obj["time"]))
             row["path"] = obj["path"]
             row["keywords"] = ""
             return row

@@ -9,8 +9,7 @@ from auto_extract import parse_article
 
 from nostalgia.cache import get_cache
 
-from datetime import datetime
-from nostalgia.times import tz
+from nostalgia.times import datetime_from_timestamp
 from nostalgia.ndf import NDF
 from nostalgia.nlp import nlp
 
@@ -75,7 +74,7 @@ class Videos(NDF):
             return None
         row = get_linked_data(obj)
         if row is not None:
-            row["time"] = datetime.fromtimestamp(float(obj["time"]), tz=tz)
+            row["time"] = datetime_from_timestamp(float(obj["time"]))
             row["url"] = obj["url"]
             row["path"] = obj["path"]
             row["keywords"] = ""

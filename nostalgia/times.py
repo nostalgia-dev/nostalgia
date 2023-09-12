@@ -1,3 +1,4 @@
+import pytz
 from pytz import timezone
 
 # import tzlocal
@@ -10,10 +11,18 @@ import dateutil
 from dateutil.rrule import rrule
 from ciso8601 import parse_datetime
 from tzlocal import get_localzone
+from pytz.reference import Local
 
 tzlocal = get_localzone()
 tz = dateutil.tz.tzlocal()
 utc = dateutil.tz.tzutc()
+try:
+    tz2 = timezone(Local.tzname(datetime.now()))
+except Exception as e:
+    if str(e) == "'CEST'":
+        tz2 = timezone("Europe/Amsterdam")
+    else:
+        raise
 
 
 def now(**kwargs):
@@ -95,9 +104,10 @@ def try_date(x, min_level=None, max_level=None):
                 continue
             date = mp.start_date
             if date.tzinfo is None:
-                date = tz.localize(date)
+                date = tz2.localize(date)
             return date
-    except:
+    except Exception as e:
+        print(e)
         return None
 
 
@@ -112,10 +122,10 @@ def parse_date_tz(text):
 
 
 def datetime_tz(*args):
-    return tz.localize(datetime(*args))
+    return tz2.localize(datetime(*args))
 
 
-def datetime_from_timestamp(x, tzone=tz):
+def datetime_from_timestamp(x, tzone=tzlocal):
     # would be year 3000
     x = float(x)
     if x > 32503683600:
@@ -135,7 +145,7 @@ def datetime_from_format(s, fmt, in_utc=False):
     elif in_utc is None:  # naive
         return base.replace(tzinfo=tzlocal)
     else:
-        return tz.localize(base)
+        return tz2.localize(base)
 
 
 freqs = dict(zip(("yearly", "monthly", "weekly", "daily", "hourly", "minutely", "secondly"), range(7)))

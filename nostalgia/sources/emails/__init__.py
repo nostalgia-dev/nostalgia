@@ -3,7 +3,7 @@ import os
 import dotenv
 import pandas as pd
 from nostalgia.ndf import NDF
-from nostalgia.sources.email.export import ImapExport
+from nostalgia.sources.emails.export import ImapExport
 
 dotenv.load_dotenv(".env")
 dotenv.load_dotenv("email/.env")

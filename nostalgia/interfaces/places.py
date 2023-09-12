@@ -6,7 +6,7 @@ from nostalgia.times import parse_date_tz
 from nostalgia.utils import haversine
 
 
-class Places(NDF):
+class PlacesInterface(NDF):
     keywords = [
         "did i go",
         "i was in",

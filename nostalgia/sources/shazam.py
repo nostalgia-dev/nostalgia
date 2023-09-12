@@ -1,12 +1,17 @@
 # ensure ~/nostalgia_data/input exists (e.g. "mkdir -p ~/nostalgia_data/input" on linux)
+# -----
+# new version is to ask for an export: https://www.shazam.com/privacy/login/download
+# ---
+# new incomplete version, you can find the only the date (not time) using CSV
+# --
+# oldest version, not working now
 # goto https://shazam.com/myshazam
+# login if needed
 # open network tab
 # login
 # search for url containing "discovery"
 # right click and copy as curl and replace limit=20 with limit=2000
 # take that curl command and add the following: > ~/nostalgia_data/input/shazam.json and hit return
-# -----
-# new version is to ask for an export
 import os
 import pandas as pd
 import just
@@ -16,23 +21,29 @@ from nostalgia.times import datetime_from_timestamp, parse_datetime
 
 class Shazam(NDF):
     @classmethod
-    def load(cls, file_path="~/nostalgia_data/input/shazam.json", nrows=None):
-        json_path = os.path.expanduser("~/nostalgia_data/input/shazam.json")
-        csv = os.path.expanduser("~/nostalgia_data/input/SyncedShazams.csv")
-        if os.path.exists(json_path):
-            shazam = pd.DataFrame(
-                [
-                    (
-                        datetime_from_timestamp(x["timestamp"], x["timezone"]),
-                        x["track"]["heading"]["title"],
-                        x["track"]["heading"]["subtitle"],
-                    )
-                    for x in just.read(file_path)["tags"]
-                ],
-                columns=["time", "title", "artist"],
+    def load(cls, nrows=None, from_cache=True, **kwargs):
+        cls.latest_file(
+            "~/Downloads/shazamlibrary*.csv",
+            "~/nostalgia_data/input/SyncedShazams.csv",
+            "~/Downloads/SyncedShazams.csv",
+        )
+        return cls(
+            cls.latest_file_is_historic(
+                "~/Downloads/shazamlibrary*.csv",
+                "~/nostalgia_data/input/SyncedShazams.csv",
+                "~/Downloads/SyncedShazams.csv",
+                nrows=nrows,
+                from_cache=from_cache,
             )
-        elif os.path.exists(csv):
-            shazam = pd.read_csv(csv)
-            shazam["time"] = [parse_datetime(x) for x in shazam.date]
-            shazam = shazam[["time", "title", "artist"]]
-        return cls(shazam)
+        )
+
+    @classmethod
+    def handle_dataframe_per_file(cls, data, file_path):
+        if "SyncedShazams" in file_path:
+            data["time"] = [parse_datetime(x) for x in data.date]
+        elif "shazamlibrary" in file_path:
+            data = pd.read_csv(file_path, skiprows=1)
+            data["time"] = [parse_datetime(x) for x in data.TagTime]
+            data["title"] = data.Title
+            data["artist"] = data.Artist
+        return data[["time", "title", "artist"]]

@@ -1,7 +1,8 @@
 import just
 import pandas as pd
 from datetime import datetime
-from nostalgia.times import tz, parse
+from nostalgia.times import tzlocal as tz
+from nostalgia.times import parse
 from nostalgia.data_loading import read_array_of_dict_from_json
 from nostalgia.sources.google import Google
 
@@ -20,14 +21,6 @@ def try_parse(x):
         return datetime(1970, 1, 1, 0, 0, 0, tzinfo=tz)
 
 
-# class MBox:
-#     ingest_settings = {
-#         "ingest_glob": "~/Downloads/*.mbox",
-#         "recent_only": False,
-#         "delete_existing": False,
-#     }
-
-
 class Gmail(Google):
     me = []
 
@@ -36,13 +29,15 @@ class Gmail(Google):
         data["subject"] = data["subject"].astype(str)
         data["to"] = data["to"].astype(str)
         data["sender"] = data["from"].str.extract("<([^>]+)>")
+        data["sender_alias"] = data["from"].str.extract("^(.+) <")
         data.loc[data["sender"].isnull(), "sender"] = data[data["sender"].isnull()]["from"].str.strip('"')
         data["sent"] = data.sender.str.contains("|".join(cls.me), na=False)
         data["receiver"] = data["to"].str.extract("<([^>]+)>")
+        data["receiver_alias"] = data["to"].str.extract("^(.+) <")
         data.loc[data["receiver"].isnull(), "receiver"] = data.loc[data["receiver"].isnull(), "to"]
         data["received"] = data.receiver.str.contains("|".join(cls.me), na=False)
         data["timestamp"] = pd.to_datetime([try_parse(x) for x in data.date], utc=True).tz_convert(tz)
-        data.drop("date", axis=1, inplace=True)
+        data.drop(columns=["from", "to", "date"], inplace=True)
         return data
 
     @classmethod

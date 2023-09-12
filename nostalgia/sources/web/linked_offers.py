@@ -1,15 +1,16 @@
 import os
 import json
 from collections import Counter
-from datetime import datetime
+
 from urllib.parse import urljoin
 import just
 import pandas as pd
 
 from nostalgia.utils import parse_price
-from nostalgia.times import tz
+from nostalgia.times import datetime_from_timestamp
 from nostalgia.nlp import nlp
 from nostalgia.ndf import NDF
+from natura import Finder
 
 from auto_extract import parse_article
 from nostalgia.sources.web.get_keywords_for_product import get_keywords_for_product
@@ -22,18 +23,13 @@ CACHE = get_cache("linked_offers")
 def getter(dc, key, default=None):
     res = dc.get(key, default)
     if isinstance(res, list):
-        res = res[0]
+        res = res[0] if res else ""
     elif isinstance(res, dict):
         res = json.dumps(res)
     return res
 
 
-from natura import Finder
-
-try:
-    finder = Finder()
-except AttributeError as e:
-    print("natura:", e)
+finder = None
 
 
 def get_linked_data_jd(art):
@@ -194,6 +190,9 @@ def get_linked_data_md(art):
 
 
 def get_linked_amazon(art):
+    global finder
+    if finder is None:
+        finder = Finder()
     if "www.amazon.com" not in str(art.url):
         return None
     for x in ["account", "cart"]:
@@ -298,7 +297,7 @@ class Offers(NDF):
             print(obj)
             return {}
         if row is not None:
-            row["time"] = datetime.fromtimestamp(float(obj["time"]), tz=tz)
+            row["time"] = datetime_from_timestamp(float(obj["time"]))
             row["url"] = obj["url"]
             row["path"] = obj["path"]
             # if row.get("name"):
@@ -307,7 +306,7 @@ class Offers(NDF):
             #     row["keywords"] = ""
             if "image" in row:
                 img = row["image"]
-                row["image"] = img if isinstance(img, str) or img is None else img["url"]
+                row["image"] = img if isinstance(img, str) or img is None else img.get("url", "")
             if isinstance(row["image"], dict):
                 row["image"] = row["image"]["url"]
             return row

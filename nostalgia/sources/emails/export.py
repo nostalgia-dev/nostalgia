@@ -4,7 +4,6 @@ import os
 import re
 
 import just
-from imap_tools import MailBox
 
 log = logging.getLogger(__name__)
 
@@ -50,6 +49,8 @@ class ImapExport(object):
         return mails
 
     def walk_folders(self):
+        from imap_tools import MailBox
+
         with MailBox(self.hostname).login(self.username, self.password) as mailbox:
             for folder in mailbox.folder.list():
                 folder_name = folder["name"]
