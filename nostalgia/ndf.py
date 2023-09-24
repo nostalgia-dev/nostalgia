@@ -688,8 +688,10 @@ class NDF(Anonymizer, Loader, pd.DataFrame):
     def duration(self):
         return self.end - self.start
 
-    def sort_values(self, by, **kwargs):
-        return self.__class__(pd.DataFrame.sort_values(self, **kwargs))
+    # def sort_values(self, by, **kwargs):
+    #     return self.__class__(pd.DataFrame.sort_values(self, **kwargs))
+    def sort_values(self, by, axis=0, ascending=True, inplace=False, kind="quicksort", na_position="last"):
+        return self.__class__(pd.DataFrame.sort_values(self, by, axis, ascending, inplace, kind, na_position))
 
     @nlp("filter", "last", "last time", "most recently")
     def last(self):
@@ -757,7 +759,11 @@ class Results(NDF):
     def merge(cls, *dfs, max_n=None):
         data = pd.concat([x.as_simple(max_n) for x in dfs])
         data = data.set_index("start")
-        data = data.sort_values("start", na_position="first")
+        try:
+            data = data.sort_values(by="start", na_position="first")
+        except TypeError:
+            print([x for x in data.itertuples() if "+" not in str(x.Index)])
+            raise
         data["start"] = data.index
         return Results(data)
 

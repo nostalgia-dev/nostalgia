@@ -145,10 +145,14 @@ def interactive(color="Neutral", refresh_data_every_secs: int = 120):
 
 
 @cli
-def ingest(name: str | None = None):
+def ingest(name: str | None = None, password: str | None = None):
     """Ingest source, e.g. twitter or google"""
     if name is not None:
-        INGESTERS[name].ingest()
+        ingester = INGESTERS[name]
+        if password is not None:
+            ingester.ingest(password=password)
+        else:
+            ingester.ingest()
     else:
         return [x for x in INGESTERS]
 

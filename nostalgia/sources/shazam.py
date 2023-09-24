@@ -22,11 +22,6 @@ from nostalgia.times import datetime_from_timestamp, parse_datetime
 class Shazam(NDF):
     @classmethod
     def load(cls, nrows=None, from_cache=True, **kwargs):
-        cls.latest_file(
-            "~/Downloads/shazamlibrary*.csv",
-            "~/nostalgia_data/input/SyncedShazams.csv",
-            "~/Downloads/SyncedShazams.csv",
-        )
         return cls(
             cls.latest_file_is_historic(
                 "~/Downloads/shazamlibrary*.csv",
@@ -43,7 +38,7 @@ class Shazam(NDF):
             data["time"] = [parse_datetime(x) for x in data.date]
         elif "shazamlibrary" in file_path:
             data = pd.read_csv(file_path, skiprows=1)
-            data["time"] = [parse_datetime(x) for x in data.TagTime]
+            data["time"] = [parse_datetime(x + "+00:00") for x in data.TagTime]
             data["title"] = data.Title
             data["artist"] = data.Artist
         return data[["time", "title", "artist"]]

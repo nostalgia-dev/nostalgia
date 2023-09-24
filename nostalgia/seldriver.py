@@ -24,15 +24,15 @@ def get_driver(
     driver = webdriver.Chrome(executable_path=executable_path, options=chrome_options)
 
     # login if neccessary
-    if isinstance(credentials, dict):
-        credentials = MockCredentials(credentials)
     if credentials is not None:
+        if isinstance(credentials, dict):
+            credentials = MockCredentials(credentials)
         driver.get(login_url)
-        if user_xpath_or_id.startswith("/"):
+        if user_xpath_or_id[:1] in "/.":
             user_element = driver.find_elements_by_xpath(user_xpath_or_id)[0]
         else:
             user_element = driver.find_element_by_id(user_xpath_or_id)
-        if password_xpath_or_id.startswith("/"):
+        if password_xpath_or_id[:1] in "/.":
             password_element = driver.find_elements_by_xpath(password_xpath_or_id)[0]
         else:
             password_element = driver.find_element_by_id(password_xpath_or_id)
